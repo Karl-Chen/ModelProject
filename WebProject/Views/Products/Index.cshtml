@@ -1,0 +1,159 @@
+﻿@model WebProject.ViewModels.VMProducts
+
+@{
+    ViewData["Title"] = "Index";
+    var price = 0;
+}
+
+<h1>Index</h1>
+<div class="row mt-3">
+    <div class="col-3">
+        <h3 class="text-center">商品類別</h3>
+        <div>
+            @foreach (var item in Model.ProductSpecifications)
+            {
+                @* <a class="list-group-item text-center" href="Mystudents/Index?deptid=@item.DeptID">@item.DeptName</a> *@
+                @* var count = 0; *@
+                @* @if (item.Products != null) *@
+                @* { *@
+                @*     count = item.Products.Count(); *@
+                @* } *@
+                <a class="list-group-item text-center" asp-action="Index" asp-route-SpecificationID="@item.SpecificationID">@(item.SpecificationName)</a>
+            }
+    </div>
+</div>
+<div class="col-9">
+    @* 學生資料 *@
+    <h3 class="text-center"><span class="alert-danger">@ViewBag.DeptName</span>學生資料管理</h3>
+    <p>
+        <a class="btn btn-info" asp-route-deptid="@ViewBag.DeptID" asp-action="Create">新增學生資料</a>
+    </p>
+    @if (Model.Products.Count() == 0)
+    {
+        <h1 class="text-danger text-center">@ViewData["ErrMsg"]</h1>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var item in Model.Products)
+            {
+                <div class="col-xl-4">
+                    <div class="card mb-4 border-info">
+                        @if (item.Photo != null)
+                        {
+                            <img src="~/ModelPhoto/@item.Photo" class="card-img-top img-thumbnail" />
+                        }
+                        <div class="card-body">
+                            <h3> @item.ProductName</h3>
+                            <p>@Html.Raw(item.Description.Replace("\r\n", "<br>"))</p>
+                        </div>
+                        <div class="card-footer">
+                            <h3 class="text-end">
+                                @{
+                                    var value = item.CostJP * item.PriceExchangeRage;
+                                    price = (int)(value);
+                                }
+                                @Html.DisplayFor(modelItem => @price) 元
+                                <a class="btn btn-info" asp-action="Display" asp-route-id="@item.ProductID"> 點我看詳細</a>
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+</div>
+@* <p> *@
+@*     <a asp-action="Create">Create New</a> *@
+@* </p> *@
+@* <table class="table"> *@
+@*     <thead> *@
+@*         <tr> *@
+@*             <th> *@
+@*                 @Html.DisplayNameFor(model => model.ProductName) *@
+@*             </th> *@
+@*             <th> *@
+@*                 @Html.DisplayNameFor(model => model.Description) *@
+@*             </th> *@
+@*             <th> *@
+@*                 @Html.DisplayNameFor(model => model.Photo) *@
+@*             </th> *@
+@*             <th> *@
+@*                 @Html.DisplayNameFor(model => model.CostJP) *@
+@*             </th> *@
+@*             <th> *@
+@*                 @Html.DisplayNameFor(model => model.CostExchangeRate) *@
+@*             </th> *@
+@*             <th> *@
+@*                 @Html.DisplayNameFor(model => model.PriceExchangeRage) *@
+@*             </th> *@
+@*             <th> *@
+@*                 @Html.DisplayNameFor(model => model.Inventory) *@
+@*             </th> *@
+@*             <th> *@
+@*                 @Html.DisplayNameFor(model => model.OrderedQuantity) *@
+@*             </th> *@
+@*             <th> *@
+@*                 @Html.DisplayNameFor(model => model.ProductType) *@
+@*             </th> *@
+@*             <th> *@
+@*                 @Html.DisplayNameFor(model => model.ProductSpecification) *@
+@*             </th> *@
+@*             <th> *@
+@*                 @Html.DisplayNameFor(model => model.Brand) *@
+@*             </th> *@
+@*             <th> *@
+@*                 @Html.DisplayNameFor(model => model.Supplier) *@
+@*             </th> *@
+@*             <th></th> *@
+@*         </tr> *@
+@*     </thead> *@
+@*     <tbody> *@
+@* @foreach (var item in Model) { *@
+@*         <tr> *@
+@*             <td> *@
+@*                 @Html.DisplayFor(modelItem => item.ProductName) *@
+@*             </td> *@
+@*             <td> *@
+@*                 @Html.DisplayFor(modelItem => item.Description) *@
+@*             </td> *@
+@*             <td> *@
+@*                 @Html.DisplayFor(modelItem => item.Photo) *@
+@*             </td> *@
+@*             <td> *@
+@*                 @Html.DisplayFor(modelItem => item.CostJP) *@
+@*             </td> *@
+@*             <td> *@
+@*                 @Html.DisplayFor(modelItem => item.CostExchangeRate) *@
+@*             </td> *@
+@*             <td> *@
+@*                 @Html.DisplayFor(modelItem => item.PriceExchangeRage) *@
+@*             </td> *@
+@*             <td> *@
+@*                 @Html.DisplayFor(modelItem => item.Inventory) *@
+@*             </td> *@
+@*             <td> *@
+@*                 @Html.DisplayFor(modelItem => item.OrderedQuantity) *@
+@*             </td> *@
+@*             <td> *@
+@*                 @Html.DisplayFor(modelItem => item.ProductType.TypeID) *@
+@*             </td> *@
+@*             <td> *@
+@*                 @Html.DisplayFor(modelItem => item.ProductSpecification.SpecificationID) *@
+@*             </td> *@
+@*             <td> *@
+@*                 @Html.DisplayFor(modelItem => item.Brand.BrandID) *@
+@*             </td> *@
+@*             <td> *@
+@*                 @Html.DisplayFor(modelItem => item.Supplier.SupplierID) *@
+@*             </td> *@
+@*             <td> *@
+@*                 <a asp-action="Edit" asp-route-id="@item.ProductID">Edit</a> | *@
+@*                 <a asp-action="Details" asp-route-id="@item.ProductID">Details</a> | *@
+@*                 <a asp-action="Delete" asp-route-id="@item.ProductID">Delete</a> *@
+@*             </td> *@
+@*         </tr> *@
+@* } *@
+@*     </tbody> *@
+@* </table> *@

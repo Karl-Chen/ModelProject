@@ -8,26 +8,18 @@
 <h1>Index</h1>
 <div class="row mt-3">
     <div class="col-3">
-        <h3 class="text-center">商品類別</h3>
-        <div>
-            @foreach (var item in Model.ProductSpecifications)
-            {
-                @* <a class="list-group-item text-center" href="Mystudents/Index?deptid=@item.DeptID">@item.DeptName</a> *@
-                @* var count = 0; *@
-                @* @if (item.Products != null) *@
-                @* { *@
-                @*     count = item.Products.Count(); *@
-                @* } *@
-                <a class="list-group-item text-center" asp-action="Index" asp-route-SpecificationID="@item.SpecificationID">@(item.SpecificationName)</a>
-            }
-    </div>
+        <div id="ProductTypeList">
+            @* //2.3.10 編寫Display View，加入VCReBooks ViewComponent *@
+            @await Component.InvokeAsync("VCProductType", new { })
+        </div>
 </div>
 <div class="col-9">
     @* 學生資料 *@
-    <h3 class="text-center"><span class="alert-danger">@ViewBag.DeptName</span>學生資料管理</h3>
-    <p>
-        <a class="btn btn-info" asp-route-deptid="@ViewBag.DeptID" asp-action="Create">新增學生資料</a>
-    </p>
+    @* <h3 class="text-center"><span class="alert-danger">@ViewBag.DeptName</span>學生資料管理</h3> *@
+    @* <p> *@
+    @*     <a class="btn btn-info" asp-route-deptid="@ViewBag.DeptID" asp-action="Create">新增學生資料</a> *@
+    @* </p> *@
+    
     @if (Model.Products.Count() == 0)
     {
         <h1 class="text-danger text-center">@ViewData["ErrMsg"]</h1>
@@ -38,26 +30,28 @@
             @foreach (var item in Model.Products)
             {
                 <div class="col-xl-4">
-                    <div class="card mb-4 border-info">
-                        @if (item.Photo != null)
-                        {
-                            <img src="~/ModelPhoto/@item.Photo" class="card-img-top img-thumbnail" />
-                        }
-                        <div class="card-body">
-                            <h3> @item.ProductName</h3>
-                            <p>@Html.Raw(item.Description.Replace("\r\n", "<br>"))</p>
+                        <a style="text-decoration: none" asp-action="Details" asp-route-id="@item.ProductID">
+                        <div class="card mb-4 border-info">
+                            
+                            @if (item.Photo != null)
+                            {
+                                    <img src="~/ModelPhoto/@item.Photo" class="card-img-top border border-bottom " style="max-height:280px width:auto" />
+                            }
+                            <div class="card-body">
+                                <h4 class="text-black"> @item.ProductName</h4>
+                                <p class="text-black-50">@Html.Raw(item.Description.Replace("\r\n", "<br>"))</p>
+                            </div>
+                            <div class="card-footer">
+                                <h3 class="text-end text-black">
+                                    @{
+                                        var value = item.CostJP * item.PriceExchangeRage;
+                                        price = (int)(value);
+                                    }
+                                    @Html.DisplayFor(modelItem => @price) 元
+                                </h3>
+                            </div>    
                         </div>
-                        <div class="card-footer">
-                            <h3 class="text-end">
-                                @{
-                                    var value = item.CostJP * item.PriceExchangeRage;
-                                    price = (int)(value);
-                                }
-                                @Html.DisplayFor(modelItem => @price) 元
-                                <a class="btn btn-info" asp-action="Display" asp-route-id="@item.ProductID"> 點我看詳細</a>
-                            </h3>
-                        </div>
-                    </div>
+                    </a>
                 </div>
             }
         </div>

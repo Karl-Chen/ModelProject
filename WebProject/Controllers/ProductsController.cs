@@ -7,16 +7,24 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebProject.Models;
 using WebProject.ViewModels;
+using System.IO;
+using WebProject.Hubs;
+using static WebProject.WorkFunction.FileIOFunction;
+using Microsoft.AspNetCore.SignalR;
 
 namespace WebProject.Controllers
 {
     public class ProductsController : Controller
     {
         private readonly GuestModelContext _context;
+        private readonly IWebHostEnvironment _env;
+        private readonly PushMessage _hubContext;
 
-        public ProductsController(GuestModelContext context)
+        public ProductsController(GuestModelContext context, IWebHostEnvironment env, PushMessage hubcontext)
         {
             _context = context;
+            _env = env;
+            _hubContext = hubcontext;
         }
 
         // GET: Products
@@ -24,6 +32,7 @@ namespace WebProject.Controllers
         {
             //var guestModelContext = _context.Prodect.Include(p => p.Brand).Include(p => p.ProductSpecification).Include(p => p.ProductType).Include(p => p.Supplier);
             //return View(await guestModelContext.ToListAsync());
+
             bool isAll = false;
             if (SpecificationID == "00")
                 isAll = true;
@@ -33,9 +42,15 @@ namespace WebProject.Controllers
                 ProductSpecifications = _context.ProductSpecification.OrderBy(t=>t.SpecificationName).ToList(),
             };
             if (vMProducts.Products.Count == 0)
-                ViewData["ErrMsg"] = "該分類沒有商品";
+                ViewData["ErrMsg"] = "該分類尚未建立商品";
+
+            ViewData["isTest"] = "1234567899614521";
+
+            if (HttpContext.Session.GetString("Manager") == null)
+                ViewData["isLogin"] = "1";
             //ViewData["DeptName"] = db.Department.Find(deptid).DeptName;
             //ViewData["DeptID"] = deptid;
+
             return View(vMProducts);
         }
 
@@ -60,6 +75,19 @@ namespace WebProject.Controllers
 
             //ViewData["ProductName"] = product.ProductName;
             return View(product);
+        }
+
+        public async Task<IActionResult> AddOrderCarAsync(string pid, int value)
+        {
+            // TODO: 寫檔
+            string path = _env.ContentRootPath + "/wwwroot/OrderCar";
+            string account = HttpContext.Session.GetString("Manager").ToString();
+            string fileName = account + ".txt";
+            string orderdetail = pid + "," + value;
+            WriteFileAppend(path, fileName, orderdetail);
+            int count = ReadFileCount(path, fileName);
+            await _hubContext.Clients.All.SendAsync("ReceiveMessage", account, count.ToString());
+            return NoContent();
         }
         // POST: Books/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.

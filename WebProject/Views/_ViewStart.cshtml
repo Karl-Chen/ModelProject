@@ -1,3 +1,10 @@
 ﻿@{
     Layout = "_Layout";
+
+    var loginAcc = Context.Request.Cookies["ManagerCookie"];
+    var iskeep = Context.Request.Cookies["KeepCookie"];
+    if (loginAcc != null && loginAcc != "" && iskeep == "True")
+    {
+        Context.Session.SetString("Manager", loginAcc);
+    }
 }

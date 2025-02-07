@@ -1,5 +1,8 @@
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using WebProject.Hubs;
 using WebProject.Models;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +13,13 @@ builder.Services.AddControllersWithViews();
 //      ※注意程式的位置必須要在var builder = WebApplication.CreateBuilder(args);這句之後
 builder.Services.AddDbContext<GuestModelContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("dbGuestModelConnection")));
+
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options => {
+    //TimeOut時間，清掉就是所有Session清掉
+    options.IdleTimeout = TimeSpan.FromMinutes(10);
+});
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 
@@ -31,8 +41,12 @@ app.UseRouting();
 
 app.UseAuthorization();
 
+//啟用Session
+app.UseSession();
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+app.MapHub<PushMessage>("/PushMessage");
 app.Run();

@@ -1,0 +1,50 @@
+﻿@model WebProject.Models.MemberAcc
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+
+
+<hr />
+<div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+        <form asp-action="Login">
+            <h1>登入</h1>
+            <hr/>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Account" class="control-label"></label>
+                <input asp-for="Account" class="form-control" />
+                <span asp-validation-for="Account" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Mima" class="control-label"></label>
+                <input asp-for="Mima" class="form-control" />
+                <label>
+                    <input type="checkbox" id="Keep" name="Keep" value="true">記住登入30天
+                </label>
+                <span asp-validation-for="Mima" class="text-danger"></span>
+            </div>
+            
+            <input name="uAction" value="@ViewBag.action" type="hidden"/>
+            <input name="rRoute" value="@ViewBag.uRoute" type="hidden" />
+            <input name="pid" value="@ViewBag.id" type="hidden" />
+            @* <div class="form-group"> *@
+            @*     <label asp-for="MemberID" class="control-label"></label> *@
+            @*     <select asp-for="MemberID" class ="form-control" asp-items="ViewBag.MemberID"></select> *@
+            @* </div> *@
+            <div class="form-group">
+                <input type="submit" value="登入" class="btn btn-primary" />
+                　　
+                <a class="btn btn-danger"  asp-controller="VMMembers" asp-action="Create" asp-route-uAction="@ViewBag.action" asp-route-rRoute="@ViewBag.uRoute" asp-route-pid="@ViewBag.id">沒有帳號嗎？點我點我</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

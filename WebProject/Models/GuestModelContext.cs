@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using WebProject.ViewModels;
 
 namespace WebProject.Models
 {
@@ -42,5 +43,7 @@ namespace WebProject.Models
         public DbSet<Staff> Staff { get; set; }
         public DbSet<Supplier> Supplier { get; set; }
         public DbSet<HandleOrder> HandleOrder { get; set; }
+        public DbSet<WebProject.ViewModels.VMMemberAcc> VMMemberAcc { get; set; } = default!;
+        public DbSet<WebProject.ViewModels.VMMembers> VMMembers { get; set; } = default!;
     }
 }

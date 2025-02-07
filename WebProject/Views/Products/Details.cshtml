@@ -44,14 +44,62 @@
                 <option value="8">9</option>
             </select>
         </p>
-            <button class="btn btn-info" id="order" name=" = order">我要買買買</button>
+        @{
+            var productID = @Model.ProductID;
+        }
+            <button class="btn btn-info" id="order" name="order" onclick="AddToBuyCar('@Model.ProductID')">我要買買買</button>
+
         
         @* <p>@Model.ProductName</p> *@
         
     </div>
 </div>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.ProductID">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+@* <div> *@
+@*     <a asp-action="Edit" asp-route-id="@Model?.ProductID">Edit</a> | *@
+@*     <a asp-action="Index">Back to List</a> *@
+@* </div> *@
+
+@section Scripts {
+    <script>
+        function getCookie(name) {
+            let cookieArr = document.cookie.split(";");
+            // console.log(cookieArr);
+            for (let i = 0; i < cookieArr.length; i++) {
+                let cookie = cookieArr[i].trim();
+                // console.log(cookie);
+                if (cookie.startsWith(name + "=")) {
+                    return cookie.substring(name.length + 1);
+                }
+            }
+
+          return null;  // 如果沒有找到 Cookie
+        }
+
+        function AddToBuyCar(productID)
+        {
+            let cookieArr = getCookie("ManagerCookie");
+            let isKeep = getCookie("KeepCookie");
+            console.log(cookieArr);
+            if (cookieArr == null || cookieArr == "" )
+            {
+                alert("請先登入/註冊帳號才能購買，將導至登入頁面");
+                    // 使用 ASP.NET Core Razor 來生成 URL 並跳轉
+                var strurl = '/Login/Login?uAction=Products&uRoute=Details&pid=' + productID;
+                console.log(strurl);
+                window.location.href = strurl;
+                //window.location.href = '@Url.Action("Login", "Login")';
+            }
+            else
+            {
+                var select = document.getElementById("value");
+                var selectValue = select.selectedIndex+1;//$("#value").selectedIndex;
+                console.log(selectValue);
+                var url = '/Products/AddOrderCar?pid=' + productID;
+                url+= '&value=' + selectValue;
+                console.log(url);
+                window.location.href = url;
+            }
+        }
+    </script>
+}

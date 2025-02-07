@@ -7,29 +7,59 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/WebProject.styles.css" asp-append-version="true" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- 引入 Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        a.cart-btn:hover {
+        color: red; /* 文字顏色變白 */
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">WebProject</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="Index">商品列表</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
+    <div class="container-fluid">
+        <header>
+            <a class="navbar-brand" asp-area="" asp-controller="Products" asp-action="Index">WebProject</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="row">
+                <div class="col-2"></div>
+                <div class="btn-group col-8" role="group" aria-label="Button group with nested dropdown">
+                    
+                    
+                    <a class="nav-link text-dark" style="font-size: 26px;" asp-area="" asp-controller="Products" asp-action="Index">商品列表</a>
+                    <p>　</p>
+                    <a class="nav-link text-dark" style="font-size: 26px;" asp-area="" asp-controller="VMMembers" asp-action="Detail">會員中心</a>
+                    @* <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between"> *@
+                    @*     <ul class="navbar-nav flex-grow-1"> *@
+                    @*         <li class="nav-item"> *@
+                    @*             <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="Index">商品列表</a> *@
+                    @*         </li> *@
+                    @*         <li class="nav-item"> *@
+                    @*             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">隱私權</a> *@
+                    @*         </li> *@
+                    @*     </ul> *@
+                    @* </div> *@
                 </div>
+                @if (Context.Session.GetString("Manager") == null)
+                {
+                    <div class="col-2">
+                        <a asp-action="Login" asp-controller="Login" type="button" class="btn btn-outline-danger"><i class="bi bi-person-fill"></i>登入</a>
+                    </div>
+                }
+                else
+                {
+                    <div class="col-2">
+                        <a asp-action="BuyCar" asp-controller="Index" class="btn border-0 cart-btn" id="btnCar"><i class="bi bi-cart" style="font-size: 2rem;"></i>購物車(<span id="car-count">0</span>)</a>
+                        <a asp-action="Logout" asp-controller="Login" type="button" class="btn btn-outline-dark"><i class="bi bi-person-fill"></i>登出</a>
+                    </div>
+                }
             </div>
-        </nav>
-    </header>
+        </header>
+    </div>
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
@@ -43,7 +73,32 @@
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/signalr@5.0.9/dist/browser/signalr.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
+@section Scripts {
+    <script>
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/PushMessage") // 設定 SignalR Hub 的 URL，這個 URL 路徑與你的 Hub 路徑對應
+            .build();
+
+        // 設定當 Hub 傳送消息時的處理邏輯
+        connection.on("ReceiveMessage", function (user, message) {
+            // 當從 Hub 收到訊息時觸發
+            console.log("收到來自 " + user + " 的訊息: " + message);
+
+            // 可以在這裡執行其他操作，例如顯示通知、更新頁面等
+            // alert(user + ": " + message);
+            $("#car-count").text(message);
+        });
+
+        // 啟動 SignalR 連接
+        connection.start().catch(function (err) {
+            return console.error("SignalR 連接錯誤: ", err.toString());
+        });
+        // $("#car-count").text();
+    </script>
+}

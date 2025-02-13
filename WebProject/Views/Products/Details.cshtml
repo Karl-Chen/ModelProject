@@ -3,58 +3,100 @@
 @{
     ViewData["Title"] = Model.ProductName;
     var price = 0;
+    string showModal = ViewData["isShowModal"].ToString();
 }
 
 <div class="container">
-<div class="row">
-    <div class="col-3">
-        <div id="ProductTypeList">
-            @* //2.3.10 編寫Display View，加入VCReBooks ViewComponent *@
-            @await Component.InvokeAsync("VCProductType", new { })
+    <div class="row">
+        <div class="col-3">
+            <div id="ProductTypeList">
+                @* //2.3.10 編寫Display View，加入VCReBooks ViewComponent *@
+                @await Component.InvokeAsync("VCProductType", new { })
+            </div>
         </div>
-    </div>
-    <div class="col-5">
-        @{
-            var path = "/ModelPhoto/" + Model.Photo;
-        }
-        <img src=@path alt="@Model.ProductName" class="card-img-top border border-bottom " style="max-height:280px width:auto" />
-    </div>
-    <div class="col-4">
-        <h4></h4>
+        <div class="col-5">
+            @{
+                var path = "/ModelPhoto/" + Model.Photo;
+            }
+            <img src=@path alt="@Model.ProductName" class="card-img-top border border-bottom " style="max-height:280px width:auto" />
+        </div>
+        <div class="col-4">
+            <h4></h4>
 
-        <h2>@Model.ProductName</h2>
-        <h3>@Model.Description</h3>
+            <h2>@Model.ProductName</h2>
+            <h3>@Model.Description</h3>
             @{
                 var value = Model.CostJP * Model.PriceExchangeRage;
                 price = (int)(value);
             }
-        <br />
-        <h4>售價 @price 元</h4>
-        <p>
-            數量：
-            <select name="value" id="value" style="width:100px">
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="8">9</option>
-            </select>
-        </p>
-        @{
-            var productID = @Model.ProductID;
-        }
+            <br />
+            <h4>售價 @price 元</h4>
+            @{
+                int index = Convert.ToInt32(ViewData["value"]);
+            }
+            <p>
+                數量：
+                <select name="value" id="value" style="width:100px">
+                    @for (int i = 1; i < 10; i++)
+                    {
+                        if (index == i)
+                        {
+                            <option selected value="@i" >@i</option>
+                        }
+                        else
+                        {
+                            <option value="@i">@i</option>
+                        }
+                    }
+                </select>
+            </p>
+            @{
+                var productID = @Model.ProductID;
+            }
             <button class="btn btn-info" id="order" name="order" onclick="AddToBuyCar('@Model.ProductID')">我要買買買</button>
+            <div id="isShowModel" name="isShowModel" style="visibility:hidden">@(showModal)</div>
+            @{
+                showModal = "";
+            }
 
-        
+            <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="myModalLabel">存進購物車</h5>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-3">
+                                    <img src=@path alt="@Model.ProductName" class="card-img-top border border-bottom " style="max-height:80px width:auto" />
+                                </div>
+                                <div class="col-4">
+                                    <h3>@Model.ProductName</h3>
+                                </div>
+                                <div class="col-5">
+                                    @{
+                                        var totalprice = price * index;
+                                    }
+                                    <h4>小計 @totalprice 元</h4>
+                                    <p>
+                                        數量： @index                                        
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal" id="confirmButton">關閉</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         @* <p>@Model.ProductName</p> *@
         
+        </div>
     </div>
 </div>
-</div>
+
 @* <div> *@
 @*     <a asp-action="Edit" asp-route-id="@Model?.ProductID">Edit</a> | *@
 @*     <a asp-action="Index">Back to List</a> *@
@@ -101,5 +143,17 @@
                 window.location.href = url;
             }
         }
+
+        var name = $("#isShowModel").text();
+        if (name == "1")
+        {
+                $(document).ready(function() {
+                    $('#myModal').modal('show');  // 顯示 Modal
+                });
+        }
+        
+        $('#confirmButton').on('click', function () {
+            $('#myModal').modal('hide');  // 隱藏 Modal
+        });
     </script>
 }

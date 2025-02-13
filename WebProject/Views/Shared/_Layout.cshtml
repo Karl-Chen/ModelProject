@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@{
+    string count = "0";
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -22,14 +25,14 @@
         <header>
             <a class="navbar-brand" asp-area="" asp-controller="Products" asp-action="Index">WebProject</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
+            aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="row">
                 <div class="col-2"></div>
                 <div class="btn-group col-8" role="group" aria-label="Button group with nested dropdown">
-                    
-                    
+
+
                     <a class="nav-link text-dark" style="font-size: 26px;" asp-area="" asp-controller="Products" asp-action="Index">商品列表</a>
                     <p>　</p>
                     <a class="nav-link text-dark" style="font-size: 26px;" asp-area="" asp-controller="VMMembers" asp-action="Detail">會員中心</a>
@@ -53,7 +56,13 @@
                 else
                 {
                     <div class="col-2">
-                        <a asp-action="BuyCar" asp-controller="Index" class="btn border-0 cart-btn" id="btnCar"><i class="bi bi-cart" style="font-size: 2rem;"></i>購物車(<span id="car-count">0</span>)</a>
+                        @if (Context.Session.GetString("OrderCar") != null && Context.Session.GetString("OrderCar") != "")
+                        {
+                            count = Context.Session.GetString("OrderCar");
+                        }
+
+                        <span>歡迎回來 @Context.Session.GetString("UserName") 您好~(^_^)~</span>
+                        <a asp-action="BuyCar" asp-controller="Index" class="btn border-0 cart-btn" id="btnCar"><i class="bi bi-cart" style="font-size: 2rem;"></i>購物車(<span id="car-count">@count</span>)</a>
                         <a asp-action="Logout" asp-controller="Login" type="button" class="btn btn-outline-dark"><i class="bi bi-person-fill"></i>登出</a>
                     </div>
                 }
@@ -73,32 +82,63 @@
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/signalr@5.0.9/dist/browser/signalr.min.js"></script>
+    @* <script src="https://cdn.jsdelivr.net/npm/signalr@5.0.9/dist/browser/signalr.min.js"></script> *@
+    @* <script src="https://cdnjs.cloudflare.com/ajax/libs/signalr/5.0.12/signalr.min.js"></script> *@
+
+
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+
+    @* <script> *@
+
+    @*      function getCookie(name) { *@
+    @*          let cookieArr = document.cookie.split(";"); *@
+    @*          // console.log(cookieArr); *@
+    @*          for (let i = 0; i < cookieArr.length; i++) { *@
+    @*              let cookie = cookieArr[i].trim(); *@
+    @*              // console.log(cookie); *@
+    @*              if (cookie.startsWith(name + "=")) { *@
+    @*                  return cookie.substring(name.length + 1); *@
+    @*              }  *@
+    @*          } *@
+
+    @*        return null; // 如果沒有找到 Cookie *@
+    @*      } *@
+    @*      $(document).ready(function(){ *@
+    @*          document.addEventListener("DOMContentLoaded", function() { *@
+    @*              let cookieArr = getCookie("ManagerCookie"); *@
+    @*              console.log(cookieArr); *@
+    @*              if (cookieArr != null && cookieArr != "" ) *@
+    @*              { *@
+    @*                  console.log(cookieArr); *@
+    @*                  const connection = new signalR.HubConnectionBuilder() *@
+    @*                          .withUrl("/PushMessage",{ *@
+    @*                              accessTokenFactory: () => cookieArr //用戶標識符 *@
+    @*                          }) //設定 SignalR Hub 的 URL，這個 URL 路徑與你的 Hub 路徑對應 *@
+    @*                      .build(); *@
+             
+    @*                  //設定當 Hub 傳送消息時的處理邏輯 *@
+    @*                  connection.on("ReceiveMessage", function (user, message) { *@
+    @*                      //當從 Hub 收到訊息時觸發 *@
+    @*                      console.log("收到來自 " + user + " 的訊息: " + message); *@
+             
+    @*                      //可以在這裡執行其他操作，例如顯示通知、更新頁面等 *@
+    @*                      alert(user + ": " + message); *@
+    @*                      $("#car-count").text(message); *@
+    @*                  }); *@
+             
+    @*                  //啟動 SignalR 連接 *@
+    @*                  connection.start().then(function() { *@
+    @*                      console.log("SignalR 連接成功!"); *@
+    @*                  }).catch(function(err) { *@
+    @*                      console.error("SignalR 連接錯誤: ", err); *@
+    @*                  }); *@
+             
+    @*                  $("#car-count").text(); *@
+    @*              } *@
+    @*          }); *@
+    @*      }); *@
+         
+    @* </script> *@
 </body>
 </html>
-
-@section Scripts {
-    <script>
-        const connection = new signalR.HubConnectionBuilder()
-            .withUrl("/PushMessage") // 設定 SignalR Hub 的 URL，這個 URL 路徑與你的 Hub 路徑對應
-            .build();
-
-        // 設定當 Hub 傳送消息時的處理邏輯
-        connection.on("ReceiveMessage", function (user, message) {
-            // 當從 Hub 收到訊息時觸發
-            console.log("收到來自 " + user + " 的訊息: " + message);
-
-            // 可以在這裡執行其他操作，例如顯示通知、更新頁面等
-            // alert(user + ": " + message);
-            $("#car-count").text(message);
-        });
-
-        // 啟動 SignalR 連接
-        connection.start().catch(function (err) {
-            return console.error("SignalR 連接錯誤: ", err.toString());
-        });
-        // $("#car-count").text();
-    </script>
-}

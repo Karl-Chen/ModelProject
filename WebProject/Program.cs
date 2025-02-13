@@ -1,6 +1,7 @@
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
-using WebProject.Hubs;
+//using WebProject.Hubs;
 using WebProject.Models;
 
 
@@ -15,11 +16,16 @@ builder.Services.AddDbContext<GuestModelContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("dbGuestModelConnection")));
 
 builder.Services.AddDistributedMemoryCache();
+
 builder.Services.AddSession(options => {
     //TimeOut時間，清掉就是所有Session清掉
     options.IdleTimeout = TimeSpan.FromMinutes(10);
 });
-builder.Services.AddSignalR();
+
+//廢案
+//builder.Services.AddSignalR();
+
+
 
 var app = builder.Build();
 
@@ -40,13 +46,17 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+//app.UseCors(CorsOptions.AllowAll);
+//廢案
+//app.MapHub<PushMessage>("/PushMessage");
+
 
 //啟用Session
 app.UseSession();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Products}/{action=Index}");
 
-app.MapHub<PushMessage>("/PushMessage");
+
 app.Run();

@@ -74,17 +74,25 @@ namespace WebProject.Controllers
                 //登入完成後須發給證明，證明他已登入
                 //使用Session來當全域變數，紀錄登入狀態，須在Program.cs裡面註冊result.ToJson()
                 HttpContext.Session.SetString("Manager", result.Account);
+                var memberID = await _context.MemberAcc.Where(c => c.Account == result.Account).Select(c => c.MemberID).FirstOrDefaultAsync();
+                string name = "";
+                if (memberID != null)
+                {
+                    var tmpvar = await _context.Member.Where(c => c.MemberID == memberID).Select(c => c.Name).FirstOrDefaultAsync();
+                    name = tmpvar;
+                }
+                HttpContext.Session.SetString("UserName", name);
                 string strkeep = Keep.ToString();
                 HttpContext.Session.SetString("Keep", strkeep);
                 int keepday = 30;
                 
                 Response.Cookies.Append("ManagerCookie", result.Account, new CookieOptions
                 {
-                    Expires = DateTimeOffset.UtcNow.AddMinutes(keepday)
+                    Expires = DateTimeOffset.UtcNow.AddDays(keepday)
                 });
                 Response.Cookies.Append("KeepCookie", strkeep, new CookieOptions
                 {
-                    Expires = DateTimeOffset.UtcNow.AddMinutes(keepday)
+                    Expires = DateTimeOffset.UtcNow.AddDays(keepday)
                 });
 
                 if (uAction != "" && uAction != null)

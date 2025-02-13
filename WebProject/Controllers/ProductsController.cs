@@ -8,9 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using WebProject.Models;
 using WebProject.ViewModels;
 using System.IO;
-using WebProject.Hubs;
+//using WebProject.Hubs;
 using static WebProject.WorkFunction.FileIOFunction;
 using Microsoft.AspNetCore.SignalR;
+using Newtonsoft.Json.Linq;
+using System.Security.Cryptography;
 
 namespace WebProject.Controllers
 {
@@ -18,13 +20,14 @@ namespace WebProject.Controllers
     {
         private readonly GuestModelContext _context;
         private readonly IWebHostEnvironment _env;
-        private readonly PushMessage _hubContext;
+        //private readonly IHubContext<PushMessage> _hubContext;
 
-        public ProductsController(GuestModelContext context, IWebHostEnvironment env, PushMessage hubcontext)
+        //public ProductsController(GuestModelContext context, IWebHostEnvironment env, IHubContext<PushMessage> hubcontext)
+        public ProductsController(GuestModelContext context, IWebHostEnvironment env)
         {
             _context = context;
             _env = env;
-            _hubContext = hubcontext;
+            //_hubContext = hubcontext;
         }
 
         // GET: Products
@@ -36,6 +39,7 @@ namespace WebProject.Controllers
             bool isAll = false;
             if (SpecificationID == "00")
                 isAll = true;
+            GetOrderCarCount();
             VMProducts vMProducts = new VMProducts()
             {
                 Products = _context.Prodect.Where(s => s.ProductSpecificationID == SpecificationID || isAll).OrderByDescending(t => t.ProductTypeID).ToList(),
@@ -55,13 +59,18 @@ namespace WebProject.Controllers
         }
 
         // GET: Products/Details/5
-        public async Task<IActionResult> Details(string id)
+        public async Task<IActionResult> Details(string id, int mValue = 1, bool isShowModal = false)
         {
+            GetOrderCarCount();
             if (id == null)
             {
                 return NotFound();
             }
-
+            ViewData["value"] = mValue;
+            if (isShowModal)
+                ViewData["isShowModal"] = "1";
+            else
+                ViewData["isShowModal"] = "0";
             var product = await _context.Prodect
                 .Include(p => p.Brand)
                 .Include(p => p.ProductSpecification)
@@ -77,17 +86,24 @@ namespace WebProject.Controllers
             return View(product);
         }
 
-        public async Task<IActionResult> AddOrderCarAsync(string pid, int value)
+        public  IActionResult AddOrderCarAsync(string pid, int value)
         {
             // TODO: 寫檔
             string path = _env.ContentRootPath + "/wwwroot/OrderCar";
-            string account = HttpContext.Session.GetString("Manager").ToString();
+            var varacc = HttpContext.Session.GetString("Manager");
+            if (varacc == null)
+            {
+                string id = pid;
+                return RedirectToAction("Login", "Login", new { uAction = "Products", uRoute = "Details", pid = id });
+            }
+            string account = varacc.ToString();
             string fileName = account + ".txt";
             string orderdetail = pid + "," + value;
             WriteFileAppend(path, fileName, orderdetail);
-            int count = ReadFileCount(path, fileName);
-            await _hubContext.Clients.All.SendAsync("ReceiveMessage", account, count.ToString());
-            return NoContent();
+            // 本來想用聊天室的做法來發送push讓JS去更新畫面，但不知道為什麼JS進不去signalR的event裡面，所以作罷
+            //_hubContext.Clients.All.SendAsync("SendMessage", account, count.ToString());
+            return RedirectToAction("Details", "Products", new { id = pid, mValue = value, isShowModal = true});
+            //return NoContent();
         }
         // POST: Books/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -243,5 +259,20 @@ namespace WebProject.Controllers
         //{
         //    return _context.Prodect.Any(e => e.ProductID == id);
         //}
+
+        // 取得購物車數量
+        private void GetOrderCarCount()
+        {
+            string path = _env.ContentRootPath + "/wwwroot/OrderCar";
+            var varacc = HttpContext.Session.GetString("Manager");
+            if (varacc == null)
+            {
+                return;
+            }
+            string account = varacc.ToString();
+            string fileName = account + ".txt";
+            int count = ReadFileCount(path, fileName);
+            HttpContext.Session.SetString("OrderCar", count.ToString());
+        }
     }
 }

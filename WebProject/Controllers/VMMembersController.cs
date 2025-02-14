@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebProject.Models;
+using WebProject.Services;
 using WebProject.ViewModels;
 using static WebProject.WorkFunction.MimaHandler;
 
@@ -15,10 +16,11 @@ namespace WebProject.Controllers
     public class VMMembersController : Controller
     {
         private readonly GuestModelContext _context;
-
-        public VMMembersController(GuestModelContext context)
+        private readonly MemberServices _memberServices;
+        public VMMembersController(GuestModelContext context, MemberServices memberServices)
         {
             _context = context;
+            _memberServices = memberServices;
         }
 
         // GET: VMMembers1
@@ -35,31 +37,8 @@ namespace WebProject.Controllers
             {
                 return NotFound();
             }
-            VMMembers vMMembers = new VMMembers();
-            var memberAcc = await _context.MemberAcc
-                .FirstOrDefaultAsync(m => m.Account == id);
-            if (memberAcc == null)
-            {
-                return NotFound();
-            }
-            var member = await _context.Member.FirstOrDefaultAsync(m => m.MemberID == memberAcc.MemberID);
-            if (member == null)
-            {
-                return NotFound();
-            }
-            var memberTel = await _context.MemberTel.FirstOrDefaultAsync(m => m.MemberID == memberAcc.MemberID);
-            if (memberTel == null)
-            {
-                return NotFound();
-            }
-            vMMembers.Account = memberAcc.Account;
-            vMMembers.Mima = memberAcc.Mima;
-            vMMembers.reMima = memberAcc.Mima;
-            vMMembers.Name = member.Name;
-            vMMembers.Email = member.Email;
-            vMMembers.Address = member.Address;
-            vMMembers.TelNumber = memberTel.TelNumber;
-
+            VMMembers vMMembers = await _memberServices.GetVMMemberByAccount(id);
+            
             return View(vMMembers);
         }
 
@@ -80,10 +59,6 @@ namespace WebProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Account,Mima,reMima,Name,Address,Email,TelNumber")] VMMembers vMMembers, string? uAction, string? rRoute, string? pid)
         {
-            MemberAcc memberAcc = new MemberAcc();
-            Member member = new Member();
-            MemberTel memberTel = new MemberTel();
-            memberAcc.Account = vMMembers.Account;
             if (vMMembers == null)
             {
                 return BadRequest();
@@ -93,35 +68,15 @@ namespace WebProject.Controllers
                 ViewData["ErrMsg"] = "所輸入的密碼與確認密碼不同";
                 return View(vMMembers);
             }
-            var mima = Get_SHA256_Hash(vMMembers.Mima);
-            memberAcc.Mima = mima;
-            string mid = "M00001";
-            var memberID = await _context.Member.OrderByDescending(c => c.MemberID).Select(c => c.MemberID).FirstOrDefaultAsync();
-            if (memberID != null && memberID.Length > 0)
-            {
-                mid = memberID.Substring(1, memberID.Length - 1);
-                int intMid = int.Parse(mid);
-                intMid++;
-                mid = "M" + intMid.ToString().PadLeft(5, '0');
-            }
-            memberAcc.MemberID = mid;
-            member.MemberID = mid;
-            member.Name = vMMembers.Name;
-            member.Address = vMMembers.Address;
-            member.Email = vMMembers.Email;
-            memberTel.TelNumber = vMMembers.TelNumber;
-            memberTel.MemberID = mid;
+            string mid = await _memberServices.CreateNewMemberID();
+            MemberAcc memberAcc = _memberServices.VMMMemberToMemberAcc(vMMembers, mid);
+            Member member = _memberServices.VMMMemberToMember(vMMembers, mid);
+            MemberTel memberTel = _memberServices.VMMMemberToMemberTel(vMMembers, mid);
+            
 
             if (ModelState.IsValid)
             {
-                _context.Add(member);
-                await _context.SaveChangesAsync();
-                _context.Add(memberAcc);
-                await _context.SaveChangesAsync();
-                _context.Add(memberTel);
-                await _context.SaveChangesAsync();
-
-                
+                _memberServices.SaveMmeberGroup(member, memberAcc, memberTel);
                 if (uAction != "" && uAction != null)
                 {
                     string id = pid;
@@ -141,12 +96,7 @@ namespace WebProject.Controllers
             {
                 return NotFound();
             }
-            var memberAcc = await _context.MemberAcc.FindAsync(id);
-            var member = await _context.Member.FindAsync(memberAcc.MemberID);
-            var memberTel = await _context.MemberTel.FindAsync(memberAcc.MemberID);
-            if (member == null || memberAcc == null || memberTel == null)
-                return NotFound();
-            var vMMembers = MemberToVMMember(member, memberAcc, memberTel);
+            var vMMembers = _memberServices.GetVMMemberByAccount(id);
             if (vMMembers == null)
             {
                 return NotFound();
@@ -170,23 +120,11 @@ namespace WebProject.Controllers
             {
                 try
                 {
-                    var member = VMMMemberToMember(vMMembers);
-                    var memberAcc = VMMMemberToMemberAcc(vMMembers);
-                    var memberTel = VMMMemberToMemberTel(vMMembers);
-                    var memberid = await _context.MemberAcc.Where(c => c.Account == id).Select(c => c.MemberID).FirstOrDefaultAsync();
-                    member.MemberID = memberid;
-                    memberAcc.MemberID = memberid;
-                    memberTel.MemberID = memberid;
-                    _context.Update(member);
-                    await _context.SaveChangesAsync();
-                    _context.Update(memberAcc);
-                    await _context.SaveChangesAsync();
-                    _context.Update(memberTel);
-                    await _context.SaveChangesAsync();
+                    _memberServices.EditMemberGroup(vMMembers, id);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!VMMembersExists(vMMembers.Account))
+                    if (!_memberServices.VMMembersExists(vMMembers.Account))
                     {
                         return NotFound();
                     }
@@ -233,46 +171,6 @@ namespace WebProject.Controllers
         //    return RedirectToAction(nameof(Index));
         //}
 
-        private bool VMMembersExists(string id)
-        {
-            return _context.MemberAcc.Any(e => e.Account == id);
-        }
-
-        private Member VMMMemberToMember(VMMembers vMMembers)
-        {
-            Member member = new Member();
-            member.Address = vMMembers.Address;
-            member.Name = vMMembers.Name;
-            member.Email = vMMembers.Email;
-            return member;
-        }
-        private MemberAcc VMMMemberToMemberAcc(VMMembers vMMembers)
-        {
-            MemberAcc memberAcc = new MemberAcc();
-            memberAcc.Account = vMMembers.Account;
-            memberAcc.Mima = vMMembers.Mima;
-            
-            return memberAcc;
-        }
-
-        private MemberTel VMMMemberToMemberTel(VMMembers vMMembers)
-        {
-            MemberTel memberTel = new MemberTel();
-            memberTel.TelNumber = vMMembers.TelNumber;
-
-            return memberTel;
-        }
-
-        private VMMembers MemberToVMMember(Member member, MemberAcc memberacc, MemberTel membertel)
-        {
-            VMMembers vMMembers = new VMMembers();
-            vMMembers.Mima = memberacc.Mima;
-            vMMembers.Account = memberacc.Account;
-            vMMembers.Address = member.Address;
-            vMMembers.TelNumber = membertel.TelNumber;
-            vMMembers.Email = member.Email;
-            vMMembers.Name = member.Name;
-            return vMMembers;
-        }
+        
     }
 }

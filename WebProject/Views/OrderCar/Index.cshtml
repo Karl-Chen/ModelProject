@@ -1,0 +1,68 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model WebProject.ViewModels.VMOrderCar
+@{
+    ViewData["Title"] = "購物車";
+    // var price = 0;
+}
+<form asp-action="Order">
+    <div class="row mt-3">
+        <div class="col-8">
+            @if (Model == null || Model.item == null || Model.item.Count() == 0)
+            {
+                <h1 class="text-danger text-center">@ViewData["Message"]</h1>
+                <h5>在進行結帳之前，您必須將一些產品添加到購物車。您會在我們商品頁面上找到很多有趣的產品。</h5>
+            }
+            else
+            {
+                <div class="row">
+                    <div class="col-xl-8 text-center">商品</div>
+                    <div class="col-xl-3 text-center">數量</div>
+                    <div class="col-xl-1 text-center">刪除</div>
+                </div>
+                    @foreach (var item in Model.item)
+                    {
+                        <div class="row">
+                            <div class="col-xl-1">
+                                @if (item.img != null)
+                                {
+                                    <img src="~/ModelPhoto/@item.img"  style="max-height:80px; width:auto;" />
+                                }
+                            
+                            </div>
+                            <div class="col-xl-7 d-flex align-items-center">
+                                <p>　　</p>
+                                <a class="text-dark fs-3" asp-controller="Products" asp-route-productid="@item.product" asp-action="Detail">@item.name</a>
+                            </div>
+                            <div class="col-xl-3 d-flex align-items-center">
+                                <p>　</p>
+                                <input type="button" value="+" onclick="SetCount(1)" />
+                                <p>　</p>
+                                <input id="textcount" style="text; width:50px" value="@item.count" readonly/>
+                                <p>　</p>
+                                <input type="button" value="-" onclick="SetCount(-1)"/>
+                            </div>
+                            <div class="col-xl-1 d-flex align-items-center">
+                                <i class="bi bi-trash3-fill" style="font-size: 2rem;"></i>
+                            </div>
+                        </div>
+                        <h3></h3>
+
+                    }
+            }
+        </div>
+        <div div class="col-4"></div>
+
+        </div>
+</form>
+
+@section Scripts {
+    <script>
+        function SetCount(add) {
+            var count = parseInt($("#textcount").val());
+            count+=add;
+            $("#textcount").val(count);
+        }
+    </script>
+}

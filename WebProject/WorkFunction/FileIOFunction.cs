@@ -6,9 +6,15 @@ namespace WebProject.WorkFunction
 {
     public class FileIOFunction
     {
-        public static bool WriteFileAppend(string strdir, string fileName, string content)
+        private readonly IWebHostEnvironment _env;
+        public FileIOFunction(IWebHostEnvironment env)
         {
-            string path = strdir;
+            _env = env;
+        }
+
+        public bool WriteFileAppend(string fileName, string content)
+        {
+            string path = _env.ContentRootPath + "/wwwroot/OrderCar";
             if (!System.IO.Directory.Exists(path))
                 System.IO.Directory.CreateDirectory(path);
             string filePath = Path.Combine(path, fileName);
@@ -29,16 +35,16 @@ namespace WebProject.WorkFunction
             return true;
         }
 
-        public static int ReadFileCount(string strdir, string fileName)
+        public int ReadFileCount(string fileName)
         {
-            int count = -1;
-            string path = strdir;
+            int count = 0;
+            string path = _env.ContentRootPath + "/wwwroot/OrderCar"; ;
             if (!System.IO.Directory.Exists(path))
                 return count;
             string filePath = Path.Combine(path, fileName);
-            StreamReader sr = new StreamReader(filePath);
             if (File.Exists(filePath))
             {
+                StreamReader sr = new StreamReader(filePath);
                 count = 0;
                 string line = "";
                 while ((line = sr.ReadLine()) != null)
@@ -50,17 +56,17 @@ namespace WebProject.WorkFunction
             return count;
         }
 
-        public static List<string> ReadFileContent(string strdir, string fileName)
+        public List<string> ReadFileContent(string fileName)
         {
             List<string> ret = new List<string>();
             
-            string path = strdir;
+            string path = _env.ContentRootPath + "/wwwroot/OrderCar";
             if (!System.IO.Directory.Exists(path))
                 return ret;
             string filePath = Path.Combine(path, fileName);
-            StreamReader sr = new StreamReader(filePath);
             if (File.Exists(filePath))
             {
+                StreamReader sr = new StreamReader(filePath);
                 string line = "";
                 while ((line = sr.ReadLine()) != null)
                 {

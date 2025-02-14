@@ -13,20 +13,26 @@ using static WebProject.WorkFunction.FileIOFunction;
 using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json.Linq;
 using System.Security.Cryptography;
+using WebProject.WorkFunction;
+using WebProject.Services;
 
 namespace WebProject.Controllers
 {
     public class ProductsController : Controller
     {
         private readonly GuestModelContext _context;
-        private readonly IWebHostEnvironment _env;
+        private readonly FileIOFunction _fileIOFunction;
+        private readonly ProductsService _productsService;
+        private readonly MemberServices _memberServices;
         //private readonly IHubContext<PushMessage> _hubContext;
 
         //public ProductsController(GuestModelContext context, IWebHostEnvironment env, IHubContext<PushMessage> hubcontext)
-        public ProductsController(GuestModelContext context, IWebHostEnvironment env)
+        public ProductsController(GuestModelContext context, FileIOFunction fileIOFunction, ProductsService productsService, MemberServices memberServices)
         {
             _context = context;
-            _env = env;
+            _fileIOFunction = fileIOFunction;
+            _productsService = productsService;
+            _memberServices = memberServices;
             //_hubContext = hubcontext;
         }
 
@@ -39,21 +45,14 @@ namespace WebProject.Controllers
             bool isAll = false;
             if (SpecificationID == "00")
                 isAll = true;
-            GetOrderCarCount();
-            VMProducts vMProducts = new VMProducts()
-            {
-                Products = _context.Prodect.Where(s => s.ProductSpecificationID == SpecificationID || isAll).OrderByDescending(t => t.ProductTypeID).ToList(),
-                ProductSpecifications = _context.ProductSpecification.OrderBy(t=>t.SpecificationName).ToList(),
-            };
+            
+            VMProducts vMProducts = await _productsService.GetProductListByPSID(SpecificationID, isAll);
             if (vMProducts.Products.Count == 0)
                 ViewData["ErrMsg"] = "該分類尚未建立商品";
 
-            ViewData["isTest"] = "1234567899614521";
 
             if (HttpContext.Session.GetString("Manager") == null)
                 ViewData["isLogin"] = "1";
-            //ViewData["DeptName"] = db.Department.Find(deptid).DeptName;
-            //ViewData["DeptID"] = deptid;
 
             return View(vMProducts);
         }
@@ -71,12 +70,13 @@ namespace WebProject.Controllers
                 ViewData["isShowModal"] = "1";
             else
                 ViewData["isShowModal"] = "0";
-            var product = await _context.Prodect
-                .Include(p => p.Brand)
-                .Include(p => p.ProductSpecification)
-                .Include(p => p.ProductType)
-                .Include(p => p.Supplier)
-                .FirstOrDefaultAsync(m => m.ProductID == id);
+            //var product = await _context.Prodect
+            //    .Include(p => p.Brand)
+            //    .Include(p => p.ProductSpecification)
+            //    .Include(p => p.ProductType)
+            //    .Include(p => p.Supplier)
+            //    .FirstOrDefaultAsync(m => m.ProductID == id);
+            var product = await _productsService.GetProductByID(id);
             if (product == null)
             {
                 return NotFound();
@@ -89,7 +89,6 @@ namespace WebProject.Controllers
         public  IActionResult AddOrderCarAsync(string pid, int value)
         {
             // TODO: 寫檔
-            string path = _env.ContentRootPath + "/wwwroot/OrderCar";
             var varacc = HttpContext.Session.GetString("Manager");
             if (varacc == null)
             {
@@ -99,7 +98,7 @@ namespace WebProject.Controllers
             string account = varacc.ToString();
             string fileName = account + ".txt";
             string orderdetail = pid + "," + value;
-            WriteFileAppend(path, fileName, orderdetail);
+            _fileIOFunction.WriteFileAppend(fileName, orderdetail);
             // 本來想用聊天室的做法來發送push讓JS去更新畫面，但不知道為什麼JS進不去signalR的event裡面，所以作罷
             //_hubContext.Clients.All.SendAsync("SendMessage", account, count.ToString());
             return RedirectToAction("Details", "Products", new { id = pid, mValue = value, isShowModal = true});
@@ -261,18 +260,18 @@ namespace WebProject.Controllers
         //}
 
         // 取得購物車數量
-        private void GetOrderCarCount()
+        private string GetOrderCarCount()
         {
-            string path = _env.ContentRootPath + "/wwwroot/OrderCar";
             var varacc = HttpContext.Session.GetString("Manager");
             if (varacc == null)
             {
-                return;
+                return null;
             }
             string account = varacc.ToString();
             string fileName = account + ".txt";
-            int count = ReadFileCount(path, fileName);
+            int count = _fileIOFunction.ReadFileCount(fileName);
             HttpContext.Session.SetString("OrderCar", count.ToString());
+            return varacc;
         }
     }
 }

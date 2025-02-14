@@ -30,22 +30,13 @@
             </button>
             <div class="row">
                 <div class="col-2"></div>
-                <div class="btn-group col-8" role="group" aria-label="Button group with nested dropdown">
+                <div class="btn-group col-7" role="group" aria-label="Button group with nested dropdown">
 
 
                     <a class="nav-link text-dark" style="font-size: 26px;" asp-area="" asp-controller="Products" asp-action="Index">商品列表</a>
                     <p>　</p>
                     <a class="nav-link text-dark" style="font-size: 26px;" asp-area="" asp-controller="VMMembers" asp-action="Detail">會員中心</a>
-                    @* <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between"> *@
-                    @*     <ul class="navbar-nav flex-grow-1"> *@
-                    @*         <li class="nav-item"> *@
-                    @*             <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="Index">商品列表</a> *@
-                    @*         </li> *@
-                    @*         <li class="nav-item"> *@
-                    @*             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">隱私權</a> *@
-                    @*         </li> *@
-                    @*     </ul> *@
-                    @* </div> *@
+
                 </div>
                 @if (Context.Session.GetString("Manager") == null)
                 {
@@ -55,14 +46,14 @@
                 }
                 else
                 {
-                    <div class="col-2">
+                    <div class="col-3">
                         @if (Context.Session.GetString("OrderCar") != null && Context.Session.GetString("OrderCar") != "")
                         {
                             count = Context.Session.GetString("OrderCar");
                         }
 
                         <span>歡迎回來 @Context.Session.GetString("UserName") 您好~(^_^)~</span>
-                        <a asp-action="BuyCar" asp-controller="Index" class="btn border-0 cart-btn" id="btnCar"><i class="bi bi-cart" style="font-size: 2rem;"></i>購物車(<span id="car-count">@count</span>)</a>
+                        <a asp-action="Index" asp-controller="OrderCar" class="btn border-0 cart-btn" id="btnCar"><i class="bi bi-cart" style="font-size: 2rem;"></i>購物車(<span id="car-count">@count</span>)</a>
                         <a asp-action="Logout" asp-controller="Login" type="button" class="btn btn-outline-dark"><i class="bi bi-person-fill"></i>登出</a>
                     </div>
                 }

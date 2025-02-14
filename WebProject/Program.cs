@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 //using WebProject.Hubs;
 using WebProject.Models;
+using WebProject.Services;
+using WebProject.WorkFunction;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,6 +27,11 @@ builder.Services.AddSession(options => {
 //¼o®×
 //builder.Services.AddSignalR();
 
+builder.Services.AddScoped<FileIOFunction>();
+builder.Services.AddScoped<MimaHandler>();
+builder.Services.AddScoped<ProductsService>();
+builder.Services.AddScoped<MemberServices>();
+builder.Services.AddScoped<OrderCarServices>();
 
 
 var app = builder.Build();

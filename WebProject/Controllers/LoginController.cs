@@ -5,17 +5,19 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 using WebProject.Models;
-using static WebProject.WorkFunction.MimaHandler;
+using WebProject.Services;
 
 namespace WebProject.Controllers
 {
     public class LoginController : Controller
     {
         private readonly GuestModelContext _context;
+        private readonly MemberServices _memberServices;
         private string mAction, mRoute, mID;
-        public LoginController(GuestModelContext context)
+        public LoginController(GuestModelContext context, MemberServices memberServices)
         {
             _context = context;
+            _memberServices = memberServices;
         }
 
         public IActionResult Create()
@@ -59,14 +61,8 @@ namespace WebProject.Controllers
             //var result = await _context.Login.Where(m => m.Account == login.Account && m.Password == login.Password).FirstOrDefaultAsync();
             // 直接寫資料庫語法
             //string sql = "Select * from Login where Account = '" + login.Account + "'and Password = '" + login.Password + "'";
-            string sql = "Select * from MemberAcc where Account = @Account and Mima = @Mima";
-            string loginmima = Get_SHA256_Hash(login.Mima);
-            SqlParameter[] parameters =
-                {
-                    new SqlParameter("@Account", login.Account),
-                    new SqlParameter("@Mima", loginmima)
-                };
-            var result = await _context.MemberAcc.FromSqlRaw(sql, parameters).FirstOrDefaultAsync();
+
+            var result = await _memberServices.CheckMemberAcc(login);
 
 
             if (result != null)
@@ -74,12 +70,11 @@ namespace WebProject.Controllers
                 //登入完成後須發給證明，證明他已登入
                 //使用Session來當全域變數，紀錄登入狀態，須在Program.cs裡面註冊result.ToJson()
                 HttpContext.Session.SetString("Manager", result.Account);
-                var memberID = await _context.MemberAcc.Where(c => c.Account == result.Account).Select(c => c.MemberID).FirstOrDefaultAsync();
+                var memberID = await _memberServices.GetMemberIDByAccount(result.Account);
                 string name = "";
                 if (memberID != null)
                 {
-                    var tmpvar = await _context.Member.Where(c => c.MemberID == memberID).Select(c => c.Name).FirstOrDefaultAsync();
-                    name = tmpvar;
+                    name = await _memberServices.GetNameByMemberID(memberID);
                 }
                 HttpContext.Session.SetString("UserName", name);
                 string strkeep = Keep.ToString();

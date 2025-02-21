@@ -5,10 +5,12 @@
 @{
     ViewData["Title"] = "購物車";
     // var price = 0;
+    var index = 0;
+    string[] sendWayItem = new string[] { "自取", "711取貨", "全家取貨", "萊爾富取貨", "OK取貨" };//
 }
 <form asp-action="Order">
     <div class="row mt-3">
-        <div class="col-8">
+        <div class="col-md-10">
             @if (Model == null || Model.item == null || Model.item.Count() == 0)
             {
                 <h1 class="text-danger text-center">@ViewData["Message"]</h1>
@@ -18,51 +20,237 @@
             {
                 <div class="row">
                     <div class="col-xl-8 text-center">商品</div>
-                    <div class="col-xl-3 text-center">數量</div>
+                    <div class="col-xl-3 text-center">單價　　　數量　　　價格</div>
                     <div class="col-xl-1 text-center">刪除</div>
                 </div>
-                    @foreach (var item in Model.item)
-                    {
-                        <div class="row">
-                            <div class="col-xl-1">
-                                @if (item.img != null)
-                                {
-                                    <img src="~/ModelPhoto/@item.img"  style="max-height:80px; width:auto;" />
-                                }
-                            
-                            </div>
-                            <div class="col-xl-7 d-flex align-items-center">
-                                <p>　　</p>
-                                <a class="text-dark fs-3" asp-controller="Products" asp-route-productid="@item.product" asp-action="Detail">@item.name</a>
-                            </div>
-                            <div class="col-xl-3 d-flex align-items-center">
-                                <p>　</p>
-                                <input type="button" value="+" onclick="SetCount(1)" />
-                                <p>　</p>
-                                <input id="textcount" style="text; width:50px" value="@item.count" readonly/>
-                                <p>　</p>
-                                <input type="button" value="-" onclick="SetCount(-1)"/>
-                            </div>
-                            <div class="col-xl-1 d-flex align-items-center">
-                                <i class="bi bi-trash3-fill" style="font-size: 2rem;"></i>
-                            </div>
-                        </div>
-                        <h3></h3>
+                @foreach (var item in Model.item)
+                {
+                    <div class="row">
+                        <div class="col-2">
+                            @if (item.img != null)
+                            {
+                                <img src="~/ModelPhoto/@item.img"  style="max-height:80px; width:auto;" />
+                                index = index + 1;
+                            }
 
-                    }
+                        </div>
+                        <div class="col-6 d-flex align-items-center">
+                            <p>　　</p>
+                            <a class="text-dark fs-3" asp-controller="Products" asp-route-productid="@item.product" asp-action="Detail">@item.name</a>
+                        </div>
+                        <div class="col-3 d-flex align-items-center">
+                            @{
+                                string inputid = "textcount" + index.ToString();
+                                string priceid = "textprice" + index.ToString();
+                                string unitpriceid = "unitprice" + index.ToString();
+                                int price = item.count * item.price;
+                            }
+                            <input id="@unitpriceid" style="text; width:50px" value="@item.price.ToString()" readonly />
+                            <p>　</p>
+                            <input type="button" value="+" onclick="SetCount(1, '@inputid', '@priceid', '@unitpriceid', '@item.product')" />
+                            @* <p>　</p> *@
+                            <input id="@inputid" style="text; width:50px" value="@item.count" readonly />
+                            @* <p>　</p> *@
+                            <input type="button" value="-" onclick="SetCount(-1, '@inputid', '@priceid', '@unitpriceid', '@item.product')" />
+                            <p>　</p>
+                            <input id="@priceid" style="text; width:50px" value="@price.ToString()" readonly />
+                        </div>
+                        <div class="col-1 d-flex align-items-center">
+                            <a class="bi bi-trash3-fill" style="font-size: 2rem;" asp-action="Delete" asp-controller="OrderCar" asp-route-index=@index></a>
+                        </div>
+                    </div>
+                    <h3></h3>
+
+                }
             }
         </div>
-        <div div class="col-4"></div>
-
+        <div class="col-md-2">
+            <div class="row">
+                <h2>購物車總計</h2>
+                @{
+                    int totalPrice = 0;
+                    if (Model == null || Model.item == null || Model.item.Count() == 0) { }
+                    else {
+                        foreach (var item in Model.item)
+                        {
+                            totalPrice += item.count * item.price;
+                        }
+                    }
+                }
+                <h5>商品小計 @totalPrice 元</h5>
+                <h5>取貨方式：
+                    <select name="ShippingWayID" id="ShippingWayID" style="width:150px" onclick="SelectSendWay(0)">
+                        @{
+                            int sendway = 1; // 預設值
+                            if (!string.IsNullOrEmpty(Model?.sendWay))
+                            {
+                                sendway = int.Parse(Model.sendWay);
+                            }
+                            for (int i = 1; i <= 5; i++)
+                            {
+                                if (i == sendway)
+                                {
+                                    <option selected value="@i">@(sendWayItem[i - 1])</option>
+                                }
+                                else
+                                {
+                                    <option value="@i">@(sendWayItem[i - 1])</option>
+                                }
+                            }
+                            // <option selected value="1">自取</option>
+                            // <option value="2">711取貨</option>
+                            // <option value="3">全家取貨</option>
+                            // <option value="4">萊爾富取貨</option>
+                            // <option value="5">OK取貨</option>
+                        }
+                    </select>
+                </h5>
+                <h5 id="sendMoney">運費：0 元</h5>
+                <label for="IsGoodPackage">
+                    <input id="IsGoodPackage" name="IsGoodPackage" type="checkbox" @(Model.isFix == "1" ? "checked" : "")> 八角刺人加固包裝(60元)
+                </label>
+                <br/>
+                <h5>店到店門市名稱：</h5>
+                <a href="#" id="storeSelector" onclick="openStoreMap()" style="display: inline-block; padding: 10px 15px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;" class="text-end">
+                    選擇超商門市
+                </a>
+                <h3 id="totalMoney">總計 @totalPrice 元</h3>
+                <a herf="#" onclick="onSubmit()">我要結帳</a>
+            </div>
         </div>
+
+    </div>
 </form>
 
 @section Scripts {
     <script>
-        function SetCount(add) {
-            var count = parseInt($("#textcount").val());
+        var store711 = "https://emap.presco.com.tw/c2cemap.ashx?eshopid=870&&servicetype=1&url=";
+        var storeOther = "https://map.ezship.com.tw/ezship_map_web.jsp?rtURL=";
+
+        function SelectSendWay(index) {
+            var sendMoney = 0;
+            if ($("#ShippingWayID").val() == "1")
+            {
+                $("#storeSelector").prop("disabled", true);
+            }
+            else
+            {
+                $("#storeSelector").prop("disabled", false);
+                sendMoney = 60;
+            }
+            var money = "運費 " + sendMoney.toString() + "元";
+            $("#sendMoney").text(money);
+            // 如果有選擇寄送方式要重算金額，還要再加做聽勾選的項目
+            // $("#totalMoney")
+        }
+        function SetCount(add, textid, priceid, unitpriceid, productid) {
+            console.log(textid);
+            var count = parseInt($("#" + textid).val());
+            var unitprice = parseInt($("#" + unitpriceid).val());
             count+=add;
-            $("#textcount").val(count);
+            $("#" + textid).val(count);
+            var price = unitprice * count;
+            $("#" + priceid).val(price);
+
+            var url = '/OrderCar/RecordOrderCarItem?pid=' + productid;
+                url+= '&value=' + count;
+                console.log(url);
+                window.location.href = url;
+        }
+
+        function openStoreMap() {
+            if ($("#ShippingWayID").val() == "2")
+            {
+                open711StoreMap();
+            }
+            else if ($("#ShippingWayID").val() == "1")
+            {
+            }
+            else
+            {
+                openOtherStoreMap();
+            }
+        }
+
+        function open711StoreMap() {
+            // 開啟超商地圖選擇視窗（這裡以711為例）
+            //var select = document.getElementById("ShippingWayID");
+            //var selectValue = select.selectedIndex+1;//$("#value").selectedIndex;
+            var sendWay = $("#ShippingWayID").val();
+            var isfix = $("#IsGoodPackage").prop("checked") == true ? "1" : "0";
+            //let url = "https:emap.presco.com.tw/c2cemap.ashx?eshopid=870&&servicetype=1&url=http://localhost:5208/OrderCar/mapCallbackFun?sendWay=" +sendWay + "&isFix=" + isfix;
+            let callbackUrl = encodeURIComponent("https://6695-111-242-209-253.ngrok-free.app/OrderCar/mapCallbackFun");
+            let url = store711 + callbackUrl;
+            // http:localhost:5208/OrderCar/index?sendWay=" +sendWay + "&isFix=" + isfix;
+
+            let storeWindow = window.open(url, "storeMap", "width=800,height=600");
+
+            // 監聽子視窗回傳的門市資訊
+            window.addEventListener("message", function(event) {
+                console.log("收到訊息:", event.data); // Debug 用
+                console.log("來源:", event.origin);
+
+                // 確保來源是官方網址，防止跨域攻擊
+                if (event.origin.includes("https://6695-111-242-209-253.ngrok-free.app")) {
+                    let storeData = event.data;  // 假設收到 { storeName: "7-11 測試店", storeId: "1234" }
+                    if (storeData && storeData.storeName && storeData.storeId) {
+                        // ✅ 更新 <a> 標籤的文字
+                        let storeLink = document.getElementById("storeSelector");
+                        storeLink.innerText = "7-11 " + storeData.storeName + "(" + storeData.storeId + ")";
+                        // storeLink.innerText = `${storeData.storeName} (${storeData.storeId})`;
+
+                        // ✅ 關閉子視窗
+                        if (storeWindow) {
+                            storeWindow.close();
+                        }
+                    }
+                }
+            }, false);
+        }
+        
+        function openOtherStoreMap() {
+            var sendWay = $("#ShippingWayID").val();
+            var isfix = $("#IsGoodPackage").prop("checked") == true ? "1" : "0";
+            //let url = "https:emap.presco.com.tw/c2cemap.ashx?eshopid=870&&servicetype=1&url=http://localhost:5208/OrderCar/mapCallbackFun?sendWay=" +sendWay + "&isFix=" + isfix;
+            let callbackUrl = encodeURIComponent("https://6695-111-242-209-253.ngrok-free.app/OrderCar/mapOtherCallbackFun");
+            let url = storeOther + callbackUrl;
+            // http:localhost:5208/OrderCar/index?sendWay=" +sendWay + "&isFix=" + isfix;
+
+            let storeWindow = window.open(url, "storeMap", "width=800,height=600");
+
+            // 監聽子視窗回傳的門市資訊
+            window.addEventListener("message", function(event) {
+                console.log("收到訊息:", event.data); // Debug 用
+                console.log("來源:", event.origin);
+
+                // 確保來源是官方網址，防止跨域攻擊
+                if (event.origin.includes("https://6695-111-242-209-253.ngrok-free.app")) {
+                    let storeData = event.data;  // 假設收到 { storeName: "7-11 測試店", storeId: "1234" }
+                    if (storeData && storeData.storeName && storeData.storeId) {
+                        // ✅ 更新 <a> 標籤的文字
+                        let storeLink = document.getElementById("storeSelector");
+                        storeLink.innerText = storeData.storeName + "(" + storeData.storeId + ")";
+                        // storeLink.innerText = `${storeData.storeName} (${storeData.storeId})`;
+
+                        // ✅ 關閉子視窗
+                        if (storeWindow) {
+                            storeWindow.close();
+                        }
+                    }
+                }
+            }, false);
+        }
+        //將表單送回controller 未完成
+        function onSubmit()
+        {
+            var selectIndex = $("#ShippingWayID").val();
+            var sendStore = "";
+            var isGoodPackage = $("#IsGoodPackage").prop("checked");
+            if (selectIndex != "1")
+            {
+                sendStore = document.getElementById("storeSelector").innerText;///ShippingAddr
+            }
+
         }
     </script>
 }

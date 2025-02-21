@@ -1,0 +1,40 @@
+﻿
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>門市回傳</title>
+    <h3 id="storeName">@ViewData["StoreName"]</h3>
+    <h3 id="storeid">@ViewData["StoreID"]</h3>
+    <script>
+        function getQueryParam(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        window.onload = function () {
+            //const storeName = getQueryParam("storeName"); // 例: 7-11測試店
+            //const storeId = getQueryParam("storeId");     // 例: 1234
+            const storeName = document.getElementById("storeName").innerText;
+            const storeId = document.getElementById("storeid").innerText;
+            if (storeName && storeId) {
+                // ✅ 傳遞回主頁面
+                window.opener.postMessage({ storeName, storeId }, "http://localhost:5208");
+
+                // ✅ 關閉視窗
+                window.close();
+            }
+        };
+    </script>
+</head>
+<body>
+    <p>處理中，請稍候...</p>
+</body>
+</html>

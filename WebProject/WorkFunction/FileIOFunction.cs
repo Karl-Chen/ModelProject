@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using System.Numerics;
 using System.Security.Cryptography;
+using WebProject.ViewModels;
 
 namespace WebProject.WorkFunction
 {
@@ -24,12 +25,43 @@ namespace WebProject.WorkFunction
                 using (StreamWriter sw = new StreamWriter(filePath, true))
                 {
                     sw.WriteLine(content);
-                    sw.Close();
+                    //sw.Close();
+                    sw.Flush();
                 }
             }
             catch (Exception e)
             {
                 Console.WriteLine("寫入檔案時出錯：" + e.Message);
+                return false;
+            }
+            return true;
+        }
+
+        public async Task<bool> WriteFileOverWrite(string fileName, VMOrderCar orderCar)
+        {
+            string path = _env.ContentRootPath + "/wwwroot/OrderCar";
+            if (!System.IO.Directory.Exists(path))
+                System.IO.Directory.CreateDirectory(path);
+            string filePath = Path.Combine(path, fileName);
+            string content = VMOrderCarToString(orderCar);
+            string[] contents = content.Split("\n");
+            try
+            {
+                // 使用 StreamWriter 來寫入文本檔案
+                //await using (FileStream fs = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite))
+                //await using (StreamWriter sw = new StreamWriter(fs))
+                //{
+                //    for (int i = 0; i < contents.Length; i++)
+                //        await sw.WriteLineAsync(contents[i]);
+                //    await sw.FlushAsync();
+                //    //sw.Close();
+                //}
+                await File.WriteAllTextAsync(filePath, content);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("寫入檔案時出錯：" + e.Message);
+                await Task.Delay(100);
                 return false;
             }
             return true;
@@ -72,7 +104,19 @@ namespace WebProject.WorkFunction
                 {
                     ret.Add(line);
                 }
+                sr.Close();
             }
+            return ret;
+        }
+
+        private string VMOrderCarToString(VMOrderCar orderCar)
+        {
+            string ret = "";
+            foreach (var item in orderCar.item)
+            {
+                ret += item.product + "," + item.count + "\n";
+            }
+            //ret = ret.Substring(0, ret.Length - 1);
             return ret;
         }
     }

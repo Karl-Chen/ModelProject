@@ -60,7 +60,7 @@
             }
 
             <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
+                <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="myModalLabel">存進購物車</h5>
@@ -70,13 +70,16 @@
                                 <div class="col-3">
                                     <img src=@path alt="@Model.ProductName" class="card-img-top border border-bottom " style="max-height:80px width:auto" />
                                 </div>
-                                <div class="col-4">
-                                    <h3>@Model.ProductName</h3>
+                                <div class="col-6 d-flex align-items-center">
+                                    <h3 >@Model.ProductName</h3>
                                 </div>
-                                <div class="col-5">
+                                <div class="col-3 ">
                                     @{
                                         var totalprice = price * index;
                                     }
+                                    <br/>
+                                    <br/>
+                                    <br />
                                     <h4>小計 @totalprice 元</h4>
                                     <p>
                                         數量： @index                                        

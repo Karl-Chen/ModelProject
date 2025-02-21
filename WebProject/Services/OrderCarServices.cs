@@ -49,7 +49,8 @@ namespace WebProject.Services
             vMorderCarItem.price = (int)price;
             vMorderCarItem.img = p.Photo;
             vMorderCarItem.offset = offset;
-            vMorderCarItem.count = int.Parse(item[1]);
+            var count = int.Parse(item[1]);
+            vMorderCarItem.count = count;
             vMorderCarItem.name = p.ProductName;
 
             return vMorderCarItem;

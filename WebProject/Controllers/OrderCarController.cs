@@ -61,7 +61,7 @@ namespace WebProject.Controllers
 
         }
 
-        public async Task<IActionResult> RecordOrderCarItem(string pid, string value)
+        public async Task<IActionResult> RecordOrderCarItem(string pid, string value, string msendWay, string misFix)
         {
             var acc = HttpContext.Session.GetString("Manager");
             if (acc == null || acc == "")
@@ -96,7 +96,7 @@ namespace WebProject.Controllers
             string fileName = account + ".txt";
 
             await _fileIOFunction.WriteFileOverWrite(fileName, ret);
-            return NoContent();
+            return RedirectToAction("Index", "OrderCar", new { sendWay = msendWay, isFix = misFix });
         }
         //[HttpGet]
         public IActionResult mapCallbackFun(string storeName, string storeId)

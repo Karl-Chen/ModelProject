@@ -77,7 +77,7 @@
                         }
                     }
                 }
-                <h5>商品小計 @totalPrice 元</h5>
+                <h5>商品小計 <span id="totalPrice">@totalPrice</span> 元</h5>
                 <h5>取貨方式：
                     <select name="ShippingWayID" id="ShippingWayID" style="width:150px" onclick="SelectSendWay(0)">
                         @{
@@ -114,7 +114,7 @@
                 <a href="#" id="storeSelector" onclick="openStoreMap()" style="display: inline-block; padding: 10px 15px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;" class="text-end">
                     選擇超商門市
                 </a>
-                <h3 id="totalMoney">總計 @totalPrice 元</h3>
+                <h3 id="totalMoney">總計 <span id="totalAllPrice">@totalPrice</span> 元</h3>
                 <a herf="#" onclick="onSubmit()">我要結帳</a>
             </div>
         </div>
@@ -126,8 +126,18 @@
     <script>
         var store711 = "https://emap.presco.com.tw/c2cemap.ashx?eshopid=870&&servicetype=1&url=";
         var storeOther = "https://map.ezship.com.tw/ezship_map_web.jsp?rtURL=";
+        $('#IsGoodPackage').change(function() {
+            $("#totalAllPrice").text(GetTotalMoney());
+        });
 
-        function SelectSendWay(index) {
+        function GetTotalMoney() {
+            var totalItemPrice = parseInt($('#totalPrice').text());
+            var package = $("#IsGoodPackage").prop("checked") == true ? 60 : 0;
+            var senMoney = GetSendWayMoney();
+            return totalItemPrice + package + senMoney;
+        }
+
+        function GetSendWayMoney() {
             var sendMoney = 0;
             if ($("#ShippingWayID").val() == "1")
             {
@@ -138,22 +148,38 @@
                 $("#storeSelector").prop("disabled", false);
                 sendMoney = 60;
             }
+            return sendMoney;
+        }
+
+        function SelectSendWay(index) {
+            var sendMoney = GetSendWayMoney();
+            
             var money = "運費 " + sendMoney.toString() + "元";
             $("#sendMoney").text(money);
             // 如果有選擇寄送方式要重算金額，還要再加做聽勾選的項目
-            // $("#totalMoney")
+
+            $("#totalAllPrice").text(GetTotalMoney());
         }
+
         function SetCount(add, textid, priceid, unitpriceid, productid) {
             console.log(textid);
             var count = parseInt($("#" + textid).val());
             var unitprice = parseInt($("#" + unitpriceid).val());
             count+=add;
+            if (count <= 0)
+            {
+               count = 1;
+            }
+
             $("#" + textid).val(count);
             var price = unitprice * count;
             $("#" + priceid).val(price);
-
+            var sendWay = $("#ShippingWayID").val();
+            var isfix = $("#IsGoodPackage").prop("checked") == true ? "1" : "0";
             var url = '/OrderCar/RecordOrderCarItem?pid=' + productid;
                 url+= '&value=' + count;
+                url+= '&msendWay=' + sendWay;
+                url+= '&misFix=' + isfix;
                 console.log(url);
                 window.location.href = url;
         }
@@ -179,7 +205,7 @@
             var sendWay = $("#ShippingWayID").val();
             var isfix = $("#IsGoodPackage").prop("checked") == true ? "1" : "0";
             //let url = "https:emap.presco.com.tw/c2cemap.ashx?eshopid=870&&servicetype=1&url=http://localhost:5208/OrderCar/mapCallbackFun?sendWay=" +sendWay + "&isFix=" + isfix;
-            let callbackUrl = encodeURIComponent("https://6695-111-242-209-253.ngrok-free.app/OrderCar/mapCallbackFun");
+            let callbackUrl = encodeURIComponent("https://3118-2001-b011-e006-5875-4982-60d-5493-b8da.ngrok-free.app/OrderCar/mapCallbackFun");
             let url = store711 + callbackUrl;
             // http:localhost:5208/OrderCar/index?sendWay=" +sendWay + "&isFix=" + isfix;
 
@@ -191,7 +217,7 @@
                 console.log("來源:", event.origin);
 
                 // 確保來源是官方網址，防止跨域攻擊
-                if (event.origin.includes("https://6695-111-242-209-253.ngrok-free.app")) {
+                if (event.origin.includes("https://3118-2001-b011-e006-5875-4982-60d-5493-b8da.ngrok-free.app")) {
                     let storeData = event.data;  // 假設收到 { storeName: "7-11 測試店", storeId: "1234" }
                     if (storeData && storeData.storeName && storeData.storeId) {
                         // ✅ 更新 <a> 標籤的文字
@@ -212,7 +238,7 @@
             var sendWay = $("#ShippingWayID").val();
             var isfix = $("#IsGoodPackage").prop("checked") == true ? "1" : "0";
             //let url = "https:emap.presco.com.tw/c2cemap.ashx?eshopid=870&&servicetype=1&url=http://localhost:5208/OrderCar/mapCallbackFun?sendWay=" +sendWay + "&isFix=" + isfix;
-            let callbackUrl = encodeURIComponent("https://6695-111-242-209-253.ngrok-free.app/OrderCar/mapOtherCallbackFun");
+            let callbackUrl = encodeURIComponent("https://3118-2001-b011-e006-5875-4982-60d-5493-b8da.ngrok-free.app/OrderCar/mapOtherCallbackFun");
             let url = storeOther + callbackUrl;
             // http:localhost:5208/OrderCar/index?sendWay=" +sendWay + "&isFix=" + isfix;
 
@@ -224,7 +250,7 @@
                 console.log("來源:", event.origin);
 
                 // 確保來源是官方網址，防止跨域攻擊
-                if (event.origin.includes("https://6695-111-242-209-253.ngrok-free.app")) {
+                if (event.origin.includes("https://3118-2001-b011-e006-5875-4982-60d-5493-b8da.ngrok-free.app")) {
                     let storeData = event.data;  // 假設收到 { storeName: "7-11 測試店", storeId: "1234" }
                     if (storeData && storeData.storeName && storeData.storeId) {
                         // ✅ 更新 <a> 標籤的文字

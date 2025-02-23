@@ -54,7 +54,7 @@ namespace WebProject.Services
             return MemberToVMMember(member, memberAcc, memberTel);
         }
 
-        public async void EditMemberGroup(VMMembers vMMembers, string account)
+        public async Task EditMemberGroup(VMMembers vMMembers, string account)
         {
             string memberID = "";
             memberID = await GetMemberIDByAccount(account);
@@ -94,7 +94,7 @@ namespace WebProject.Services
             return mid;
         }
 
-        public async void SaveMmeberGroup(Member member, MemberAcc memberAcc, MemberTel memberTel)
+        public async Task SaveMmeberGroup(Member member, MemberAcc memberAcc, MemberTel memberTel)
         {
             _context.Add(member);
             await _context.SaveChangesAsync();

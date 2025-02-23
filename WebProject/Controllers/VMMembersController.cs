@@ -76,7 +76,7 @@ namespace WebProject.Controllers
 
             if (ModelState.IsValid)
             {
-                _memberServices.SaveMmeberGroup(member, memberAcc, memberTel);
+                await _memberServices.SaveMmeberGroup(member, memberAcc, memberTel);
                 if (uAction != "" && uAction != null)
                 {
                     string id = pid;

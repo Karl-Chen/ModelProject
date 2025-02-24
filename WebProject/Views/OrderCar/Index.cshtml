@@ -142,6 +142,8 @@
             if ($("#ShippingWayID").val() == "1")
             {
                 $("#storeSelector").prop("disabled", true);
+                //待驗證，如果選回自取，要把文字改回選擇超商門市
+                document.getElementById("storeSelector").innerText = "選擇超商門市";
             }
             else
             {
@@ -278,7 +280,10 @@
             {
                 sendStore = document.getElementById("storeSelector").innerText;///ShippingAddr
             }
-
+            var url = '/OrderCar/RecordOrderCarItem?ShippingAddr=' + sendStore;
+                url+= '&IsGoodPackage=' + isGoodPackage;
+                console.log(url);
+                window.location.href = url;
         }
     </script>
 }

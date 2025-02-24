@@ -112,5 +112,11 @@ namespace WebProject.Controllers
             ViewData["StoreID"] = stCode;
             return View();
         }
+
+        public async Task<IActionResult> SubmitOrder(string? ShippingAddr, string? IsGoodPackage)
+        {
+
+            return RedirectToAction("Index", "OrderCar", new { });
+        }
     }
 }

@@ -32,6 +32,8 @@ builder.Services.AddScoped<MimaHandler>();
 builder.Services.AddScoped<ProductsService>();
 builder.Services.AddScoped<MemberServices>();
 builder.Services.AddScoped<OrderCarServices>();
+builder.Services.AddScoped<OrderServices>();
+builder.Services.AddScoped<OrderDetailService>();
 
 
 var app = builder.Build();

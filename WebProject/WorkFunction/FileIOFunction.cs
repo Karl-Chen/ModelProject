@@ -37,6 +37,39 @@ namespace WebProject.WorkFunction
             return true;
         }
 
+        public bool WriteFileOverWrite(string fileName, List<string> detail)
+        {
+            string path = _env.ContentRootPath + "/wwwroot/OrderCar";
+            if (!System.IO.Directory.Exists(path))
+                System.IO.Directory.CreateDirectory(path);
+            string filePath = Path.Combine(path, fileName);
+            string content = "";
+            foreach (var item in detail)
+            {
+                content += item + "\n";
+            }
+            try
+            {
+                // 使用 StreamWriter 來寫入文本檔案
+                //await using (FileStream fs = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite))
+                //await using (StreamWriter sw = new StreamWriter(fs))
+                //{
+                //    for (int i = 0; i < contents.Length; i++)
+                //        await sw.WriteLineAsync(contents[i]);
+                //    await sw.FlushAsync();
+                //    //sw.Close();
+                //}
+                File.WriteAllText(filePath, content);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("寫入檔案時出錯：" + e.Message);
+                
+                return false;
+            }
+            return true;
+        }
+
         public async Task<bool> WriteFileOverWrite(string fileName, VMOrderCar orderCar)
         {
             string path = _env.ContentRootPath + "/wwwroot/OrderCar";
@@ -107,6 +140,19 @@ namespace WebProject.WorkFunction
                 sr.Close();
             }
             return ret;
+        }
+
+        public async Task DeletOrderCardFile(string fileName)
+        {
+            string path = _env.ContentRootPath + "/wwwroot/OrderCar";
+            if (!System.IO.Directory.Exists(path))
+                return;
+            string filePath = Path.Combine(path, fileName);
+            if (File.Exists(filePath))
+            {
+                await Task.Run(() => File.Delete(filePath));
+            }
+            return;
         }
 
         private string VMOrderCarToString(VMOrderCar orderCar)

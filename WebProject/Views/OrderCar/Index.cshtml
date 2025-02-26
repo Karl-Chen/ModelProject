@@ -45,7 +45,7 @@
                                 string unitpriceid = "unitprice" + index.ToString();
                                 int price = item.count * item.price;
                             }
-                            <input id="@unitpriceid" style="text; width:50px" value="@item.price.ToString()" readonly />
+                            <input id="@unitpriceid" style="text; width:50px" value="@item.price.ToString("N0")" readonly />
                             <p>　</p>
                             <input type="button" value="+" onclick="SetCount(1, '@inputid', '@priceid', '@unitpriceid', '@item.product')" />
                             @* <p>　</p> *@
@@ -53,7 +53,7 @@
                             @* <p>　</p> *@
                             <input type="button" value="-" onclick="SetCount(-1, '@inputid', '@priceid', '@unitpriceid', '@item.product')" />
                             <p>　</p>
-                            <input id="@priceid" style="text; width:50px" value="@price.ToString()" readonly />
+                            <input id="@priceid" style="text; width:50px" value="@price.ToString("N0")" readonly />
                         </div>
                         <div class="col-1 d-flex align-items-center">
                             <a class="bi bi-trash3-fill" style="font-size: 2rem;" asp-action="Delete" asp-controller="OrderCar" asp-route-index=@index></a>
@@ -77,7 +77,7 @@
                         }
                     }
                 }
-                <h5>商品小計 <span id="totalPrice">@totalPrice</span> 元</h5>
+                <h5>商品小計 <span id="totalPrice">@(totalPrice.ToString("N0"))</span> 元</h5>
                 <h5>取貨方式：
                     <select name="ShippingWayID" id="ShippingWayID" style="width:150px" onclick="SelectSendWay(0)">
                         @{
@@ -114,7 +114,7 @@
                 <a href="#" id="storeSelector" onclick="openStoreMap()" style="display: inline-block; padding: 10px 15px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;" class="text-end">
                     選擇超商門市
                 </a>
-                <h3 id="totalMoney">總計 <span id="totalAllPrice">@totalPrice</span> 元</h3>
+                <h3 id="totalMoney">總計 <span id="totalAllPrice">@(totalPrice.ToString("N0"))</span> 元</h3>
                 <a herf="#" onclick="onSubmit()">我要結帳</a>
             </div>
         </div>
@@ -131,7 +131,9 @@
         });
 
         function GetTotalMoney() {
-            var totalItemPrice = parseInt($('#totalPrice').text());
+            var strTotalItemPrice = $('#totalPrice').text();
+            strTotalItemPrice = strTotalItemPrice.replace(",", "");
+            var totalItemPrice = parseInt(strTotalItemPrice);
             var package = $("#IsGoodPackage").prop("checked") == true ? 60 : 0;
             var senMoney = GetSendWayMoney();
             return totalItemPrice + package + senMoney;
@@ -207,7 +209,7 @@
             var sendWay = $("#ShippingWayID").val();
             var isfix = $("#IsGoodPackage").prop("checked") == true ? "1" : "0";
             //let url = "https:emap.presco.com.tw/c2cemap.ashx?eshopid=870&&servicetype=1&url=http://localhost:5208/OrderCar/mapCallbackFun?sendWay=" +sendWay + "&isFix=" + isfix;
-            let callbackUrl = encodeURIComponent("https://3118-2001-b011-e006-5875-4982-60d-5493-b8da.ngrok-free.app/OrderCar/mapCallbackFun");//https://6695-111-242-209-253.ngrok-free.app/ 南訓要用的連結
+            let callbackUrl = encodeURIComponent("https://7c08-111-242-195-111.ngrok-free.app/OrderCar/mapCallbackFun");//https://6695-111-242-209-253.ngrok-free.app/ 南訓要用的連結
             let url = store711 + callbackUrl;
             // http:localhost:5208/OrderCar/index?sendWay=" +sendWay + "&isFix=" + isfix;
 
@@ -220,7 +222,7 @@
 
                 // 確保來源是官方網址，防止跨域攻擊
                 //https://6695-111-242-209-253.ngrok-free.app/ 南訓要用的連結
-                if (event.origin.includes("https://3118-2001-b011-e006-5875-4982-60d-5493-b8da.ngrok-free.app")) {
+                if (event.origin.includes("https://7c08-111-242-195-111.ngrok-free.app")) {
                     let storeData = event.data;  // 假設收到 { storeName: "7-11 測試店", storeId: "1234" }
                     if (storeData && storeData.storeName && storeData.storeId) {
                         // ✅ 更新 <a> 標籤的文字
@@ -241,7 +243,7 @@
             var sendWay = $("#ShippingWayID").val();
             var isfix = $("#IsGoodPackage").prop("checked") == true ? "1" : "0";
             //let url = "https:emap.presco.com.tw/c2cemap.ashx?eshopid=870&&servicetype=1&url=http://localhost:5208/OrderCar/mapCallbackFun?sendWay=" +sendWay + "&isFix=" + isfix;
-            let callbackUrl = encodeURIComponent("https://3118-2001-b011-e006-5875-4982-60d-5493-b8da.ngrok-free.app/OrderCar/mapOtherCallbackFun");//https://6695-111-242-209-253.ngrok-free.app/ 南訓要用的連結
+            let callbackUrl = encodeURIComponent("https://7c08-111-242-195-111.ngrok-free.app/OrderCar/mapOtherCallbackFun");//https://6695-111-242-209-253.ngrok-free.app/ 南訓要用的連結
             let url = storeOther + callbackUrl;
             // http:localhost:5208/OrderCar/index?sendWay=" +sendWay + "&isFix=" + isfix;
 
@@ -254,7 +256,7 @@
 
                 // 確保來源是官方網址，防止跨域攻擊
                 //https://6695-111-242-209-253.ngrok-free.app/ 南訓要用的連結
-                if (event.origin.includes("https://3118-2001-b011-e006-5875-4982-60d-5493-b8da.ngrok-free.app")) {
+                if (event.origin.includes("https://7c08-111-242-195-111.ngrok-free.app")) {
                     let storeData = event.data;  // 假設收到 { storeName: "7-11 測試店", storeId: "1234" }
                     if (storeData && storeData.storeName && storeData.storeId) {
                         // ✅ 更新 <a> 標籤的文字
@@ -275,12 +277,12 @@
         {
             var selectIndex = $("#ShippingWayID").val();
             var sendStore = "";
-            var isGoodPackage = $("#IsGoodPackage").prop("checked");
+            var isGoodPackage = $("#IsGoodPackage").prop("checked") == true ? "1" : "0";
             if (selectIndex != "1")
             {
                 sendStore = document.getElementById("storeSelector").innerText;///ShippingAddr
             }
-            var url = '/OrderCar/RecordOrderCarItem?ShippingAddr=' + sendStore;
+            var url = '/OrderCar/SubmitOrder?ShippingAddr=' + sendStore;
                 url+= '&IsGoodPackage=' + isGoodPackage;
                 console.log(url);
                 window.location.href = url;

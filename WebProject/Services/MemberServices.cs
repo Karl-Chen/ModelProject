@@ -33,6 +33,11 @@ namespace WebProject.Services
             return await _context.MemberAcc.Where(c => c.Account == account).Select(c => c.MemberID).FirstOrDefaultAsync();
         }
 
+        public async Task<List<Member>> GetMemberList()
+        {
+            return await _context.Member.ToListAsync();
+        }
+
         public async Task<string> GetNameByMemberID(string memberID)
         {
             return await _context.Member.Where(c => c.MemberID == memberID).Select(c => c.Name).FirstOrDefaultAsync();
@@ -64,6 +69,14 @@ namespace WebProject.Services
             Member member = VMMMemberToMember(vMMembers, memberID);
             MemberTel memberTel = VMMMemberToMemberTel(vMMembers, memberID);
             SaveMmeberGroup(member, memberAcc, memberTel);
+        }
+
+        public async Task<Member> GetMemberbyAcc(string acc)
+        {
+            string memberID = await GetMemberIDByAccount(acc);
+            if (memberID == "")
+                return null;
+            return await GetMemberByMmeberID(memberID);
         }
 
         private async Task<MemberAcc> GetMemberAccByAccount(string account)

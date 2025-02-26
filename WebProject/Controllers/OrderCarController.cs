@@ -11,11 +11,15 @@ namespace WebProject.Controllers
     {
         private readonly OrderCarServices _orderCarServices;
         private readonly FileIOFunction _fileIOFunction;
+        private readonly OrderServices _orderServices;
+        private readonly OrderDetailService _orderDetailService;
 
-        public OrderCarController(OrderCarServices orderCarServices, FileIOFunction fileIOFunction)
+        public OrderCarController(OrderCarServices orderCarServices, FileIOFunction fileIOFunction, OrderServices orderServices, OrderDetailService orderDetailService)
         {
             _orderCarServices = orderCarServices;
             _fileIOFunction = fileIOFunction;
+            _orderServices = orderServices;
+            _orderDetailService = orderDetailService;
         }
 
         public async Task<IActionResult> Index(string? sendWay, string? isFix)
@@ -115,7 +119,14 @@ namespace WebProject.Controllers
 
         public async Task<IActionResult> SubmitOrder(string? ShippingAddr, string? IsGoodPackage)
         {
-
+            var acc = HttpContext.Session.GetString("Manager");
+            if (acc == null || acc == "")
+                return NoContent();
+            string orderNo = await _orderServices.WriteToOrderTable(ShippingAddr, IsGoodPackage, acc);
+            acc += ".txt";
+            VMOrderCar ret = await _orderCarServices.GetOrderCarList(acc);
+            await _orderDetailService.WriteToOrderDetailTable(orderNo, ret);
+            await _fileIOFunction.DeletOrderCardFile(acc);
             return RedirectToAction("Index", "OrderCar", new { });
         }
     }

@@ -46,7 +46,7 @@
                                         var value = item.CostJP * item.PriceExchangeRage;
                                         price = (int)(value);
                                     }
-                                    @Html.DisplayFor(modelItem => @price) 元
+                                        @(price.ToString("N0")) 元
                                 </h3>
                             </div>    
                         </div>

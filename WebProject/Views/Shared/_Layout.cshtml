@@ -30,7 +30,7 @@
             </button>
             <div class="row">
                 <div class="col-2"></div>
-                <div class="btn-group col-7" role="group" aria-label="Button group with nested dropdown">
+                <div class="btn-group col-5" role="group" aria-label="Button group with nested dropdown">
 
 
                     <a class="nav-link text-dark" style="font-size: 26px;" asp-area="" asp-controller="Products" asp-action="Index">商品列表</a>
@@ -46,14 +46,15 @@
                 }
                 else
                 {
-                    <div class="col-3">
+                    <div class="col-5">
                         @if (Context.Session.GetString("OrderCar") != null && Context.Session.GetString("OrderCar") != "")
                         {
                             count = Context.Session.GetString("OrderCar");
                         }
 
                         <span>歡迎回來 @Context.Session.GetString("UserName") 您好~(^_^)~</span>
-                        <a asp-action="Index" asp-controller="OrderCar" class="btn border-0 cart-btn" id="btnCar"><i class="bi bi-cart" style="font-size: 2rem;"></i>購物車(<span id="car-count">@count</span>)</a>
+                        <a asp-action="Index" asp-controller="OrderCar" class="btn border-0 cart-btn text-center" id="btnCar"><i class="bi bi-cart" style="font-size: 2rem;"></i>購物車(<span id="car-count">@count</span>)</a>
+                        <a asp-controller="Members" asp-action="UserDetails" class="btn border-0 cart-btn"> 會員專區</a>
                         <a asp-action="Logout" asp-controller="Login" type="button" class="btn btn-outline-dark"><i class="bi bi-person-fill"></i>登出</a>
                     </div>
                 }

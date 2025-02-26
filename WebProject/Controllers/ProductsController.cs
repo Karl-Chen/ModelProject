@@ -97,11 +97,32 @@ namespace WebProject.Controllers
             }
             string account = varacc.ToString();
             string fileName = account + ".txt";
-            string orderdetail = pid + "," + value;
-            _fileIOFunction.WriteFileAppend(fileName, orderdetail);
-            // 本來想用聊天室的做法來發送push讓JS去更新畫面，但不知道為什麼JS進不去signalR的event裡面，所以作罷
-            //_hubContext.Clients.All.SendAsync("SendMessage", account, count.ToString());
-            return RedirectToAction("Details", "Products", new { id = pid, mValue = value, isShowModal = true});
+            List<string> orderList = _fileIOFunction.ReadFileContent(fileName);
+            bool isSame = false;
+            for (int i = 0; i < orderList.Count(); i++)
+            {
+                string[] items = orderList[i].Split(",");
+                if (items[0] == pid)
+                {
+                    int mValue = int.Parse(items[1]) + value;
+                    string strValue = mValue.ToString();
+                    orderList[i] = pid + "," + strValue;
+                    isSame = true;
+                    break;
+                }
+            }
+            if (!isSame)
+            {
+                string orderdetail = pid + "," + value;
+                _fileIOFunction.WriteFileAppend(fileName, orderdetail);
+            }
+            else
+            {
+                _fileIOFunction.WriteFileOverWrite(fileName, orderList);
+            }
+                // 本來想用聊天室的做法來發送push讓JS去更新畫面，但不知道為什麼JS進不去signalR的event裡面，所以作罷
+                //_hubContext.Clients.All.SendAsync("SendMessage", account, count.ToString());
+                return RedirectToAction("Details", "Products", new { id = pid, mValue = value, isShowModal = true });
             //return NoContent();
         }
         // POST: Books/Create

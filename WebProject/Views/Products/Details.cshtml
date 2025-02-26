@@ -30,7 +30,7 @@
                 price = (int)(value);
             }
             <br />
-            <h4>售價 @price 元</h4>
+            <h4>售價 @(price.ToString("N0")) 元</h4>
             @{
                 int index = Convert.ToInt32(ViewData["value"]);
             }

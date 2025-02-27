@@ -1,18 +1,34 @@
-﻿@model WebProject.Models.Member
+﻿@model WebProject.ViewModels.VMMembers
 
-@{
-    ViewData["Title"] = "Edit";
-}
-
-<h1>Edit</h1>
-
-<h4>Member</h4>
+<h4>VMMembers</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-3">
+        <div id="VCMemberOptList">
+            @* //2.3.10 編寫Display View，加入VCReBooks ViewComponent *@
+            @await Component.InvokeAsync("VCMemberOpt", new { })
+        </div>
+    </div>
+    <div class="col-9">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="MemberID" />
+            <input type="hidden" asp-for="Account" />
+            <div class="card-body text-danger">【*如須更改密碼才須填入舊密碼】</div>
+            <div class="form-group">
+                <label asp-for="OldMima" class="control-label"></label>
+                <input asp-for="OldMima" class="form-control" />
+                <span asp-validation-for="OldMima" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Mima" class="control-label"></label>
+                <input asp-for="Mima" class="form-control" />
+                <span asp-validation-for="Mima" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="reMima" class="control-label"></label>
+                <input asp-for="reMima" class="form-control" />
+                <span asp-validation-for="reMima" class="text-danger"></span>
+            </div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
@@ -27,6 +43,11 @@
                 <label asp-for="Email" class="control-label"></label>
                 <input asp-for="Email" class="form-control" />
                 <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TelNumber" class="control-label"></label>
+                <input asp-for="TelNumber" class="form-control" />
+                <span asp-validation-for="TelNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

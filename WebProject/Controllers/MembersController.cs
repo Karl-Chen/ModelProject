@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebProject.Models;
 using WebProject.Services;
+using WebProject.ViewModels;
 
 namespace WebProject.Controllers
 {
@@ -65,41 +66,49 @@ namespace WebProject.Controllers
             return View();
         }
 
-        
+        public async Task<IActionResult> Edit(string id)
+        {
+            var member = await _memberServices.GetVMMemberByAccount(id);
+            return View(member);
+        }
+
+
         // POST: Members/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Edit(string id, [Bind("MemberID,Name,Address,Email")] Member member)
-        //{
-        //    if (id != member.MemberID)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    if (ModelState.IsValid)
-        //    {
-        //        try
-        //        {
-        //            _context.Update(member);
-        //            await _context.SaveChangesAsync();
-        //        }
-        //        catch (DbUpdateConcurrencyException)
-        //        {
-        //            if (!MemberExists(member.MemberID))
-        //            {
-        //                return NotFound();
-        //            }
-        //            else
-        //            {
-        //                throw;
-        //            }
-        //        }
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    return View(member);
-        //}
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(string id, [Bind("Account,OldMima,Mima,reMima,Name,Address,Email,TelNumber")] VMMembers member)
+        {
+            if (id != member.Account)
+            {
+                return NotFound();
+            }
+            if (member.OldMima != null && member.OldMima != "")
+            {
+                if (ModelState.IsValid)
+                {
+                    //try
+                    //{
+                    //    _context.Update(member);
+                    //    await _context.SaveChangesAsync();
+                    //}
+                    //catch (DbUpdateConcurrencyException)
+                    //{
+                    //    if (!MemberExists(member.MemberID))
+                    //    {
+                    //        return NotFound();
+                    //    }
+                    //    else
+                    //    {
+                    //        throw;
+                    //    }
+                    //}
+                    //return RedirectToAction(nameof(Index));
+                }
+            }
+            return View(member);
+        }
 
         //// GET: Members/Delete/5
         //public async Task<IActionResult> Delete(string id)

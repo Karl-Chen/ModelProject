@@ -1,0 +1,39 @@
+﻿@model WebProject.ViewModels.VMEditMemberAcc
+
+<h4>VMEditMemberAcc</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="EditMima">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Account" />
+            <input type="hidden" asp-for="MemberID" />
+            <div class="form-group">
+                <label asp-for="OldMima" class="control-label"></label>
+                <input asp-for="OldMima" class="form-control" />
+                <span asp-validation-for="OldMima" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Mima" class="control-label"></label>
+                <input asp-for="Mima" class="form-control" />
+                <span asp-validation-for="Mima" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="reMima" class="control-label"></label>
+                <input asp-for="reMima" class="form-control" />
+                <span asp-validation-for="reMima" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="更改密碼" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="UserDetails">返回會員資料</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

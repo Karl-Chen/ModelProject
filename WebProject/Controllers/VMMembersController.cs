@@ -96,7 +96,7 @@ namespace WebProject.Controllers
             {
                 return NotFound();
             }
-            var vMMembers = _memberServices.GetVMMemberByAccount(id);
+            var vMMembers = await _memberServices.GetVMMemberByAccount(id);
             if (vMMembers == null)
             {
                 return NotFound();
@@ -120,11 +120,11 @@ namespace WebProject.Controllers
             {
                 try
                 {
-                    _memberServices.EditMemberGroup(vMMembers, id);
+                    //_memberServices.EditMemberGroup(vMMembers, id);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!_memberServices.VMMembersExists(vMMembers.Account))
+                    if (!await _memberServices.VMMembersExists(vMMembers.Account))
                     {
                         return NotFound();
                     }

@@ -13,6 +13,7 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Account" />
+            <h1>@ViewBag.ErrMsg</h1>
             <div class="card-body text-danger">【*如須更改密碼才須填入舊密碼】</div>
             <div class="form-group">
                 <label asp-for="OldMima" class="control-label"></label>

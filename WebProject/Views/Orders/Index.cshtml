@@ -1,0 +1,84 @@
+﻿@model IEnumerable<WebProject.Models.Order>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>已下訂的訂單</h1>
+
+<div class="row mt-3">
+    <div class="col-3">
+        <div id="VCMemberOptList">
+            @* //2.3.10 編寫Display View，加入VCReBooks ViewComponent *@
+            @await Component.InvokeAsync("VCMemberOpt", new { })
+        </div>
+    </div>
+    <div class="col-9">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.OrderNo)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.OrderDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ShippingDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.IsGoodPackage)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ShippingAddr)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.PayWayID)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.OrdertatusID)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ShippingWayID)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model) {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.OrderNo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.OrderDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ShippingDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.IsGoodPackage)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ShippingAddr)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PayWay.PayWayName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Ordertatus.OrdertatusName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ShippingWay.ShippingWayName)
+                        </td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.OrderNo">Edit</a> |
+                            <a asp-action="Details" asp-route-id="@item.OrderNo">Details</a> |
+                            <a asp-action="Delete" asp-route-id="@item.OrderNo">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

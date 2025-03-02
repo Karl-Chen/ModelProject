@@ -45,5 +45,7 @@ namespace WebProject.Models
         public DbSet<HandleOrder> HandleOrder { get; set; }
         public DbSet<WebProject.ViewModels.VMMemberAcc> VMMemberAcc { get; set; } = default!;
         public DbSet<WebProject.ViewModels.VMMembers> VMMembers { get; set; } = default!;
+        public DbSet<WebProject.ViewModels.VMEditMemberAcc> VMEditMemberAcc { get; set; } = default!;
+        public DbSet<WebProject.ViewModels.VMEditMember> VMEditMember { get; set; } = default!;
     }
 }

@@ -8,8 +8,9 @@
         </div>
     </div>
     <div class="col-9">
-
-        <a asp-action="Edit" asp-route-id="@Model?.Account" class="btn btn-outline-danger text-primary">修改資訊</a> 
+        <h1 class="text-danger">@ViewBag.Message</h1>
+        <a asp-action="EditMima" asp-route-id="@Model?.Account" class="btn btn-outline-danger text-primary">修改密碼</a>
+        <a asp-action="EditMember" asp-route-id="@Model?.Account" class="btn btn-outline-danger text-primary">修改會員資料</a>
         <dl class = "row">
             <dt class = "col-sm-2 fs-3">
                 @Html.DisplayNameFor(model => model.Name)

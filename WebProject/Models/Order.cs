@@ -14,7 +14,7 @@ namespace WebProject.Models
         [Required(ErrorMessage = "請輸入下單日期")]
         [Display(Name = "下單時間")]
         [DataType(DataType.DateTime)]
-        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd hh:mm:ss}")]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
         //[HiddenInput]
         public DateTime OrderDate { get; set; }
 

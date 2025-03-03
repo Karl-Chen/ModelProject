@@ -48,6 +48,71 @@ namespace WebProject.Services
             return orderNumber;
         }
 
+        public async Task<List<Order>> GetOrderListByAcc(string acc)
+        {
+            var memberID = await _memberService.GetMemberIDByAccount(acc);
+            var OrderList = await _guestModelContext.Order.Include(o => o.Member)
+                .Include(o => o.Ordertatus)
+                .Include(o => o.PayWay)
+                .Include(o => o.ShippingWay)
+                .Where(c => c.MemberID == memberID && !(c.OrdertatusID == "10" || c.OrdertatusID == "05" || c.OrdertatusID == "11"))
+                .DefaultIfEmpty().ToListAsync();
+            return OrderList;
+        }
+
+        public async Task<List<Order>> GetUCancelOrderListByAcc(string acc)
+        {
+            var memberID = await _memberService.GetMemberIDByAccount(acc);
+            var OrderList = await _guestModelContext.Order.Include(o => o.Member)
+                .Include(o => o.Ordertatus)
+                .Include(o => o.PayWay)
+                .Include(o => o.ShippingWay)
+                .Where(c => c.MemberID == memberID && (c.OrdertatusID == "10" || c.OrdertatusID == "5"))
+                .DefaultIfEmpty().ToListAsync();
+            return OrderList;
+        }
+
+        public async Task<List<Order>> GetBCancelOrderListByAcc(string acc)
+        {
+            var memberID = await _memberService.GetMemberIDByAccount(acc);
+            var OrderList = await _guestModelContext.Order.Include(o => o.Member)
+                .Include(o => o.Ordertatus)
+                .Include(o => o.PayWay)
+                .Include(o => o.ShippingWay)
+                .Where(c => c.MemberID == memberID && (c.OrdertatusID == "11"))
+                .DefaultIfEmpty().ToListAsync();
+            return OrderList;
+        }
+
+
+        public async Task<bool> CancelOrder(string orderNo)
+        {
+            var order = await _guestModelContext.Order.Where(c => c.OrderNo == orderNo).DefaultIfEmpty().FirstOrDefaultAsync();
+            if (order == null)
+                return false;
+            if (order.ShippingDate == null)
+            {
+                // ShippingDate 為 null，可以設置預設值或進行其他處理
+                order.ShippingDate = null; // 或者 DateTime.MinValue 根據需求
+            }
+            order.OrdertatusID = "10";
+            _guestModelContext.Update(order);
+            await _guestModelContext.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<Order> GetOrderByOrderNo(string orderNo)
+        {
+            var order = await _guestModelContext.Order
+                .Include(o => o.Ordertatus)
+                .Include(o => o.PayWay)
+                .Include(o => o.ShippingWay)
+                .Where(c => c.OrderNo == orderNo)
+                .DefaultIfEmpty()
+                .FirstOrDefaultAsync();
+            return order;
+        }
+
         private async Task<string> GetOrderNumber()
         {
             //var memberID = await _context.Member.OrderByDescending(c => c.MemberID).Select(c => c.MemberID).FirstOrDefaultAsync();

@@ -111,11 +111,11 @@
                 </label>
                 <br/>
                 <h5>店到店門市名稱：</h5>
-                <a href="#" id="storeSelector" onclick="openStoreMap()" style="display: inline-block; padding: 10px 15px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;" class="text-end">
+                <a href="#" id="storeSelector" onclick="openStoreMap()" style="display: inline-block; padding: 10px 15px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;" class="text-center">
                     選擇超商門市
                 </a>
                 <h3 id="totalMoney">總計 <span id="totalAllPrice">@(totalPrice.ToString("N0"))</span> 元</h3>
-                <a herf="#" onclick="onSubmit()">我要結帳</a>
+                <a herf="#" onclick="onSubmit()" class="btn btn-outline-danger btn-primary text-light">我要結帳</a>
             </div>
         </div>
 
@@ -124,6 +124,7 @@
 
 @section Scripts {
     <script>
+        var localurl = "https://d953-111-242-229-135.ngrok-free.app";
         var store711 = "https://emap.presco.com.tw/c2cemap.ashx?eshopid=870&&servicetype=1&url=";
         var storeOther = "https://map.ezship.com.tw/ezship_map_web.jsp?rtURL=";
         $('#IsGoodPackage').change(function() {
@@ -208,8 +209,7 @@
             //var selectValue = select.selectedIndex+1;//$("#value").selectedIndex;
             var sendWay = $("#ShippingWayID").val();
             var isfix = $("#IsGoodPackage").prop("checked") == true ? "1" : "0";
-            //let url = "https:emap.presco.com.tw/c2cemap.ashx?eshopid=870&&servicetype=1&url=http://localhost:5208/OrderCar/mapCallbackFun?sendWay=" +sendWay + "&isFix=" + isfix;
-            let callbackUrl = encodeURIComponent("https://7c08-111-242-195-111.ngrok-free.app/OrderCar/mapCallbackFun");//https://6695-111-242-209-253.ngrok-free.app/ 南訓要用的連結
+            let callbackUrl = encodeURIComponent(localurl + "/OrderCar/mapCallbackFun");
             let url = store711 + callbackUrl;
             // http:localhost:5208/OrderCar/index?sendWay=" +sendWay + "&isFix=" + isfix;
 
@@ -220,9 +220,7 @@
                 console.log("收到訊息:", event.data); // Debug 用
                 console.log("來源:", event.origin);
 
-                // 確保來源是官方網址，防止跨域攻擊
-                //https://6695-111-242-209-253.ngrok-free.app/ 南訓要用的連結
-                if (event.origin.includes("https://7c08-111-242-195-111.ngrok-free.app")) {
+                if (event.origin.includes(localurl)) {
                     let storeData = event.data;  // 假設收到 { storeName: "7-11 測試店", storeId: "1234" }
                     if (storeData && storeData.storeName && storeData.storeId) {
                         // ✅ 更新 <a> 標籤的文字
@@ -242,8 +240,7 @@
         function openOtherStoreMap() {
             var sendWay = $("#ShippingWayID").val();
             var isfix = $("#IsGoodPackage").prop("checked") == true ? "1" : "0";
-            //let url = "https:emap.presco.com.tw/c2cemap.ashx?eshopid=870&&servicetype=1&url=http://localhost:5208/OrderCar/mapCallbackFun?sendWay=" +sendWay + "&isFix=" + isfix;
-            let callbackUrl = encodeURIComponent("https://7c08-111-242-195-111.ngrok-free.app/OrderCar/mapOtherCallbackFun");//https://6695-111-242-209-253.ngrok-free.app/ 南訓要用的連結
+            let callbackUrl = encodeURIComponent(localurl + "/OrderCar/mapOtherCallbackFun");//https://6695-111-242-209-253.ngrok-free.app/ 南訓要用的連結
             let url = storeOther + callbackUrl;
             // http:localhost:5208/OrderCar/index?sendWay=" +sendWay + "&isFix=" + isfix;
 
@@ -255,8 +252,7 @@
                 console.log("來源:", event.origin);
 
                 // 確保來源是官方網址，防止跨域攻擊
-                //https://6695-111-242-209-253.ngrok-free.app/ 南訓要用的連結
-                if (event.origin.includes("https://7c08-111-242-195-111.ngrok-free.app")) {
+                if (event.origin.includes(localurl)) {
                     let storeData = event.data;  // 假設收到 { storeName: "7-11 測試店", storeId: "1234" }
                     if (storeData && storeData.storeName && storeData.storeId) {
                         // ✅ 更新 <a> 標籤的文字

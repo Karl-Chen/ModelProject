@@ -13,12 +13,6 @@
         </div>
 </div>
 <div class="col-9">
-    @* 學生資料 *@
-    @* <h3 class="text-center"><span class="alert-danger">@ViewBag.DeptName</span>學生資料管理</h3> *@
-    @* <p> *@
-    @*     <a class="btn btn-info" asp-route-deptid="@ViewBag.DeptID" asp-action="Create">新增學生資料</a> *@
-    @* </p> *@
-    
     @if (Model.Products.Count() == 0)
     {
         <h1 class="text-danger text-center">@ViewData["ErrMsg"]</h1>

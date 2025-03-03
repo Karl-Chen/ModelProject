@@ -1,19 +1,15 @@
 ﻿@model IEnumerable<WebProject.Models.Order>
 
-@{
-    ViewData["Title"] = "Index";
-}
-
-<h1>已下訂的訂單</h1>
-
 <div class="row mt-3">
-    <div class="col-3">
+    <div class="col-2">
         <div id="VCMemberOptList">
             @* //2.3.10 編寫Display View，加入VCReBooks ViewComponent *@
             @await Component.InvokeAsync("VCMemberOpt", new { })
         </div>
     </div>
-    <div class="col-9">
+    <div class="col-10">
+
+        <h1>@ViewBag.Title</h1>
         <table class="table">
             <thead>
                 <tr>
@@ -45,40 +41,61 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model) {
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.OrderNo)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.OrderDate)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ShippingDate)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.IsGoodPackage)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ShippingAddr)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.PayWay.PayWayName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Ordertatus.OrdertatusName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ShippingWay.ShippingWayName)
-                        </td>
-                        <td>
-                            <a asp-action="Edit" asp-route-id="@item.OrderNo">Edit</a> |
-                            <a asp-action="Details" asp-route-id="@item.OrderNo">Details</a> |
-                            <a asp-action="Delete" asp-route-id="@item.OrderNo">Delete</a>
-                        </td>
-                    </tr>
+                @if (!Model.Any())
+                {
+                    <h1 class="text-danger"><i class="bi bi-cart4"></i> @ViewBag.ErrMsg <i class="bi bi-cart4"></i></h1>
+                }
+                else
+                {
+                    @foreach (var item in Model) {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.OrderNo)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.OrderDate)
+                            </td>
+                            <td>
+                                @* @Html.DisplayFor(modelItem => item.ShippingDate) *@
+
+                                <span>@(item.ShippingDate.HasValue ? item.ShippingDate.Value.ToString("yyyy/MM/dd") : "")</span><br />
+                                <span>@(item.ShippingDate.HasValue ? item.ShippingDate.Value.ToString("HH:mm:ss") : "")</span>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IsGoodPackage)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ShippingAddr)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PayWay.PayWayName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Ordertatus.OrdertatusName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ShippingWay.ShippingWayName)
+                            </td>
+                            <td>
+                                <a class="btn btn-info" asp-action="Details" asp-route-id="@item.OrderNo">明細</a> |
+                                <a class="btn btn-danger" onclick="DelOrder('@item.OrderNo')">取消</a>
+                            </td>
+                        </tr>
+                    }
                 }
             </tbody>
         </table>
     </div>
 </div>
+@section Scripts {
+    <script>
+        function DelOrder(orderNo) {
+            if(confirm('您確定要取消該訂單嗎？訂單編號：' + orderNo)) {
+                var strurl = '/Orders/CancelOrder?orderNo=' + orderNo;
+                console.log(strurl);
+                window.location.href = strurl;
+            }
+        }
+    </script>
+}
+

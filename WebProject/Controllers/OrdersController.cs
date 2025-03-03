@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebProject.Models;
 using WebProject.Services;
+using WebProject.ViewModels;
 
 namespace WebProject.Controllers
 {
@@ -60,19 +61,15 @@ namespace WebProject.Controllers
             {
                 return NotFound();
             }
-
-            var order = await _context.Order
-                .Include(o => o.Member)
-                .Include(o => o.Ordertatus)
-                .Include(o => o.PayWay)
-                .Include(o => o.ShippingWay)
-                .FirstOrDefaultAsync(m => m.OrderNo == id);
-            if (order == null)
+            var acc = HttpContext.Session.GetString("Manager");
+            VMOrderDetail vMOrderDetail = await _orderDetailServices.GetVMOrderDetailByAccAndOrderNo(acc, id);
+            if (vMOrderDetail == null)
             {
+                ViewData["ErrMsg"] = "查無資料";
                 return NotFound();
             }
-
-            return View(order);
+            ViewData["OrderNo"] = id;
+            return View(vMOrderDetail);
         }
 
         // POST: Orders/Edit/5

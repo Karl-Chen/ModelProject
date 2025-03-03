@@ -9,11 +9,11 @@
     <h1></h1>
     <a class="list-group-item text-left fs-4" asp-controller="Members" asp-action="UserDetails">我的帳號</a>
     <h5></h5>
-    <a class="list-group-item text-left fs-4" asp-controller="Orders" asp-action="Index">已下訂的訂單</a>
+    <a class="list-group-item text-left fs-4" asp-controller="Orders" asp-action="Index" asp-route-tag="1">已下訂的訂單</a>
     <h5></h5>
-    <a class="list-group-item text-left fs-4" asp-controller="Login" asp-action="Edit">取消的訂單</a>
+    <a class="list-group-item text-left fs-4" asp-controller="Orders" asp-action="Index" asp-route-tag="2">取消的訂單</a>
     <h5></h5>
-    <a class="list-group-item text-left fs-4" asp-controller="Login" asp-action="Edit">完成的訂單</a>
+    <a class="list-group-item text-left fs-4" asp-controller="Orders" asp-action="Index" asp-route-tag="3">完成的訂單</a>
     <h5></h5>
     @* 管理員專用 *@
     <a class="list-group-item text-left fs-4" asp-controller="Login" asp-action="Edit">帳號列表</a>

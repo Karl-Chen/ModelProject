@@ -14,24 +14,42 @@ namespace WebProject.Controllers
     {
         private readonly GuestModelContext _context;
         private readonly MemberServices _memberServices;
+        private readonly OrderServices _orderServices;
+        private readonly OrderDetailService _orderDetailServices;
 
-        public OrdersController(GuestModelContext context, MemberServices memberServices)
+        public OrdersController(GuestModelContext context, MemberServices memberServices, OrderServices orderServices, OrderDetailService orderDetailServices)
         {
             _context = context;
             _memberServices = memberServices;
+            _orderServices = orderServices;
+            _orderDetailServices = orderDetailServices;
         }
 
         // GET: Orders
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string tag)
         {
             var acc = HttpContext.Session.GetString("Manager");
-            var memberID = await _memberServices.GetMemberIDByAccount(acc);
-            var guestModelContext = await _context.Order.Include(o => o.Member).Include(o => o.Ordertatus).Include(o => o.PayWay).Include(o => o.ShippingWay).Where(c=>c.MemberID == memberID).ToListAsync();
-            if (guestModelContext == null)
+            List<Order> guestModelContext;
+            if (tag == "1")
             {
-                ViewData["ErrMsg"] = "您目前尚未下過訂單";
-                return View("您目前尚未下過訂單");
+                guestModelContext = await _orderServices.GetOrderListByAcc(acc);
+                ViewData["ErrMsg"] = "您目前沒有未完成的訂單";
+                ViewData["Title"] = "已下訂的訂單";
             }
+            else if (tag == "2")
+            {
+                guestModelContext = await _orderServices.GetUCancelOrderListByAcc(acc);
+                ViewData["ErrMsg"] = "您目前沒有已取消的訂單";
+                ViewData["Title"] = "已取消的訂單";
+            }
+            else
+            {
+                guestModelContext = await _orderServices.GetBCancelOrderListByAcc(acc);
+                ViewData["ErrMsg"] = "您目前沒有已完成的訂單";
+                ViewData["Title"] = "已完成的訂單";
+            }
+            if (guestModelContext == null || guestModelContext[0] == null)
+                guestModelContext.Clear();
             return View(guestModelContext);
         }
 
@@ -54,56 +72,6 @@ namespace WebProject.Controllers
                 return NotFound();
             }
 
-            return View(order);
-        }
-
-        // GET: Orders/Create
-        public IActionResult Create()
-        {
-            ViewData["MemberID"] = new SelectList(_context.Member, "MemberID", "MemberID");
-            ViewData["OrdertatusID"] = new SelectList(_context.Ordertatus, "OrdertatusID", "OrdertatusID");
-            ViewData["PayWayID"] = new SelectList(_context.PayWay, "PayWayID", "PayWayID");
-            ViewData["ShippingWayID"] = new SelectList(_context.ShippingWay, "ShippingWayID", "ShippingWayID");
-            return View();
-        }
-
-        // POST: Orders/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("OrderNo,OrderDate,ShippingDate,IsGoodPackage,ShippingAddr,PayWayID,OrdertatusID,MemberID,ShippingWayID")] Order order)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(order);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["MemberID"] = new SelectList(_context.Member, "MemberID", "MemberID", order.MemberID);
-            ViewData["OrdertatusID"] = new SelectList(_context.Ordertatus, "OrdertatusID", "OrdertatusID", order.OrdertatusID);
-            ViewData["PayWayID"] = new SelectList(_context.PayWay, "PayWayID", "PayWayID", order.PayWayID);
-            ViewData["ShippingWayID"] = new SelectList(_context.ShippingWay, "ShippingWayID", "ShippingWayID", order.ShippingWayID);
-            return View(order);
-        }
-
-        // GET: Orders/Edit/5
-        public async Task<IActionResult> Edit(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var order = await _context.Order.FindAsync(id);
-            if (order == null)
-            {
-                return NotFound();
-            }
-            ViewData["MemberID"] = new SelectList(_context.Member, "MemberID", "MemberID", order.MemberID);
-            ViewData["OrdertatusID"] = new SelectList(_context.Ordertatus, "OrdertatusID", "OrdertatusID", order.OrdertatusID);
-            ViewData["PayWayID"] = new SelectList(_context.PayWay, "PayWayID", "PayWayID", order.PayWayID);
-            ViewData["ShippingWayID"] = new SelectList(_context.ShippingWay, "ShippingWayID", "ShippingWayID", order.ShippingWayID);
             return View(order);
         }
 
@@ -181,6 +149,13 @@ namespace WebProject.Controllers
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> CancelOrder(string orderNo)
+        {
+            await _orderServices.CancelOrder(orderNo);
+
+            return RedirectToAction(nameof(Index), new { tag="1"});
         }
 
         private bool OrderExists(string id)

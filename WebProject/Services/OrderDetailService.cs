@@ -9,11 +9,16 @@ namespace WebProject.Services
     {
         private readonly GuestModelContext _guestModelContext;
         private readonly ProductsService _productsService;
+        private readonly OrderServices _orderServices;
+        private readonly MemberServices _memberServices;
 
-        public OrderDetailService(GuestModelContext guestModelContext, ProductsService productsService)
+
+        public OrderDetailService(GuestModelContext guestModelContext, ProductsService productsService, OrderServices orderServices, MemberServices memberServices)
         {
             _guestModelContext = guestModelContext;
             _productsService = productsService;
+            _orderServices = orderServices;
+            _memberServices = memberServices;
         }
 
         public async Task WriteToOrderDetailTable(string orderNo, VMOrderCar vMOrderCar, float off = 0.0f)
@@ -31,5 +36,17 @@ namespace WebProject.Services
             _guestModelContext.OrderDetail.AddRange(orderDetails);
             await _guestModelContext.SaveChangesAsync();
         }
+
+        //public async Task<VMOrderDetail> GetVMOrderDetailByAccAndOrderNo(string acc, string orderNo)
+        //{
+        //    var memberID = await _memberServices.GetMemberIDByAccount(acc);
+        //    var order = await _orderServices.GetOrderByOrderNo(orderNo);
+            
+        //}
+
+        //public async Task<List<OrderDetail>> GetOrderDetailBy(string memberID, string orderNo)
+        //{
+        //    var list = await _guestModelContext.OrderDetail.
+        //}
     }
 }

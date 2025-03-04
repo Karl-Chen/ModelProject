@@ -6,9 +6,10 @@ namespace WebProject.ViewModels
     {
         public List<VMOrderCarItem>? item { get; set; }
 
-        [Display(Name = "加值包裝")]
+        [Display(Name = "包裝費用")]
         public string isFix { get; set; } = "0";
 
+        [Display(Name = "出貨方式")]
         public string sendWay { get; set; } = "1";
 
         public int Total = 0;

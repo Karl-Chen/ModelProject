@@ -16,7 +16,10 @@ namespace WebProject.Services
         {
             VMProducts vMProducts = new VMProducts()
             {
-                Products = await _context.Prodect.Where(s => s.ProductSpecificationID == SpecificationID || isAll).OrderByDescending(t => t.ProductTypeID).ToListAsync(),
+                Products = await _context.Prodect.Include(c => c.Brand)
+                .Include(c => c.ProductSpecification)
+                .Include(c => c.ProductType)
+                .Where(s => s.ProductSpecificationID == SpecificationID || isAll).OrderByDescending(t => t.ProductTypeID).ToListAsync(),
                 ProductSpecifications = await _context.ProductSpecification.OrderBy(t => t.SpecificationName).ToListAsync(),
             };
             return vMProducts;

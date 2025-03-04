@@ -21,16 +21,16 @@
             <thead>
                 <tr>
                     <th>
-                        @Html.DisplayNameFor(model => model.item[0].img)
+                        @Html.DisplayNameFor(model => model.item.FirstOrDefault().img)
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.item[0].name)
+                        @Html.DisplayNameFor(model => model.item.FirstOrDefault().name)
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.item[0].price)
+                        @Html.DisplayNameFor(model => model.item.FirstOrDefault().price)
                     </th>
                     <th>
-                        數量
+                        @Html.DisplayNameFor(model => model.item.FirstOrDefault().count)
                     </th>
                     <th></th>
                 </tr>
@@ -66,5 +66,56 @@
                 }
             </tbody>
         </table>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-8 col-lg-4"></div>
+    <div class="col-xl-4 col-lg-8 d-flex justify-content-between fs-3">
+        <span>@(Html.DisplayNameFor(modelItem => modelItem.sendWay)) </span>
+        <span>@Model.sendWay</span>
+    </div>
+    <div class="col-xl-8 col-lg-4"></div>
+    <div class="col-xl-4 col-lg-8 d-flex justify-content-between fs-3">
+        <span>@(Html.DisplayNameFor(modelItem => modelItem.isFix)) </span>
+        @{
+            var tmp = Model.isFix == "1" ? 60 : 0;
+        }
+        <span>@tmp.ToString("N0") 元</span>
+    </div>
+    <div class="col-xl-8 col-lg-4"></div>
+    <div class="col-xl-4 col-lg-8 d-flex justify-content-between fs-3">
+        <span>@(Html.DisplayNameFor(modelItem => modelItem.OrderDate)) </span>
+        <span>@Html.DisplayFor(modelItem => modelItem.OrderDate)</span>
+    </div>
+    <div class="col-xl-8 col-lg-4"></div>
+    <div class="col-xl-4 col-lg-8 d-flex justify-content-between fs-3">
+        <span>@(Html.DisplayNameFor(modelItem => modelItem.ShippingDate)) </span>
+        <span>@(Model.ShippingDate.HasValue ? Model.ShippingDate.Value.ToString("yyyy/MM/dd") : "還沒出貨")</span>
+    </div>
+    <div class="col-xl-8 col-lg-4"></div>
+    <div class="col-xl-4 col-lg-8 d-flex justify-content-between fs-3">
+        @{
+            var sendMoney = Model.sendWay == "自取" ? 0 : 60;
+        }
+        <span>運費</span>
+        <span>@sendMoney.ToString("N0") 元</span>
+    </div>
+    <div class="col-xl-8 col-lg-4"></div>
+    <div class="col-xl-4 col-lg-8 d-flex justify-content-between fs-3">
+        <span>@(Html.DisplayNameFor(modelItem => modelItem.ShippingAddr))</span>
+        <span>@Model.ShippingAddr</span>
+    </div>
+    <div class="col-xl-8 col-lg-4 "></div>
+    <div class="col-xl-4 col-lg-8 d-flex justify-content-between fs-3 ">
+        <span>總金額</span>
+        @{
+            var total = sendMoney + tmp;
+            foreach (var it in Model.item)
+            {
+                total += it.price * it.count;
+            }
+        }
+        <span>@total.ToString("N0") 元</span>
     </div>
 </div>

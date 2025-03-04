@@ -35,7 +35,10 @@
 
                     <a class="nav-link text-dark" style="font-size: 26px;" asp-area="" asp-controller="Products" asp-action="Index">商品列表</a>
                     <p>　</p>
-                    <a class="nav-link text-dark" style="font-size: 26px;" asp-area="" asp-controller="VMMembers" asp-action="Detail">會員中心</a>
+                    @if (Context.Session.GetString("Manager") == "adminadmin")
+                    {
+                        <a class="nav-link text-dark" style="font-size: 26px;" asp-area="" asp-controller="VMMembers" asp-action="Detail">店員登入</a>
+                    }
 
                 </div>
                 @if (Context.Session.GetString("Manager") == null)

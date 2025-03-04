@@ -41,6 +41,7 @@ namespace WebProject.Models
         public DbSet<Role> Role { get; set; }
         public DbSet<ShippingWay> ShippingWay { get; set; }
         public DbSet<Staff> Staff { get; set; }
+        public DbSet<StaffAcc> StaffAcc { get; set; }
         public DbSet<Supplier> Supplier { get; set; }
         public DbSet<HandleOrder> HandleOrder { get; set; }
         public DbSet<WebProject.ViewModels.VMMemberAcc> VMMemberAcc { get; set; } = default!;

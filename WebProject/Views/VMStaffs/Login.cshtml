@@ -1,0 +1,42 @@
+﻿@model WebProject.Models.StaffAcc
+
+<h4>員工登入</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+        <form asp-action="Login">
+            <h1>登入</h1>
+            <h3 class="alert-danger">@ViewData["Message"]</h3>
+            <hr />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Account" class="control-label"></label>
+                <input asp-for="Account" class="form-control" />
+                <span asp-validation-for="Account" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Mima" class="control-label"></label>
+                <input asp-for="Mima" class="form-control" />
+                <span asp-validation-for="Mima" class="text-danger"></span>
+            </div>
+
+            @* <div class="form-group"> *@
+            @*     <label asp-for="MemberID" class="control-label"></label> *@
+            @*     <select asp-for="MemberID" class ="form-control" asp-items="ViewBag.MemberID"></select> *@
+            @* </div> *@
+            <div class="form-group">
+                <input type="submit" value="登入" class="btn btn-primary" />
+
+                <a class="btn btn-danger" asp-controller="VMMembers" asp-action="Create" asp-route-uAction="@ViewBag.action" asp-route-rRoute="@ViewBag.uRoute" asp-route-pid="@ViewBag.id">註冊員工帳號</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

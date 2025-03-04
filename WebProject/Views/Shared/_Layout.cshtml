@@ -35,9 +35,9 @@
 
                     <a class="nav-link text-dark" style="font-size: 26px;" asp-area="" asp-controller="Products" asp-action="Index">商品列表</a>
                     <p>　</p>
-                    @if (Context.Session.GetString("Manager") == "adminadmin")
+                    @if (Context.Session.GetString("Manager") == "adminadmin" && Context.Session.GetString("Admin") == null)
                     {
-                        <a class="nav-link text-dark" style="font-size: 26px;" asp-area="" asp-controller="VMMembers" asp-action="Detail">店員登入</a>
+                        <a class="nav-link text-dark" style="font-size: 26px;" asp-area="" asp-controller="VMStaffs" asp-action="Login">店員登入</a>
                     }
 
                 </div>
@@ -53,6 +53,7 @@
                         @if (Context.Session.GetString("OrderCar") != null && Context.Session.GetString("OrderCar") != "")
                         {
                             count = Context.Session.GetString("OrderCar");
+                            var name = @Context.Session.GetString("UserName");
                         }
 
                         <span>歡迎回來 @Context.Session.GetString("UserName") 您好~(^_^)~</span>

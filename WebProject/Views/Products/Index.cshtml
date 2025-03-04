@@ -5,6 +5,7 @@
     var price = 0;
 }
 
+
 <div class="row mt-3">
     <div class="col-3">
         <div id="ProductTypeList">
@@ -19,10 +20,21 @@
     }
     else
     {
+        <div>
+            <div class="row">
+                <div class="col-xl-2 col-lg-3 col-md-4">
+                        <button class="btn btn-outline-success" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCateList" aria-controls="offcanvasCateList">商品搜尋 <i class="bi bi-search"></i></button>
+                </div>
+                <div class="col-xl-10 col-log-9 col-md-8">
+                    <input type="text" id="searchInput" class="form-control" placeholder="請輸入關鍵字搜尋商品........." />
+                </div>
+            </div>
+            <hr />
+        </div>
         <div class="row">
             @foreach (var item in Model.Products)
             {
-                <div class="col-xl-4">
+                    <div class="col-xl-4 products" data-model-keyword="@item.ProductName@item.Description@item.ProductSpecification.SpecificationName@item.ProductType.TypeName@item.Brand.BrandName">
                         <a style="text-decoration: none" asp-action="Details" asp-route-id="@item.ProductID">
                         <div class="card mb-4 border-info">
                             
@@ -51,96 +63,24 @@
     }
 </div>
 </div>
-@* <p> *@
-@*     <a asp-action="Create">Create New</a> *@
-@* </p> *@
-@* <table class="table"> *@
-@*     <thead> *@
-@*         <tr> *@
-@*             <th> *@
-@*                 @Html.DisplayNameFor(model => model.ProductName) *@
-@*             </th> *@
-@*             <th> *@
-@*                 @Html.DisplayNameFor(model => model.Description) *@
-@*             </th> *@
-@*             <th> *@
-@*                 @Html.DisplayNameFor(model => model.Photo) *@
-@*             </th> *@
-@*             <th> *@
-@*                 @Html.DisplayNameFor(model => model.CostJP) *@
-@*             </th> *@
-@*             <th> *@
-@*                 @Html.DisplayNameFor(model => model.CostExchangeRate) *@
-@*             </th> *@
-@*             <th> *@
-@*                 @Html.DisplayNameFor(model => model.PriceExchangeRage) *@
-@*             </th> *@
-@*             <th> *@
-@*                 @Html.DisplayNameFor(model => model.Inventory) *@
-@*             </th> *@
-@*             <th> *@
-@*                 @Html.DisplayNameFor(model => model.OrderedQuantity) *@
-@*             </th> *@
-@*             <th> *@
-@*                 @Html.DisplayNameFor(model => model.ProductType) *@
-@*             </th> *@
-@*             <th> *@
-@*                 @Html.DisplayNameFor(model => model.ProductSpecification) *@
-@*             </th> *@
-@*             <th> *@
-@*                 @Html.DisplayNameFor(model => model.Brand) *@
-@*             </th> *@
-@*             <th> *@
-@*                 @Html.DisplayNameFor(model => model.Supplier) *@
-@*             </th> *@
-@*             <th></th> *@
-@*         </tr> *@
-@*     </thead> *@
-@*     <tbody> *@
-@* @foreach (var item in Model) { *@
-@*         <tr> *@
-@*             <td> *@
-@*                 @Html.DisplayFor(modelItem => item.ProductName) *@
-@*             </td> *@
-@*             <td> *@
-@*                 @Html.DisplayFor(modelItem => item.Description) *@
-@*             </td> *@
-@*             <td> *@
-@*                 @Html.DisplayFor(modelItem => item.Photo) *@
-@*             </td> *@
-@*             <td> *@
-@*                 @Html.DisplayFor(modelItem => item.CostJP) *@
-@*             </td> *@
-@*             <td> *@
-@*                 @Html.DisplayFor(modelItem => item.CostExchangeRate) *@
-@*             </td> *@
-@*             <td> *@
-@*                 @Html.DisplayFor(modelItem => item.PriceExchangeRage) *@
-@*             </td> *@
-@*             <td> *@
-@*                 @Html.DisplayFor(modelItem => item.Inventory) *@
-@*             </td> *@
-@*             <td> *@
-@*                 @Html.DisplayFor(modelItem => item.OrderedQuantity) *@
-@*             </td> *@
-@*             <td> *@
-@*                 @Html.DisplayFor(modelItem => item.ProductType.TypeID) *@
-@*             </td> *@
-@*             <td> *@
-@*                 @Html.DisplayFor(modelItem => item.ProductSpecification.SpecificationID) *@
-@*             </td> *@
-@*             <td> *@
-@*                 @Html.DisplayFor(modelItem => item.Brand.BrandID) *@
-@*             </td> *@
-@*             <td> *@
-@*                 @Html.DisplayFor(modelItem => item.Supplier.SupplierID) *@
-@*             </td> *@
-@*             <td> *@
-@*                 <a asp-action="Edit" asp-route-id="@item.ProductID">Edit</a> | *@
-@*                 <a asp-action="Details" asp-route-id="@item.ProductID">Details</a> | *@
-@*                 <a asp-action="Delete" asp-route-id="@item.ProductID">Delete</a> *@
-@*             </td> *@
-@*         </tr> *@
-@* } *@
-@*     </tbody> *@
-@* </table> *@
+
+@section Scripts {
+    <script>
+        $('#searchInput').on('input', function () {
+            console.log($(this));
+            let keyword = $(this).val().toLowerCase();
+            $('.products').each(function () {
+                let productInfo = $(this).data('model-keyword').toLowerCase();
+                if (productInfo.indexOf(keyword)>=0) {
+                    $(this).show(500);
+                }
+                else
+                {
+                    $(this).hide(500);
+                }
+
+            });
+        });
+    </script>
+
+}

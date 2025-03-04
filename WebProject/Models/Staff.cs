@@ -25,11 +25,14 @@ namespace WebProject.Models
         [Required(ErrorMessage = "必填")]
         public string Phone { get; set; } = null!;
 
+        
+
         [Display(Name = "角色")]
         [ForeignKey("Role")]
         public string RoleID { get; set; } = null!;
         public virtual Role? Role { get; set; }
-
+                
         public virtual List<HandleOrder>? HandleOrder { get; set; }
+        public virtual StaffAcc? StaffAcc { get; set; }
     }
 }

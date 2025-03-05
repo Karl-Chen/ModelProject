@@ -33,14 +33,19 @@
                 <div class="btn-group col-5" role="group" aria-label="Button group with nested dropdown">
 
 
-                    <a class="nav-link text-dark" style="font-size: 26px;" asp-area="" asp-controller="Products" asp-action="Index">商品列表</a>
+                    <a class="nav-link text-dark" style="font-size: 26px;" asp-area="" asp-controller="ADProducts" asp-action="Index">商品列表</a>
                     <p>　</p>
                     @if (Context.Session.GetString("Manager") == "adminadmin" && Context.Session.GetString("Admin") == null)
                     {
                         <a class="nav-link text-dark" style="font-size: 26px;" asp-area="" asp-controller="VMStaffs" asp-action="Login">店員登入</a>
                     }
+                    else if (Context.Session.GetString("Manager") == "adminadmin" && Context.Session.GetString("Admin") != null)
+                    {
+                        <a class="nav-link text-dark" style="font-size: 26px;" asp-area="" asp-controller="VMStaffs" asp-action="Login">訂單管理頁面</a>
+                    }
 
                 </div>
+
                 @if (Context.Session.GetString("Manager") == null)
                 {
                     <div class="col-2">

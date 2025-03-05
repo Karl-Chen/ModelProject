@@ -92,7 +92,7 @@ namespace WebProject.Controllers
 
                 if (uAction != "" && uAction != null)
                     return RedirectToAction(rRoute, uAction, new { id = pid });
-                return RedirectToAction("Index", "Products");
+                return RedirectToAction("Index", "ADProducts");
             }
             else
             {
@@ -105,8 +105,9 @@ namespace WebProject.Controllers
         {
             //5.4.1 在LoginController加入Logout Action
             HttpContext.Session.Remove("Manager");
+            HttpContext.Session.Remove("Admin");
             Response.Cookies.Delete("ManagerCookie");
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "ADProducts");
         }
 
         

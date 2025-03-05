@@ -52,10 +52,10 @@ namespace WebProject.Controllers
         // GET: ADProducts/Create
         public IActionResult Create()
         {
-            ViewData["BrandID"] = new SelectList(_context.Brand, "BrandID", "BrandID");
-            ViewData["ProductSpecificationID"] = new SelectList(_context.ProductSpecification, "SpecificationID", "SpecificationID");
-            ViewData["ProductTypeID"] = new SelectList(_context.ProductType, "TypeID", "TypeID");
-            ViewData["SupplierID"] = new SelectList(_context.Supplier, "SupplierID", "SupplierID");
+            ViewData["BrandID"] = new SelectList(_context.Brand, "BrandID", "BrandName");
+            ViewData["ProductSpecificationID"] = new SelectList(_context.ProductSpecification, "SpecificationID", "SpecificationName");
+            ViewData["ProductTypeID"] = new SelectList(_context.ProductType, "TypeID", "TypeName");
+            ViewData["SupplierID"] = new SelectList(_context.Supplier, "SupplierID", "SupplierName");
             return View();
         }
 
@@ -64,8 +64,27 @@ namespace WebProject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProductID,ProductName,Description,Photo,CostJP,CostExchangeRate,PriceExchangeRage,Inventory,OrderedQuantity,ProductTypeID,ProductSpecificationID,BrandID,SupplierID")] Product product)
+        public async Task<IActionResult> Create([Bind("ProductID,ProductName,Description,Photo,CostJP,CostExchangeRate,PriceExchangeRage,Inventory,OrderedQuantity,ProductTypeID,ProductSpecificationID,BrandID,SupplierID")] Product product, IFormFile? newPhoto)
         {
+            if (newPhoto != null && newPhoto.Length != 0)
+            {
+                //執行上傳照片
+                //只允許上傳圖檔
+                if (newPhoto.ContentType != "image/jpeg" && newPhoto.ContentType != "image/png")
+                {
+                    ViewData["Message"] = "請上傳正確JPG或PNG格式";
+                    return View(product);
+                }
+                string fileName = "PIC_" + product.ProductID + ".jpg";
+                string BookPhotoPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ModelPhoto", fileName);
+                using (FileStream stream = new FileStream(BookPhotoPath, FileMode.Create))
+                {
+                    newPhoto.CopyTo(stream);
+                }
+                product.Photo = fileName;
+            }
+            ModelState.Clear(); // 清除舊的 ModelState
+            TryValidateModel(product); // 重新執行 Model 驗證
             if (ModelState.IsValid)
             {
                 _context.Add(product);
@@ -92,10 +111,10 @@ namespace WebProject.Controllers
             {
                 return NotFound();
             }
-            ViewData["BrandID"] = new SelectList(_context.Brand, "BrandID", "BrandID", product.BrandID);
-            ViewData["ProductSpecificationID"] = new SelectList(_context.ProductSpecification, "SpecificationID", "SpecificationID", product.ProductSpecificationID);
-            ViewData["ProductTypeID"] = new SelectList(_context.ProductType, "TypeID", "TypeID", product.ProductTypeID);
-            ViewData["SupplierID"] = new SelectList(_context.Supplier, "SupplierID", "SupplierID", product.SupplierID);
+            ViewData["BrandID"] = new SelectList(_context.Brand, "BrandID", "BrandName", product.BrandID);
+            ViewData["ProductSpecificationID"] = new SelectList(_context.ProductSpecification, "SpecificationID", "SpecificationName", product.ProductSpecificationID);
+            ViewData["ProductTypeID"] = new SelectList(_context.ProductType, "TypeID", "TypeName", product.ProductTypeID);
+            ViewData["SupplierID"] = new SelectList(_context.Supplier, "SupplierID", "SupplierName", product.SupplierID);
             return View(product);
         }
 
@@ -104,13 +123,33 @@ namespace WebProject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("ProductID,ProductName,Description,Photo,CostJP,CostExchangeRate,PriceExchangeRage,Inventory,OrderedQuantity,ProductTypeID,ProductSpecificationID,BrandID,SupplierID")] Product product)
+        public async Task<IActionResult> Edit(string id, [Bind("ProductID,ProductName,Description,Photo,CostJP,CostExchangeRate,PriceExchangeRage,Inventory,OrderedQuantity,ProductTypeID,ProductSpecificationID,BrandID,SupplierID")] Product product, IFormFile? newPhoto)
         {
-            if (id != product.ProductID)
-            {
-                return NotFound();
-            }
+            // 不知道為什麼id會是空的....待查
+            //if (id != product.ProductID)
+            //{
+            //    return NotFound();
+            //}
 
+            if (newPhoto != null && newPhoto.Length != 0)
+            {
+                //執行上傳照片
+                //只允許上傳圖檔
+                if (newPhoto.ContentType != "image/jpeg" && newPhoto.ContentType != "image/png")
+                {
+                    ViewData["Message"] = "請上傳正確JPG或PNG格式";
+                    return View(product);
+                }
+                string fileName = "PIC_" + product.ProductID + ".jpg";
+                string BookPhotoPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ModelPhoto", fileName);
+                using (FileStream stream = new FileStream(BookPhotoPath, FileMode.Create))
+                {
+                    newPhoto.CopyTo(stream);
+                }
+                product.Photo = fileName;
+            }
+            ModelState.Clear(); // 清除舊的 ModelState
+            TryValidateModel(product); // 重新執行 Model 驗證
             if (ModelState.IsValid)
             {
                 try

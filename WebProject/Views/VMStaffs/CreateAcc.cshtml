@@ -1,14 +1,11 @@
 ﻿@model WebProject.Models.StaffAcc
 
-<h4>員工登入</h4>
+<h4>建立員工帳號</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4"></div>
     <div class="col-md-4">
-        <form asp-action="Login">
-            <h1>登入</h1>
-            <h3 class="alert-danger">@ViewData["Message"]</h3>
-            <hr />
+        <form asp-action="CreateAcc">
+            <h1 class="text-danger">@ViewBag.ErrMsg</h1>
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Account" class="control-label"></label>
@@ -20,23 +17,24 @@
                 <input asp-for="Mima" class="form-control" />
                 <span asp-validation-for="Mima" class="text-danger"></span>
             </div>
-
-            @* <div class="form-group"> *@
-            @*     <label asp-for="MemberID" class="control-label"></label> *@
-            @*     <select asp-for="MemberID" class ="form-control" asp-items="ViewBag.MemberID"></select> *@
-            @* </div> *@
+            <br />
             <div class="form-group">
-                <input type="submit" value="登入" class="btn btn-primary" />
-
-                <a class="btn btn-danger" asp-controller="VMStaffs" asp-action="Create">建立新員工資料</a>
+                <label asp-for="StaffID" class="control-label"></label>
+                <input asp-for="StaffID" value="@ViewBag.StaffID" readonly />
+                <span asp-validation-for="StaffID" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
+                <input type="submit" value="儲存" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

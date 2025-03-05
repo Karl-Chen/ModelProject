@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using WebProject.Filters;
+
 //using WebProject.Hubs;
 using WebProject.Models;
 using WebProject.Services;
@@ -35,6 +37,8 @@ builder.Services.AddScoped<OrderCarServices>();
 builder.Services.AddScoped<OrderServices>();
 builder.Services.AddScoped<OrderDetailService>();
 builder.Services.AddScoped<StaffServices>();
+
+builder.Services.AddScoped<MemberStatusFilter>();
 
 
 var app = builder.Build();

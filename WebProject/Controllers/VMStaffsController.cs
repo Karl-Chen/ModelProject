@@ -45,7 +45,7 @@ namespace WebProject.Controllers
                 var name = await _staffServices.GetNameByAccount(result.Account);
                 HttpContext.Session.SetString("UserName", name);
                 
-                return RedirectToAction("Index", "Products");
+                return RedirectToAction("Index", "ADProducts");
             }
             else
             {
@@ -80,10 +80,36 @@ namespace WebProject.Controllers
             return View(staff);
         }
 
+        public IActionResult CreateAcc(string id)
+        {
+            ViewData["StaffID"] = id;
+            return View();
+        }
+
+        // POST: VMStaffs/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateAcc([Bind("Account,Mima,StaffID")] StaffAcc staffAcc)
+        {
+            if (await _staffServices.CheckTheSameAcc(staffAcc.Account))
+            {
+                ViewData["ErrMsg"] = "已有相同帳號";
+            }
+
+            if (ModelState.IsValid)
+            {
+                await _staffServices.SaveStaffAcc(staffAcc);
+                return RedirectToAction(nameof(Login));
+            }
+            return View(staffAcc);
+        }
+
         // GET: VMStaffs/Create
         public IActionResult Create()
         {
-            ViewData["RoleID"] = new SelectList(_context.Role, "RoleID", "RoleID");
+            ViewData["RoleID"] = new SelectList(_context.Role, "RoleID", "RoleName");
             return View();
         }
 
@@ -94,11 +120,13 @@ namespace WebProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("StaffID,Name,ArrivalDate,Phone,RoleID")] Staff staff)
         {
+            staff.StaffID = await _staffServices.HandleStaffID(staff);
+            ModelState.Clear(); // 清除舊的 ModelState
+            TryValidateModel(staff); // 重新執行 Model 驗證
             if (ModelState.IsValid)
             {
-                _context.Add(staff);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                await _staffServices.SaveStaff(staff);
+                return RedirectToAction(nameof(CreateAcc), new { id = staff.StaffID});
             }
             ViewData["RoleID"] = new SelectList(_context.Role, "RoleID", "RoleID", staff.RoleID);
             return View(staff);

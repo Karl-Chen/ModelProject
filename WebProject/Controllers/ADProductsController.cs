@@ -124,13 +124,8 @@ namespace WebProject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("ProductID,ProductName,Description,Photo,CostJP,CostExchangeRate,PriceExchangeRage,Inventory,OrderedQuantity,ProductTypeID,ProductSpecificationID,BrandID,SupplierID")] Product product, IFormFile? newPhoto)
+        public async Task<IActionResult> Edit([Bind("ProductID,ProductName,Description,Photo,CostJP,CostExchangeRate,PriceExchangeRage,Inventory,OrderedQuantity,ProductTypeID,ProductSpecificationID,BrandID,SupplierID")] Product product, IFormFile? newPhoto)
         {
-            // 不知道為什麼id會是空的....待查
-            //if (id != product.ProductID)
-            //{
-            //    return NotFound();
-            //}
 
             if (newPhoto != null && newPhoto.Length != 0)
             {

@@ -60,6 +60,19 @@ namespace WebProject.Services
             return OrderList;
         }
 
+        public async Task<List<Order>> GetAllOrderList()
+        {
+            var OrderList = await _guestModelContext.Order.Include(o => o.Member)
+                .Include(o => o.Ordertatus)
+                .Include(o => o.PayWay)
+                .Include(o => o.ShippingWay)
+                .Include(o=> o.Member.MemberTel)
+                .Include(o => o.Member.MemberAcc)
+                .Where(c => !(c.OrdertatusID == "10" || c.OrdertatusID == "05" || c.OrdertatusID == "11"))
+                .DefaultIfEmpty().ToListAsync();
+            return OrderList;
+        }
+
         public async Task<List<Order>> GetUCancelOrderListByAcc(string acc)
         {
             var memberID = await _memberService.GetMemberIDByAccount(acc);
@@ -72,6 +85,19 @@ namespace WebProject.Services
             return OrderList;
         }
 
+        public async Task<List<Order>> GetAllCancelOrderList()
+        {
+            var OrderList = await _guestModelContext.Order.Include(o => o.Member)
+                .Include(o => o.Ordertatus)
+                .Include(o => o.PayWay)
+                .Include(o => o.ShippingWay)
+                .Include(o => o.Member.MemberTel)
+                .Include(o => o.Member.MemberAcc)
+                .Where(c => (c.OrdertatusID == "10" || c.OrdertatusID == "5"))
+                .DefaultIfEmpty().ToListAsync();
+            return OrderList;
+        }
+
         public async Task<List<Order>> GetBCancelOrderListByAcc(string acc)
         {
             var memberID = await _memberService.GetMemberIDByAccount(acc);
@@ -80,6 +106,19 @@ namespace WebProject.Services
                 .Include(o => o.PayWay)
                 .Include(o => o.ShippingWay)
                 .Where(c => c.MemberID == memberID && (c.OrdertatusID == "11"))
+                .DefaultIfEmpty().ToListAsync();
+            return OrderList;
+        }
+
+        public async Task<List<Order>> GetAllBCancelOrderListstring()
+        {
+            var OrderList = await _guestModelContext.Order.Include(o => o.Member)
+                .Include(o => o.Ordertatus)
+                .Include(o => o.PayWay)
+                .Include(o => o.ShippingWay)
+                .Include(o => o.Member.MemberTel)
+                .Include(o => o.Member.MemberAcc)
+                .Where(c => c.OrdertatusID == "11")
                 .DefaultIfEmpty().ToListAsync();
             return OrderList;
         }

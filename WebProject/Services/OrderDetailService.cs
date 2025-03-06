@@ -37,9 +37,8 @@ namespace WebProject.Services
             await _guestModelContext.SaveChangesAsync();
         }
 
-        public async Task<VMOrderDetail> GetVMOrderDetailByAccAndOrderNo(string acc, string orderNo)
+        public async Task<VMOrderDetail> GetVMOrderDetailByAccAndOrderNo(string orderNo)
         {
-            var memberID = await _memberServices.GetMemberIDByAccount(acc);
             var order = await _orderServices.GetOrderByOrderNo(orderNo);
             var listDetail = await GetOrderDetailByOrderNo(orderNo);
             return await GetVMOrderDetailByOrderObject(order, listDetail);

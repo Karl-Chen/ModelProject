@@ -11,42 +11,46 @@ using WebProject.ViewModels;
 
 namespace WebProject.Controllers
 {
-    public class OrdersController : Controller
+    public class ADOrdersController : Controller
     {
         private readonly GuestModelContext _context;
-        private readonly MemberServices _memberServices;
         private readonly OrderServices _orderServices;
-        private readonly OrderDetailService _orderDetailServices;
+        private readonly OrderDetailService _orderDetailService;
 
-        public OrdersController(GuestModelContext context, MemberServices memberServices, OrderServices orderServices, OrderDetailService orderDetailServices)
+        public ADOrdersController(GuestModelContext context, OrderServices orderServices, OrderDetailService orderDetailService)
         {
             _context = context;
-            _memberServices = memberServices;
             _orderServices = orderServices;
-            _orderDetailServices = orderDetailServices;
+            _orderDetailService = orderDetailService;
         }
 
-        // GET: Orders
-        public async Task<IActionResult> Index(string tag)
+        // GET: ADOrders
+        //public async Task<IActionResult> Index()
+        //{
+        //    var p = _context.Order.Include(o => o.Member).Include(o => o.Ordertatus).Include(o => o.PayWay).Include(o => o.ShippingWay).DefaultIfEmpty();
+        //    return View(await p.ToListAsync());
+        //}
+
+        public async Task<IActionResult> Index(string tag = "1")
         {
             var acc = HttpContext.Session.GetString("Manager");
             List<Order> guestModelContext;
             if (tag == "1")
             {
-                guestModelContext = await _orderServices.GetOrderListByAcc(acc);
-                ViewData["ErrMsg"] = "您目前沒有未完成的訂單";
+                guestModelContext = await _orderServices.GetAllOrderList();
+                ViewData["ErrMsg"] = "目前沒有未完成的訂單";
                 ViewData["Title"] = "已下訂的訂單";
             }
             else if (tag == "2")
             {
-                guestModelContext = await _orderServices.GetUCancelOrderListByAcc(acc);
-                ViewData["ErrMsg"] = "您目前沒有已取消的訂單";
+                guestModelContext = await _orderServices.GetAllCancelOrderList();
+                ViewData["ErrMsg"] = "目前沒有已取消的訂單";
                 ViewData["Title"] = "已取消的訂單";
             }
             else
             {
-                guestModelContext = await _orderServices.GetBCancelOrderListByAcc(acc);
-                ViewData["ErrMsg"] = "您目前沒有已完成的訂單";
+                guestModelContext = await _orderServices.GetAllBCancelOrderListstring();
+                ViewData["ErrMsg"] = "目前沒有已完成的訂單";
                 ViewData["Title"] = "已完成的訂單";
             }
             if (guestModelContext == null || guestModelContext[0] == null)
@@ -54,14 +58,14 @@ namespace WebProject.Controllers
             return View(guestModelContext);
         }
 
-        // GET: Orders/Details/5
+        // GET: ADOrders/Details/5
         public async Task<IActionResult> Details(string id)
         {
             if (id == null)
             {
                 return NotFound();
             }
-            VMOrderDetail vMOrderDetail = await _orderDetailServices.GetVMOrderDetailByAccAndOrderNo(id);
+            VMOrderDetail vMOrderDetail = await _orderDetailService.GetVMOrderDetailByAccAndOrderNo(id);
             if (vMOrderDetail == null)
             {
                 ViewData["ErrMsg"] = "查無資料";
@@ -71,7 +75,30 @@ namespace WebProject.Controllers
             return View(vMOrderDetail);
         }
 
-        // POST: Orders/Edit/5
+        // GET: ADOrders/Edit/5
+        public async Task<IActionResult> Edit(string id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var order = await _context.Order.FindAsync(id);
+            if (order == null)
+            {
+                return NotFound();
+            }
+            ViewData["MemberID"] = new SelectList(_context.Member, "MemberID", "MemberID", order.MemberID);
+            ViewData["OrdertatusID"] = new SelectList(_context.Ordertatus, "OrdertatusID", "OrdertatusID", order.OrdertatusID);
+            ViewData["PayWayID"] = new SelectList(_context.PayWay, "PayWayID", "PayWayID", order.PayWayID);
+            ViewData["ShippingWayID"] = new SelectList(_context.ShippingWay, "ShippingWayID", "ShippingWayID", order.ShippingWayID);
+            return View(order);
+        }
+
+
+        // 編輯訂單待續
+
+        // POST: ADOrders/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -110,49 +137,7 @@ namespace WebProject.Controllers
             return View(order);
         }
 
-        // GET: Orders/Delete/5
-        public async Task<IActionResult> Delete(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var order = await _context.Order
-                .Include(o => o.Member)
-                .Include(o => o.Ordertatus)
-                .Include(o => o.PayWay)
-                .Include(o => o.ShippingWay)
-                .FirstOrDefaultAsync(m => m.OrderNo == id);
-            if (order == null)
-            {
-                return NotFound();
-            }
-
-            return View(order);
-        }
-
-        // POST: Orders/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
-        {
-            var order = await _context.Order.FindAsync(id);
-            if (order != null)
-            {
-                _context.Order.Remove(order);
-            }
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        public async Task<IActionResult> CancelOrder(string orderNo)
-        {
-            await _orderServices.CancelOrder(orderNo);
-
-            return RedirectToAction(nameof(Index), new { tag="1"});
-        }
+       
 
         private bool OrderExists(string id)
         {

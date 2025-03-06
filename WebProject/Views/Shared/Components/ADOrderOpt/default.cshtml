@@ -1,0 +1,16 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = null;
+}
+<h2 class="text-left">訂單處理專區</h2>
+<div>
+    <h5></h5>
+    <a class="list-group-item text-left fs-4" asp-controller="ADOrders" asp-action="Index" asp-route-tag="1">已下訂的訂單</a>
+    <h5></h5>
+    <a class="list-group-item text-left fs-4" asp-controller="ADOrders" asp-action="Index" asp-route-tag="2">取消的訂單</a>
+    <h5></h5>
+    <a class="list-group-item text-left fs-4" asp-controller="ADOrders" asp-action="Index" asp-route-tag="3">完成的訂單</a>
+    <h5></h5>
+</div>

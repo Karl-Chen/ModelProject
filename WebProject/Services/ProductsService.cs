@@ -25,14 +25,55 @@ namespace WebProject.Services
             return vMProducts;
         }
 
+        public async Task<List<Product>> GetProductListDetailListByPSID(string SpecificationID, bool isAll)
+        {
+            var p = await _context.Prodect.Include(p => p.Brand)
+                .Include(p => p.ProductSpecification)
+                .Include(p => p.ProductType)
+                .Include(p => p.Supplier)
+                .Where(s => s.ProductSpecificationID == SpecificationID || isAll).ToListAsync();
+            return p;
+        }
+
         public async Task<Product> GetProductByID(string id)
         {
             return await _context.Prodect.FirstOrDefaultAsync(m => m.ProductID == id);
+        }
+        public async Task<Product> GetProductDetailByID(string id)
+        {
+            return await _context.Prodect
+                .Include(p => p.Brand)
+                .Include(p => p.ProductSpecification)
+                .Include(p => p.ProductType)
+                .Include(p => p.Supplier)
+                .FirstOrDefaultAsync(m => m.ProductID == id);
         }
 
         public async Task<List<ProductSpecification>> GetProductSpecification()
         {
             return await _context.ProductSpecification.OrderBy(b => b.SpecificationName).ToListAsync();
+        }
+
+        public async Task UpDateProduct(Product product)
+        {
+            _context.Update(product);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task AddProduct(Product product)
+        {
+            _context.Add(product);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteProduct(string  id)
+        {
+            var product = await _context.Prodect.FindAsync(id);
+            if (product != null)
+            {
+                _context.Prodect.Remove(product);
+            }
+            await _context.SaveChangesAsync();
         }
     }
 }

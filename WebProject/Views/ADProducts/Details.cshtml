@@ -59,28 +59,28 @@
             @Html.DisplayFor(model => model.OrderedQuantity)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ProductType)
+            @Html.DisplayNameFor(model => model.ProductType.TypeName)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ProductType.TypeID)
+            @Html.DisplayFor(model => model.ProductType.TypeName)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ProductSpecification)
+            @Html.DisplayNameFor(model => model.ProductSpecification.SpecificationName)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ProductSpecification.SpecificationID)
+            @Html.DisplayFor(model => model.ProductSpecification.SpecificationName)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Brand)
+            @Html.DisplayNameFor(model => model.Brand.BrandName)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Brand.BrandID)
+            @Html.DisplayFor(model => model.Brand.BrandName)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Supplier)
+            @Html.DisplayNameFor(model => model.Supplier.SupplierName)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Supplier.SupplierID)
+            @Html.DisplayFor(model => model.Supplier.SupplierName)
         </dd>
     </dl>
 </div>

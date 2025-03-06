@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebProject.Filters;
 using WebProject.Models;
+using WebProject.Services;
 
 namespace WebProject.Controllers
 {
@@ -14,17 +15,23 @@ namespace WebProject.Controllers
     public class ADProductsController : Controller
     {
         private readonly GuestModelContext _context;
+        private readonly ProductsService _productsService;
 
-        public ADProductsController(GuestModelContext context)
+        public ADProductsController(GuestModelContext context, ProductsService productsService)
         {
             _context = context;
+            _productsService = productsService;
         }
 
         // GET: ADProducts
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string SpecificationID = "00")
         {
-            var guestModelContext = _context.Prodect.Include(p => p.Brand).Include(p => p.ProductSpecification).Include(p => p.ProductType).Include(p => p.Supplier);
-            return View(await guestModelContext.ToListAsync());
+            bool isAll = false;
+            if (SpecificationID == "00")
+                isAll = true;
+
+            var p = await _productsService.GetProductListDetailListByPSID(SpecificationID, isAll);
+            return View(p);
         }
 
         // GET: ADProducts/Details/5
@@ -35,12 +42,7 @@ namespace WebProject.Controllers
                 return NotFound();
             }
 
-            var product = await _context.Prodect
-                .Include(p => p.Brand)
-                .Include(p => p.ProductSpecification)
-                .Include(p => p.ProductType)
-                .Include(p => p.Supplier)
-                .FirstOrDefaultAsync(m => m.ProductID == id);
+            var product = await _productsService.GetProductDetailByID(id);
             if (product == null)
             {
                 return NotFound();
@@ -87,8 +89,7 @@ namespace WebProject.Controllers
             TryValidateModel(product); // 重新執行 Model 驗證
             if (ModelState.IsValid)
             {
-                _context.Add(product);
-                await _context.SaveChangesAsync();
+                await _productsService.AddProduct(product);
                 return RedirectToAction(nameof(Index));
             }
             ViewData["BrandID"] = new SelectList(_context.Brand, "BrandID", "BrandID", product.BrandID);
@@ -154,8 +155,7 @@ namespace WebProject.Controllers
             {
                 try
                 {
-                    _context.Update(product);
-                    await _context.SaveChangesAsync();
+                    await _productsService.UpDateProduct(product);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -185,12 +185,7 @@ namespace WebProject.Controllers
                 return NotFound();
             }
 
-            var product = await _context.Prodect
-                .Include(p => p.Brand)
-                .Include(p => p.ProductSpecification)
-                .Include(p => p.ProductType)
-                .Include(p => p.Supplier)
-                .FirstOrDefaultAsync(m => m.ProductID == id);
+            var product = await _productsService.GetProductDetailByID(id);
             if (product == null)
             {
                 return NotFound();
@@ -200,17 +195,11 @@ namespace WebProject.Controllers
         }
 
         // POST: ADProducts/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ActionName("DeleteConfirmed")]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var product = await _context.Prodect.FindAsync(id);
-            if (product != null)
-            {
-                _context.Prodect.Remove(product);
-            }
-
-            await _context.SaveChangesAsync();
+            await _productsService.DeleteProduct(id);
             return RedirectToAction(nameof(Index));
         }
 

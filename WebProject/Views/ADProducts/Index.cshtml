@@ -10,7 +10,7 @@
     <a asp-action="Create">建立新商品</a>
 </p>
 
-<div class="row mt-3">
+<div class="row mt-3" id="ProductList">
     <div class="col-3">
         <div id="ProductTypeList">
             @* //2.3.10 編寫Display View，加入VCReBooks ViewComponent *@
@@ -64,32 +64,35 @@
                             <img src="~/ModelPhoto/@item.Photo" style="max-height:100px; width:auto;" />
                         }
                     </td>
-                    <td width="50">
+                    <td width="130">
                         @Html.DisplayFor(modelItem => item.ProductName)
                     </td>
-                    <td width="50">
+                    <td width="150">
                         @Html.DisplayFor(modelItem => item.Description)
                     </td>
-                    <td>
+                    <td width="80">
                         @Html.DisplayFor(modelItem => item.CostJP)
                     </td>
-                    <td>
+                    <td width="80">
                         @Html.DisplayFor(modelItem => item.CostExchangeRate)
                     </td>
-                    <td>
+                    <td width="80">
                         @Html.DisplayFor(modelItem => item.PriceExchangeRage)
                     </td>
-                    <td>
+                    <td width="80">
                         @Html.DisplayFor(modelItem => item.Inventory)
                     </td>
-                    <td>
+                    <td width="80">
                         @Html.DisplayFor(modelItem => item.OrderedQuantity)
                     </td>
                     
                     <td>
                         <a class="btn btn-info" asp-action="Edit" asp-route-id="@item.ProductID">編輯</a> <br/>
                         <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.ProductID">詳細</a> <br />
-                        <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.ProductID">刪除</a>
+                        @* <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.ProductID" >刪除</a> *@
+                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#DelProduct" onclick="setDeleteProduct('@item.ProductID')">
+                            刪除
+                        </button>
                     </td>
                 </tr>
         }
@@ -98,3 +101,63 @@
         }
     </div>
 </div>
+
+<div class="modal fade" id="DelProduct" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">是否要刪除這項商品？</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-danger" onclick="DeleteProduct()">確定刪除</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script>
+        let productID = "";
+        function setDeleteProduct(productid)
+        {
+            $("#DelProduct .modal-body").load("/ADProducts/Delete?id="+ productid);
+            productID = productid;
+        }
+
+        const myModal = new bootstrap.Modal(document.getElementById('DelProduct'));
+        //2.5.13 在PostBooks\Display View中撰寫相關的JavaScript程式，以Ajax方式執行新增回覆留言
+        function DeleteProduct()
+        {
+            // 以Ajax方式執行新增回覆留言
+            //將create.html的form用id命名，在這裡用jquery叫出來
+            // $("#reBookForm").serialize();   //序列化
+            console.log( $("#DeleteProduct").serialize());//序列化資料的樣子
+
+            $.ajax({
+                type:'Post',
+                url:'/ADProducts/DeleteConfirmed?id='+productID,
+                success:function(){
+                    // 1. 清空回覆留言的表單
+                    $("#DeleteProduct")[0].reset();   //重置表單
+
+                    // 2. 把Modal視窗隱藏(關掉)
+                    myModal.hide();
+                    //3. 以Ajax方式重新載入回覆留言資料(要在ReBooksController中撰寫自VCRebook ViewComponent取得回覆留言資料的Action)
+                    //使用ajax就是不希望整個頁面重新reload，但這跟我架構有關，所以不改ajax，多下一個window.location.reload();
+                    window.location.reload();
+
+
+                },
+                error:function(res) {
+                    console.log(res);
+                }
+            })
+        }
+    </script>
+}

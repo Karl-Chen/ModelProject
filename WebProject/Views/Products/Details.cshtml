@@ -36,19 +36,25 @@
             }
             <p>
                 數量：
-                <select name="value" id="value" style="width:100px">
-                    @for (int i = 1; i < 10; i++)
-                    {
-                        if (index == i)
+                @if (Model.Inventory == 0)
+                {
+                    <h1 class="text-danger">此商品目前沒有庫存！</h1>
+                }
+                else {
+                    <select name="value" id="value" style="width:100px">
+                        @for (int i = 1; i <= @Model.Inventory; i++)
                         {
-                            <option selected value="@i" >@i</option>
+                            if (index == i)
+                            {
+                                <option selected value="@i" >@i</option>
+                            }
+                            else
+                            {
+                                <option value="@i">@i</option>
+                            }
                         }
-                        else
-                        {
-                            <option value="@i">@i</option>
-                        }
-                    }
-                </select>
+                    </select>
+                }
             </p>
             @{
                 var productID = @Model.ProductID;

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace WebProject.Models
 {
@@ -14,6 +15,7 @@ namespace WebProject.Models
         [StringLength(50, MinimumLength = 1)]
         public string SpecificationName { get; set;} = null!;
 
+        [JsonIgnore]
         public virtual List<Product>? Products { get; set; }
     }
 }

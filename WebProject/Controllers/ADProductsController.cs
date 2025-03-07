@@ -81,7 +81,7 @@ namespace WebProject.Controllers
                 string BookPhotoPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ModelPhoto", fileName);
                 using (FileStream stream = new FileStream(BookPhotoPath, FileMode.Create))
                 {
-                    newPhoto.CopyTo(stream);
+                    await newPhoto.CopyToAsync(stream);
                 }
                 product.Photo = fileName;
             }
@@ -140,7 +140,7 @@ namespace WebProject.Controllers
                 string BookPhotoPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ModelPhoto", fileName);
                 using (FileStream stream = new FileStream(BookPhotoPath, FileMode.Create))
                 {
-                    newPhoto.CopyTo(stream);
+                    await newPhoto.CopyToAsync(stream);
                 }
                 product.Photo = fileName;
             }

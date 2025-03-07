@@ -43,7 +43,7 @@ namespace WebProject.Controllers
             if (SpecificationID == "00")
                 isAll = true;
             
-            VMProducts vMProducts = await _productsService.GetProductListByPSID(SpecificationID, isAll);
+            VMProducts vMProducts = await _productsService.GetVMProductByPSID(SpecificationID, isAll);
             if (vMProducts.Products.Count == 0)
                 ViewData["ErrMsg"] = "該分類尚未建立商品";
 

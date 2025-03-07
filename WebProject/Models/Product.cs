@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace WebProject.Models
 {
@@ -42,21 +43,26 @@ namespace WebProject.Models
         [ForeignKey("ProductType")]
         [Display(Name = "類型代碼")]
         public string ProductTypeID { get; set; } = null!;
+        [JsonIgnore]
         public virtual ProductType? ProductType { get; set; }
 
         [ForeignKey("ProductSpecification")]
         [Display(Name = "規格代碼")]
         public string ProductSpecificationID { get; set; } = null!;
+
+        [JsonIgnore]
         public virtual ProductSpecification? ProductSpecification { get; set; }
 
         [ForeignKey("Brand")]
         [Display(Name = "品牌商代碼")]
         public string BrandID { get; set; } = null!;
+        [JsonIgnore]
         public virtual Brand? Brand { get; set; }
 
         [ForeignKey("Supplier")]
         [Display(Name = "供應商代碼")]
         public string SupplierID { get; set; } = null!;
+        [JsonIgnore]
         public virtual Supplier? Supplier { get; set; }
     }
 }

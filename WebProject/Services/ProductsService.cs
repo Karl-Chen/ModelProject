@@ -12,7 +12,7 @@ namespace WebProject.Services
             _context = context;
         }
 
-        public async Task<VMProducts> GetProductListByPSID(string SpecificationID, bool isAll)
+        public async Task<VMProducts> GetVMProductByPSID(string SpecificationID, bool isAll)
         {
             VMProducts vMProducts = new VMProducts()
             {
@@ -31,8 +31,13 @@ namespace WebProject.Services
                 .Include(p => p.ProductSpecification)
                 .Include(p => p.ProductType)
                 .Include(p => p.Supplier)
-                .Where(s => s.ProductSpecificationID == SpecificationID || isAll).ToListAsync();
+                .Where(s => s.ProductSpecificationID == SpecificationID || isAll).OrderByDescending(t => t.ProductTypeID).ToListAsync();
             return p;
+        }
+
+        public async Task<List<ProductSpecification>> GetProductSpecificationList()
+        {
+            return await _context.ProductSpecification.OrderBy(t => t.SpecificationName).ToListAsync();
         }
 
         public async Task<Product> GetProductByID(string id)

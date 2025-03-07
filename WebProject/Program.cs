@@ -40,6 +40,9 @@ builder.Services.AddScoped<StaffServices>();
 
 builder.Services.AddScoped<MemberStatusFilter>();
 
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 
 var app = builder.Build();
 
@@ -72,5 +75,10 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Products}/{action=Index}");
 
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 app.Run();

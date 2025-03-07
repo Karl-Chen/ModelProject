@@ -32,9 +32,18 @@ namespace WebProject.Services
                 orderDetail.OrderNo = orderNo;
                 orderDetail.Off = off;
                 orderDetails.Add(orderDetail);
+                await UpdateProductQty(item.product, item.count);
             }
             _guestModelContext.OrderDetail.AddRange(orderDetails);
             await _guestModelContext.SaveChangesAsync();
+        }
+
+        public async Task UpdateProductQty(string pid, int count)
+        {
+            var p = await _productsService.GetProductDetailByID(pid);
+            p.Inventory = p.Inventory - count;
+            p.OrderedQuantity = p.OrderedQuantity + count;
+            await _productsService.UpDateProduct(p);
         }
 
         public async Task<VMOrderDetail> GetVMOrderDetailByAccAndOrderNo(string orderNo)

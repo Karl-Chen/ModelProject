@@ -1,0 +1,2 @@
+這是一個有關於模型店網站的專案，載下來後無法直接使用，必須要自行產出appsettings.json這個檔案，連結到自己的資料庫才能使用
+然後必須安裝Install-Package Swashbuckle.AspNetCore這個套件才能執行該專案

@@ -9,12 +9,14 @@ namespace WebProject.Services
         private readonly GuestModelContext _guestModelContext;
         private readonly ProductsService _productsService;
         private readonly MemberServices _memberService;
+        private readonly StaffServices _staffService;
 
-        public OrderServices(GuestModelContext guestModelContext, ProductsService productsService, MemberServices memberService = null)
+        public OrderServices(GuestModelContext guestModelContext, ProductsService productsService, MemberServices memberService, StaffServices staffService)
         {
             _guestModelContext = guestModelContext;
             _productsService = productsService;
             _memberService = memberService;
+            _staffService = staffService;
         }
 
         public async Task<string> WriteToOrderTable(string ShippingAddr, string isGoodPackage, string acc)
@@ -140,6 +142,22 @@ namespace WebProject.Services
             return true;
         }
 
+        public async Task UpdateOrder(Order order, string acc)
+        {
+            _guestModelContext.Update(order);
+            await _guestModelContext.SaveChangesAsync();
+            string  staffID = await _staffService.GetStaffIDByAccount(acc);
+            if (staffID != null)
+            {
+                HandleOrder handleOrder = new HandleOrder();
+                handleOrder.StaffID = staffID;
+                handleOrder.OrderNo = order.OrderNo;
+                handleOrder.HandleTime = DateTime.Now;
+                _guestModelContext.HandleOrder.Add(handleOrder);
+                await _guestModelContext.SaveChangesAsync();
+            }
+        }
+
         public async Task<Order> GetOrderByOrderNo(string orderNo)
         {
             var order = await _guestModelContext.Order
@@ -147,6 +165,8 @@ namespace WebProject.Services
                 .Include(o => o.PayWay)
                 .Include(o => o.ShippingWay)
                 .Include(o => o.Member)
+                .Include(o => o.HandleOrder)
+                .ThenInclude(o => o.Staff)
                 .Where(c => c.OrderNo == orderNo)
                 .DefaultIfEmpty()
                 .FirstOrDefaultAsync();

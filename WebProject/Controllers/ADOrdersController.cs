@@ -110,8 +110,8 @@ namespace WebProject.Controllers
             {
                 try
                 {
-                    _context.Update(order);
-                    await _context.SaveChangesAsync();
+                    var acc = HttpContext.Session.GetString("Admin");
+                    await _orderServices.UpdateOrder(order, acc);
                 }
                 catch (DbUpdateConcurrencyException)
                 {

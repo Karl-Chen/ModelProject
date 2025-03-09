@@ -67,6 +67,11 @@ namespace WebProject.Services
             vMOrderDetail.sendWay = order.ShippingWay.ShippingWayName;
             vMOrderDetail.ShippingAddr = order.ShippingAddr;
             vMOrderDetail.OrderStatusID = order.Ordertatus.OrdertatusName;
+            if (order.HandleOrder != null && order.HandleOrder.Count > 0)
+            {
+                vMOrderDetail.HandleMember = order.HandleOrder[order.HandleOrder.Count - 1].Staff.Name;
+                vMOrderDetail.HandleDate = order.HandleOrder[order.HandleOrder.Count - 1].HandleTime;
+            }
             vMOrderDetail.item = new List<VMOrderCarItem>();
             foreach (var it in orderDetail)
             {

@@ -32,5 +32,10 @@ namespace WebProject.ViewModels
         [Display(Name = "收貨地址")]
         public string? ShippingAddr { get; set; }
 
+        [Display(Name = "處理員工")]
+        public string?  HandleMember{ get; set; }
+
+        [Display(Name = "處理日期")]
+        public DateTime? HandleDate { get; set; }
     }
 }

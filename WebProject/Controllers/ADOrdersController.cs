@@ -82,16 +82,12 @@ namespace WebProject.Controllers
             {
                 return NotFound();
             }
-
-            var order = await _context.Order.FindAsync(id);
+            var order = await _orderServices.GetOrderByOrderNo(id);
             if (order == null)
             {
                 return NotFound();
             }
-            ViewData["MemberID"] = new SelectList(_context.Member, "MemberID", "MemberID", order.MemberID);
-            ViewData["OrdertatusID"] = new SelectList(_context.Ordertatus, "OrdertatusID", "OrdertatusID", order.OrdertatusID);
-            ViewData["PayWayID"] = new SelectList(_context.PayWay, "PayWayID", "PayWayID", order.PayWayID);
-            ViewData["ShippingWayID"] = new SelectList(_context.ShippingWay, "ShippingWayID", "ShippingWayID", order.ShippingWayID);
+            ViewData["OrdertatusID"] = new SelectList(_context.Ordertatus, "OrdertatusID", "OrdertatusName");
             return View(order);
         }
 
@@ -103,12 +99,12 @@ namespace WebProject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("OrderNo,OrderDate,ShippingDate,IsGoodPackage,ShippingAddr,PayWayID,OrdertatusID,MemberID,ShippingWayID")] Order order)
+        public async Task<IActionResult> Edit([Bind("OrderNo,OrderDate,ShippingDate,IsGoodPackage,ShippingAddr,PayWayID,OrdertatusID,MemberID,ShippingWayID")] Order order)
         {
-            if (id != order.OrderNo)
-            {
-                return NotFound();
-            }
+            //if (id != order.OrderNo)
+            //{
+            //    return NotFound();
+            //}
 
             if (ModelState.IsValid)
             {
@@ -130,10 +126,8 @@ namespace WebProject.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["MemberID"] = new SelectList(_context.Member, "MemberID", "MemberID", order.MemberID);
-            ViewData["OrdertatusID"] = new SelectList(_context.Ordertatus, "OrdertatusID", "OrdertatusID", order.OrdertatusID);
-            ViewData["PayWayID"] = new SelectList(_context.PayWay, "PayWayID", "PayWayID", order.PayWayID);
-            ViewData["ShippingWayID"] = new SelectList(_context.ShippingWay, "ShippingWayID", "ShippingWayID", order.ShippingWayID);
+
+            ViewData["OrdertatusID"] = new SelectList(_context.Ordertatus, "OrdertatusID", "OrdertatusName", order.OrdertatusID);
             return View(order);
         }
 

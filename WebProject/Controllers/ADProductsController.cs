@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using WebProject.Filters;
 using WebProject.Models;
 using WebProject.Services;
+using WebProject.ViewModels;
 
 namespace WebProject.Controllers
 {
@@ -24,8 +25,17 @@ namespace WebProject.Controllers
         }
 
         // GET: ADProducts
-        public async Task<IActionResult> Index(string SpecificationID = "00")
+        public async Task<IActionResult> Index(string SpecificationID = "00", bool isNeedReplenish = false)
         {
+            if (isNeedReplenish)
+            {
+                var product = await _productsService.GetNeedReplenish();
+                if (product == null)
+                {
+                    ViewData["ErrMsg"] = "目前尚無庫存量少於5的商品";
+                }
+                return View(product);
+            }
             bool isAll = false;
             if (SpecificationID == "00")
                 isAll = true;
@@ -143,6 +153,14 @@ namespace WebProject.Controllers
                     await newPhoto.CopyToAsync(stream);
                 }
                 product.Photo = fileName;
+            }
+            else
+            {
+                var p = await _productsService.GetProductDetailByID(product.ProductID);
+                if (p != null)
+                {
+                    product.Photo = p.Photo;
+                }
             }
             ModelState.Clear(); // 清除舊的 ModelState
             TryValidateModel(product); // 重新執行 Model 驗證

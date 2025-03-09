@@ -63,7 +63,7 @@
 
                         <span>歡迎回來 @Context.Session.GetString("UserName") 您好~(^_^)~</span>
                         <a asp-action="Index" asp-controller="OrderCar" class="btn border-0 cart-btn text-center" id="btnCar"><i class="bi bi-cart" style="font-size: 2rem;"></i>購物車(<span id="car-count">@count</span>)</a>
-                        <a asp-controller="Members" asp-action="UserDetails" class="btn border-0 cart-btn"> 會員專區</a>
+                        <a asp-controller="Members" asp-action="Index" class="btn border-0 cart-btn"> 會員專區</a>
                         <a asp-action="Logout" asp-controller="Login" type="button" class="btn btn-outline-dark"><i class="bi bi-person-fill"></i>登出</a>
                     </div>
                 }

@@ -23,6 +23,10 @@ namespace WebProject.Filters
             {
                 context.Result = new RedirectToActionResult("Index", "Products", null);
             }
+            else if (context.HttpContext.Session.GetString("Admin") == null && controller == "Members" && action == "")
+            {
+                context.Result = new RedirectToActionResult("Index", "Members", null);
+            }
         }
     }
 }

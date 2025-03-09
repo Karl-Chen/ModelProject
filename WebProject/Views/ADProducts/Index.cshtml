@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "商品管理頁面";
+    var a = "";
 }
 
 <h1>@ViewData["Title"]</h1>
@@ -16,85 +17,94 @@
             @* //2.3.10 編寫Display View，加入VCReBooks ViewComponent *@
             @await Component.InvokeAsync("VCProductType", new { })
         </div>
-</div>
-<div class="col-9">
-    @if (Model.Count() == 0)
-    {
-        <h1 class="text-danger text-center">@ViewData["ErrMsg"]</h1>
-    }
-    else
-    {
-        <table class="table">
-            <thead>
+    </div>
+    <div class="col-9">
+        @if (Model.Count() == 0)
+        {
+            <h1 class="text-danger text-center">@ViewData["ErrMsg"]</h1>
+        }
+        else
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Photo)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ProductName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Description)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.CostJP)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.CostExchangeRate)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.PriceExchangeRage)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Inventory)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.OrderedQuantity)
+                        </th>
+
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+
+            @foreach (var item in Model) {
+                @if (item.Inventory < 5)
+                {
+                    a = "class='text-danger fs-3'";
+                }
+                else
+                {
+                    a = "";
+                }
                 <tr>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Photo)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.ProductName)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Description)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.CostJP)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.CostExchangeRate)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.PriceExchangeRage)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Inventory)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.OrderedQuantity)
-                    </th>
+                <td>
+                    @if (item.Photo != null)
+                    {
+                        <img src="~/ModelPhoto/@item.Photo" style="max-height:100px; width:auto;" />
+                    }
+                </td>
+                <td width="130">
+                    @Html.DisplayFor(modelItem => item.ProductName)
+                </td>
+                <td width="150">
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td width="80">
+                    @Html.DisplayFor(modelItem => item.CostJP)
+                </td>
+                <td width="80">
+                    @Html.DisplayFor(modelItem => item.CostExchangeRate)
+                </td>
+                <td width="80">
+                    @Html.DisplayFor(modelItem => item.PriceExchangeRage)
+                </td>
+                <td width="80" @Html.Raw(a)>
+                    @Html.DisplayFor(modelItem => item.Inventory)
+                </td>
+                <td width="80">
+                    @Html.DisplayFor(modelItem => item.OrderedQuantity)
+                </td>
                     
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-        @foreach (var item in Model) {
-                <tr>
-                    <td>
-                        @if (item.Photo != null)
-                        {
-                            <img src="~/ModelPhoto/@item.Photo" style="max-height:100px; width:auto;" />
-                        }
-                    </td>
-                    <td width="130">
-                        @Html.DisplayFor(modelItem => item.ProductName)
-                    </td>
-                    <td width="150">
-                        @Html.DisplayFor(modelItem => item.Description)
-                    </td>
-                    <td width="80">
-                        @Html.DisplayFor(modelItem => item.CostJP)
-                    </td>
-                    <td width="80">
-                        @Html.DisplayFor(modelItem => item.CostExchangeRate)
-                    </td>
-                    <td width="80">
-                        @Html.DisplayFor(modelItem => item.PriceExchangeRage)
-                    </td>
-                    <td width="80">
-                        @Html.DisplayFor(modelItem => item.Inventory)
-                    </td>
-                    <td width="80">
-                        @Html.DisplayFor(modelItem => item.OrderedQuantity)
-                    </td>
-                    
-                    <td>
-                        <a class="btn btn-info" asp-action="Edit" asp-route-id="@item.ProductID">編輯</a> <br/>
-                        <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.ProductID">詳細</a> <br />
-                        @* <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.ProductID" >刪除</a> *@
-                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#DelProduct" onclick="setDeleteProduct('@item.ProductID')">
-                            刪除
-                        </button>
-                    </td>
-                </tr>
+                <td>
+                    <a class="btn btn-info" asp-action="Edit" asp-route-id="@item.ProductID">編輯</a> <br/>
+                    <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.ProductID">詳細</a> <br />
+                    @* <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.ProductID" >刪除</a> *@
+                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#DelProduct" onclick="setDeleteProduct('@item.ProductID')">
+                        刪除
+                    </button>
+                </td>
+            </tr>
         }
             </tbody>
         </table>

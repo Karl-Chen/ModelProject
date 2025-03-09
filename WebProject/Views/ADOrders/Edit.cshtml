@@ -1,10 +1,12 @@
 ﻿@model WebProject.Models.Order
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "編輯訂單";
 }
 
-<h1>Edit</h1>
+<h1>@ViewData["Title"]</h1>
+
+
 
 <h4>Order</h4>
 <hr />
@@ -15,7 +17,7 @@
             <input type="hidden" asp-for="OrderNo" />
             <div class="form-group">
                 <label asp-for="OrderDate" class="control-label"></label>
-                <input asp-for="OrderDate" class="form-control" />
+                <input asp-for="OrderDate" class="form-control" readonly/>
                 <span asp-validation-for="OrderDate" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -24,45 +26,50 @@
                 <span asp-validation-for="ShippingDate" class="text-danger"></span>
             </div>
             <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsGoodPackage" /> @Html.DisplayNameFor(model => model.IsGoodPackage)
-                </label>
+                <input type="hidden" asp-for="IsGoodPackage" />
+                @{
+                    var str = Model.IsGoodPackage ? "加固包版" : "一般包裝";
+                }
+                <h5 class="text-danger">@str</h5>
+                @* <label class="form-check-label"> *@
+                @*     <input class="form-check-input" asp-for="IsGoodPackage" /> @Html.DisplayNameFor(model => model.IsGoodPackage) *@
+                @* </label> *@
             </div>
             <div class="form-group">
                 <label asp-for="ShippingAddr" class="control-label"></label>
-                <input asp-for="ShippingAddr" class="form-control" />
+                <input asp-for="ShippingAddr" class="form-control" readonly />
                 <span asp-validation-for="ShippingAddr" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="PayWayID" class="control-label"></label>
-                <select asp-for="PayWayID" class="form-control" asp-items="ViewBag.PayWayID"></select>
-                <span asp-validation-for="PayWayID" class="text-danger"></span>
+                <h5>@Html.DisplayNameFor(model => model.PayWay.PayWayName)</h5>
+                <h5 class="form-control">@Model.PayWay.PayWayName</h5>
+                <input type="hidden" asp-for="PayWayID" />
+
             </div>
             <div class="form-group">
                 <label asp-for="OrdertatusID" class="control-label"></label>
                 <select asp-for="OrdertatusID" class="form-control" asp-items="ViewBag.OrdertatusID"></select>
                 <span asp-validation-for="OrdertatusID" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <label asp-for="MemberID" class="control-label"></label>
-                <select asp-for="MemberID" class="form-control" asp-items="ViewBag.MemberID"></select>
-                <span asp-validation-for="MemberID" class="text-danger"></span>
+                <h5>@Html.DisplayNameFor(model => model.Member.Name)</h5>
+                <h5 class="form-control">@Model.Member.Name</h5>
+                <input type="hidden" asp-for="MemberID" />
             </div>
             <div class="form-group">
-                <label asp-for="ShippingWayID" class="control-label"></label>
-                <select asp-for="ShippingWayID" class="form-control" asp-items="ViewBag.ShippingWayID"></select>
-                <span asp-validation-for="ShippingWayID" class="text-danger"></span>
+                <h5>@Html.DisplayNameFor(model => model.ShippingWay.ShippingWayName)</h5>
+                <h5 class="form-control">@Model.ShippingWay.ShippingWayName</h5>
+                <input type="hidden" asp-for="ShippingWayID" />
+
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="修改" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

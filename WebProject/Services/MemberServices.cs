@@ -37,7 +37,10 @@ namespace WebProject.Services
 
         public async Task<List<Member>> GetMemberList()
         {
-            return await _context.Member.ToListAsync();
+            return await _context.Member
+                .Include(c => c.MemberAcc)
+                .Include(c => c.MemberTel)
+                .ToListAsync();
         }
 
         public async Task<string> GetNameByMemberID(string memberID)

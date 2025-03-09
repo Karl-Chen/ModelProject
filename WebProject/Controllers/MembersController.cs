@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using WebProject.Filters;
 using WebProject.Models;
 using WebProject.Services;
 using WebProject.ViewModels;
@@ -22,9 +23,11 @@ namespace WebProject.Controllers
         }
 
         // GET: Members
+        [ServiceFilter(typeof(MemberStatusFilter))]
         public async Task<IActionResult> Index()
         {
-            return View(await _memberServices.GetMemberList());
+            var m = await _memberServices.GetMemberList();
+            return View(m);
         }
 
         // GET: Members/Details/5
@@ -35,7 +38,7 @@ namespace WebProject.Controllers
                 return NotFound();
             }
 
-            var member = await _memberServices.GetMemberbyAcc(id);
+            var member = await _memberServices.GetVMMemberByAccount(id);
             if (member == null)
             {
                 return NotFound();

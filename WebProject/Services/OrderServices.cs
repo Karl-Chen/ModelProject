@@ -146,10 +146,20 @@ namespace WebProject.Services
                 .Include(o => o.Ordertatus)
                 .Include(o => o.PayWay)
                 .Include(o => o.ShippingWay)
+                .Include(o => o.Member)
                 .Where(c => c.OrderNo == orderNo)
                 .DefaultIfEmpty()
                 .FirstOrDefaultAsync();
             return order;
+        }
+
+        public async Task<string> GetMemberIDByOrderNo(string orderNo)
+        {
+            return await _guestModelContext.Order             
+                .Where(c => c.OrderNo == orderNo)
+                .Select(o => o.MemberID)
+                .DefaultIfEmpty()
+                .FirstOrDefaultAsync();
         }
 
         private async Task<string> GetOrderNumber()

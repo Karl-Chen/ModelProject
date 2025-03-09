@@ -25,6 +25,16 @@ namespace WebProject.Services
             return vMProducts;
         }
 
+        public async Task<List<Product>> GetNeedReplenish()
+        {
+            var p = await _context.Prodect.Include(p => p.Brand)
+                .Include(p => p.ProductSpecification)
+                .Include(p => p.ProductType)
+                .Include(p => p.Supplier)
+                .Where(s => s.Inventory < 5).OrderByDescending(t => t.ProductTypeID).ToListAsync();
+            return p;
+        }
+
         public async Task<List<Product>> GetProductListDetailListByPSID(string SpecificationID, bool isAll)
         {
             var p = await _context.Prodect.Include(p => p.Brand)
@@ -61,6 +71,11 @@ namespace WebProject.Services
 
         public async Task UpDateProduct(Product product)
         {
+            var existingProduct = await _context.Prodect.FindAsync(product.ProductID);
+            if (existingProduct != null)
+            {
+                _context.Entry(existingProduct).State = EntityState.Detached;
+            }
             _context.Update(product);
             await _context.SaveChangesAsync();
         }

@@ -13,5 +13,10 @@
         {
             <a class="list-group-item text-left" asp-action="Index" asp-route-SpecificationID="@item.SpecificationID">@(item.SpecificationName)</a>
         }
+        <hr />
+        @if (Context.Session.GetString("Manager") == "adminadmin" && Context.Session.GetString("Admin") != null)
+        {
+            <a class="list-group-item text-left fs-3" asp-action="Index" asp-route-isNeedReplenish="true">庫存量少於5的商品</a>
+        }
     </div>
 }

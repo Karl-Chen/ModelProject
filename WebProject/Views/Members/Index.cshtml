@@ -1,17 +1,17 @@
 ﻿@model IEnumerable<WebProject.Models.Member>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "會員列表管理";
 }
 
-<h1>Index</h1>
+<h1>@ViewData["Title"]</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.MemberAcc.Account)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Name)
             </th>
@@ -21,12 +21,18 @@
             <th>
                 @Html.DisplayNameFor(model => model.Email)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MemberTel[0].TelNumber)
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
+            <th>
+                @Html.DisplayFor(modelItem => item.MemberAcc.Account)
+            </th>
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
@@ -37,9 +43,12 @@
                 @Html.DisplayFor(modelItem => item.Email)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.MemberID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.MemberID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.MemberID">Delete</a>
+                @Html.DisplayFor(modelItem => item.MemberTel[0].TelNumber)
+            </td>
+            <td>
+                @* <a asp-action="Edit" asp-route-id="@item.MemberAcc.Account">編輯會員</a> | *@
+                <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.MemberAcc.Account">會員明細</a> 
+                @* <a asp-action="Delete" asp-route-id="@item.MemberID">刪除會員</a> *@
             </td>
         </tr>
 }

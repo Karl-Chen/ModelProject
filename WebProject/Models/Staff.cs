@@ -31,7 +31,7 @@ namespace WebProject.Models
         [ForeignKey("Role")]
         public string RoleID { get; set; } = null!;
         public virtual Role? Role { get; set; }
-                
+
         public virtual List<HandleOrder>? HandleOrder { get; set; }
         public virtual StaffAcc? StaffAcc { get; set; }
     }

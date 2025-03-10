@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace WebProject.Models
 {
@@ -14,6 +15,7 @@ namespace WebProject.Models
         [Display(Name = "訂單狀態")]
         public string OrdertatusName { get; set; } = null!;
 
+        [JsonIgnore]
         public virtual List<Order>? Orders { get; set; }
     }
 }

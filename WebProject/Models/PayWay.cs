@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace WebProject.Models
 {
@@ -15,6 +16,7 @@ namespace WebProject.Models
         [Required(ErrorMessage = "必填")]
         public string PayWayName { get; set; } = null!;
 
+        [JsonIgnore]
         public virtual List<Order>? Orders { get; set; }
     }
 }

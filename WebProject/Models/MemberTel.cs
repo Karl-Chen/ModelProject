@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace WebProject.Models
 {
@@ -17,6 +18,7 @@ namespace WebProject.Models
         [ForeignKey("Member")]
         public string MemberID { get; set; } = null!;
 
+        [JsonIgnore]
         public virtual Member? Member { get; set; } = null!;
 
     }

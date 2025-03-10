@@ -82,6 +82,11 @@
     </div>
     <div class="col-xl-8 col-lg-3"></div>
     <div class="col-xl-4 col-lg-9 d-flex justify-content-between fs-3">
+        <span style="white-space: nowrap;">@(Html.DisplayNameFor(modelItem => modelItem.InvoiceID)) </span>
+        <span class="text-end">@Model.InvoiceID</span>
+    </div>
+    <div class="col-xl-8 col-lg-3"></div>
+    <div class="col-xl-4 col-lg-9 d-flex justify-content-between fs-3">
         <span>@(Html.DisplayNameFor(modelItem => modelItem.sendWay)) </span>
         <span>@Model.sendWay</span>
     </div>

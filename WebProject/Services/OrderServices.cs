@@ -153,7 +153,27 @@ namespace WebProject.Services
                 handleOrder.StaffID = staffID;
                 handleOrder.OrderNo = order.OrderNo;
                 handleOrder.HandleTime = DateTime.Now;
-                _guestModelContext.HandleOrder.Add(handleOrder);
+                var oldHandleOrder = await _guestModelContext.HandleOrder.Where(c => c.OrderNo == order.OrderNo && c.StaffID == staffID).DefaultIfEmpty().FirstAsync();
+                if (oldHandleOrder == null)
+                {
+                    _guestModelContext.HandleOrder.Add(handleOrder);
+                    await _guestModelContext.SaveChangesAsync();
+                }
+                else
+                {
+                    oldHandleOrder.HandleTime = DateTime.Now;
+                    _guestModelContext.Update(oldHandleOrder);
+                    await _guestModelContext.SaveChangesAsync();
+                }
+            }
+            var oldInvoice = await _guestModelContext.Invoice.Where(c => c.OrderNo == order.OrderNo).DefaultIfEmpty().FirstAsync();
+            if (order.OrdertatusID == "04" && oldInvoice == null)
+            {
+                Invoice invoice = new Invoice();
+                Random random = new Random(DateTime.Now.Ticks.GetHashCode());
+                invoice.InvoiceNo = random.Next(0, 99999999).ToString().PadLeft(8, '0');
+                invoice.OrderNo = order.OrderNo;
+                _guestModelContext.Invoice.Add(invoice);
                 await _guestModelContext.SaveChangesAsync();
             }
         }
@@ -165,6 +185,7 @@ namespace WebProject.Services
                 .Include(o => o.PayWay)
                 .Include(o => o.ShippingWay)
                 .Include(o => o.Member)
+                .Include(o => o.Invoice)
                 .Include(o => o.HandleOrder)
                 .ThenInclude(o => o.Staff)
                 .Where(c => c.OrderNo == orderNo)

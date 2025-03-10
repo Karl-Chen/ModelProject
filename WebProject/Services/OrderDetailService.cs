@@ -55,7 +55,20 @@ namespace WebProject.Services
 
         public async Task<List<OrderDetail>> GetOrderDetailByOrderNo(string orderNo)
         {
-            var list = await _guestModelContext.OrderDetail.Where(c=> c.OrderNo == orderNo).ToListAsync();
+            var list = await _guestModelContext.OrderDetail
+                .Include(c => c.Products)
+                .Include(c => c.Order)
+                .ThenInclude(c=>c.PayWay)
+                .Include(c => c.Order)
+                .ThenInclude(c => c.ShippingWay)
+                .Include(c => c.Order)
+                .ThenInclude(c => c.Ordertatus)
+                .Include(c => c.Order)
+                .ThenInclude(c => c.HandleOrder)
+                .ThenInclude(c => c.Staff)
+                .Where(c=> c.OrderNo == orderNo)
+                .DefaultIfEmpty()
+                .ToListAsync();
             return list;
         }
 
@@ -72,6 +85,10 @@ namespace WebProject.Services
                 vMOrderDetail.HandleMember = order.HandleOrder[order.HandleOrder.Count - 1].Staff.Name;
                 vMOrderDetail.HandleDate = order.HandleOrder[order.HandleOrder.Count - 1].HandleTime;
             }
+            if (order.Invoice != null)
+            {
+                vMOrderDetail.InvoiceID = order.Invoice.InvoiceNo;
+            }    
             vMOrderDetail.item = new List<VMOrderCarItem>();
             foreach (var it in orderDetail)
             {

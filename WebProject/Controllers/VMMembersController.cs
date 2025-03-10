@@ -77,6 +77,7 @@ namespace WebProject.Controllers
             if (ModelState.IsValid)
             {
                 await _memberServices.SaveMmeberGroup(member, memberAcc, memberTel);
+                TempData["RegisterMsg"] = "註冊完成，請重新登入";
                 if (uAction != "" && uAction != null)
                 {
                     string id = pid;

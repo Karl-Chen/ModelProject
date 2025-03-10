@@ -141,7 +141,9 @@ namespace WebProject.Services
 
         private async Task<Member> GetMemberByMmeberID(string memberID)
         {
-            return await _context.Member.FirstOrDefaultAsync(m => m.MemberID == memberID);
+            return await _context.Member.Include(c=>c.MemberTel)
+                .Include(m=>m.MemberAcc)
+                .FirstOrDefaultAsync(m => m.MemberID == memberID);
         }
 
         private async Task<MemberTel> GetMemberTelByMmeberID(string memberID)

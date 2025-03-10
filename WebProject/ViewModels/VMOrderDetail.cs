@@ -37,5 +37,8 @@ namespace WebProject.ViewModels
 
         [Display(Name = "處理日期")]
         public DateTime? HandleDate { get; set; }
+
+        [Display(Name = "發票號碼")]
+        public string? InvoiceID { get; set; }
     }
 }

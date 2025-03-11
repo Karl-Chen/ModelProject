@@ -1,4 +1,6 @@
-﻿using WebProject.Models;
+﻿using Newtonsoft.Json.Linq;
+using System.Security.Cryptography;
+using WebProject.Models;
 using WebProject.ViewModels;
 using WebProject.WorkFunction;
 
@@ -39,6 +41,23 @@ namespace WebProject.Services
                 return null;
             VMOrderCarItem vMorderCarItem = ProductToVMOrderCarItem(p, item, offset);
             return vMorderCarItem;
+        }
+
+        public bool CheckSameItem(string fileName, string pid, int value, List<string> orderList)
+        {
+            bool isSame = false;
+            for (int i = 0; i < orderList.Count(); i++)
+            {
+                string[] items = orderList[i].Split(",");
+                if (items[0] == pid)
+                {
+                    int mValue = int.Parse(items[1]) + value;
+                    string strValue = mValue.ToString();
+                    orderList[i] = pid + "," + strValue;
+                    return true;
+                }
+            }
+            return false;
         }
 
         private VMOrderCarItem ProductToVMOrderCarItem(Product p, string[] item, float offset)

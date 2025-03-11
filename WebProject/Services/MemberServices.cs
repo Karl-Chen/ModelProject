@@ -104,6 +104,20 @@ namespace WebProject.Services
             await _context.SaveChangesAsync();
         }
 
+        public async Task<MemberAcc> UpdateMemberAcc(MemberAcc memberAcc)
+        {
+            _context.Update(memberAcc);
+            await _context.SaveChangesAsync();
+            return await GetMemberAccByAccount(memberAcc.Account);
+        }
+
+        public async Task<Member> UpdateMember(Member member)
+        {
+            _context.Update(member);
+            await _context.SaveChangesAsync();
+            return await GetMemberByMmeberID(member.MemberID);
+        }
+
         public async Task<Member> GetMemberbyAcc(string acc)
         {
             string memberID = await GetMemberIDByAccount(acc);

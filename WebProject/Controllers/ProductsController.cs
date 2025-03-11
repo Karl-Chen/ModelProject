@@ -24,15 +24,17 @@ namespace WebProject.Controllers
         private readonly FileIOFunction _fileIOFunction;
         private readonly ProductsService _productsService;
         private readonly MemberServices _memberServices;
+        private readonly OrderCarServices _orderCarServices;
         //private readonly IHubContext<PushMessage> _hubContext;
 
         //public ProductsController(GuestModelContext context, IWebHostEnvironment env, IHubContext<PushMessage> hubcontext)
-        public ProductsController(GuestModelContext context, FileIOFunction fileIOFunction, ProductsService productsService, MemberServices memberServices)
+        public ProductsController(GuestModelContext context, FileIOFunction fileIOFunction, ProductsService productsService, MemberServices memberServices, OrderCarServices orderCarServices)
         {
             _context = context;
             _fileIOFunction = fileIOFunction;
             _productsService = productsService;
             _memberServices = memberServices;
+            _orderCarServices = orderCarServices;
             //_hubContext = hubcontext;
         }
 
@@ -89,19 +91,8 @@ namespace WebProject.Controllers
             string account = varacc.ToString();
             string fileName = account + ".txt";
             List<string> orderList = _fileIOFunction.ReadFileContent(fileName);
-            bool isSame = false;
-            for (int i = 0; i < orderList.Count(); i++)
-            {
-                string[] items = orderList[i].Split(",");
-                if (items[0] == pid)
-                {
-                    int mValue = int.Parse(items[1]) + value;
-                    string strValue = mValue.ToString();
-                    orderList[i] = pid + "," + strValue;
-                    isSame = true;
-                    break;
-                }
-            }
+            bool isSame = _orderCarServices.CheckSameItem(fileName, pid, value, orderList);
+            
             if (!isSame)
             {
                 string orderdetail = pid + "," + value;

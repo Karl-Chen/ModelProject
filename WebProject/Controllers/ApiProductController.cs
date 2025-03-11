@@ -17,15 +17,13 @@ namespace WebProject.Controllers
         private readonly OrderCarServices _orderCarServices;
         private readonly OrderServices _orderServices;
         private readonly OrderDetailService _orderDetailService;
-        private readonly MemberServices _memberService;
 
-        public ApiProductController(ProductsService productService, OrderCarServices orderCarServices, OrderServices orderServices, OrderDetailService orderDetailService, MemberServices memberService)
+        public ApiProductController(ProductsService productService, OrderCarServices orderCarServices, OrderServices orderServices, OrderDetailService orderDetailService)
         {
             _productService = productService;
             _orderCarServices = orderCarServices;
             _orderServices = orderServices;
             _orderDetailService = orderDetailService;
-            _memberService = memberService;
         }
 
         // GET: api/<ApiProductController>
@@ -55,6 +53,66 @@ namespace WebProject.Controllers
             return vMOrderCar;
         }
 
+        //[HttpPut("PutOrderCarData")]
+        //public async Task<IActionResult> PutOrderCarData([FromBody] MemberAcc memberAcc)
+        //{
+        //    if (acc == null)
+        //        return BadRequest();
+
+        //    var oldMember = await _memberService.GetMemberbyAcc(acc);
+        //    if (oldMember == null)
+        //        return NotFound("查無此會員資料");
+
+        //    MemberAcc ret;
+        //    if (ModelState.IsValid)
+        //    {
+        //        ret = await _memberService.UpdateMemberAcc(memberAcc);
+        //        return Ok(ret);
+        //    }
+
+        //    return NotFound("會員密碼更新失敗！");
+        //}
+
+        //[HttpPut("PutOrderCarItem")]
+        //public async Task<IActionResult> PutOrderCarItem([FromBody] VMSimpleOrderCarItem item)
+        //{
+           
+        //    var oldMember = await _memberService.GetMemberbyAcc(acc);
+        //    if (oldMember == null)
+        //        return NotFound("查無此會員資料");
+
+        //    MemberAcc ret;
+        //    if (ModelState.IsValid)
+        //    {
+        //        ret = await _memberService.UpdateMemberAcc(memberAcc);
+        //        return Ok(ret);
+        //    }
+
+        //    return NotFound("會員密碼更新失敗！");
+        //}
+
+        // POST: api/Categories
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        //[HttpPost("PostOrderCarData")]
+        //public async Task<ActionResult<Member>> PostMember([FromBody] VMMembers vmMember)
+        //{
+        //    var oldMember = await _memberService.GetMemberbyAcc(vmMember.Account);
+        //    if (oldMember != null)
+        //        return NotFound("此帳號被註冊過了");
+
+
+        //    string mid = await _memberService.CreateNewMemberID();
+        //    MemberAcc memberAcc = _memberService.VMMMemberToMemberAcc(vmMember, mid);
+        //    Member member = _memberService.VMMMemberToMember(vmMember, mid);
+        //    MemberTel memberTel = _memberService.VMMMemberToMemberTel(vmMember, mid);
+        //    await _memberService.SaveMmeberGroup(member, memberAcc, memberTel);
+
+
+        //    return CreatedAtAction("GetMemberInfo", new { acc = memberAcc.Account, mima = memberAcc.Mima }, member);
+        //}
+
+
+
         [HttpGet("GetOrderList")]
         public async Task<ActionResult<List<Order>>> GetOrderList(string acc)
         {
@@ -72,20 +130,7 @@ namespace WebProject.Controllers
             return await _orderDetailService.GetOrderDetailByOrderNo(orderNo);
         }
 
-        [HttpGet("GetMemberInfo")]
-        public async Task<ActionResult<Member>> GetMemberInfo(string acc, string mima)
-        {
-            MemberAcc memberAcc = new MemberAcc();
-            memberAcc.Account = acc;
-            memberAcc.Mima = mima;
-            var result = await _memberService.CheckMemberAcc(memberAcc);
+        
 
-            if (result == null)
-            {
-                return NotFound("帳號或密碼錯誤!");
-            }
-
-            return await _memberService.GetMemberbyAcc(acc);
-        }
     }
 }

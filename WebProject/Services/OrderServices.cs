@@ -19,17 +19,28 @@ namespace WebProject.Services
             _staffService = staffService;
         }
 
-        public async Task<string> WriteToOrderTable(string ShippingAddr, string isGoodPackage, string acc)
+        public async Task<string> WriteToOrderTable(string ShippingAddr, string isGoodPackage, string acc, string OrderPhone, string OrderName)
         {
             Order order = new Order();
             string orderNumber = await GetOrderNumber();
-            string MemberID = await _memberService.GetMemberIDByAccount(acc);
+            var m = await _memberService.GetMemberbyAcc(acc);
+            string MemberID = m.MemberID;
             order.OrderNo = orderNumber;
             order.IsGoodPackage = isGoodPackage == "0" ? false : true;
             order.OrderDate = DateTime.Today;
             order.OrdertatusID = "01";
             order.ShippingAddr = ShippingAddr == "" || ShippingAddr == null ? "自取" : ShippingAddr;
             order.PayWayID = ShippingAddr == "" || ShippingAddr == null ? "0" : "1";
+            if (OrderName == null || OrderName == "")
+            {
+                OrderName = m.Name;
+            }
+            if (OrderPhone == null || OrderPhone == "")
+            {
+                OrderPhone = m.MemberTel[0].TelNumber;
+            }
+            order.OrderName = OrderName;
+            order.OrderPhone = OrderPhone;
             string ShippingWayID = "1";
             if (ShippingAddr == null || ShippingAddr == "")
                 ShippingWayID = "1";

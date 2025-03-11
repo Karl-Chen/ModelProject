@@ -32,6 +32,14 @@ namespace WebProject.Models
         [StringLength(200, ErrorMessage = "地址最多200字")]
         public string? ShippingAddr { get; set; }
 
+        [Display(Name = "收貨人姓名")]
+        [StringLength(200, ErrorMessage = "收貨人姓名最多10字")]
+        public string? OrderName { get; set; }
+
+        [Display(Name = "收貨人電話")]
+        [StringLength(200, ErrorMessage = "收貨人電話最多20字")]
+        public string? OrderPhone { get; set; }
+
         [Display(Name = "付款方式")]
         [ForeignKey("PayWay")]
         public string PayWayID { get; set; } = null!;

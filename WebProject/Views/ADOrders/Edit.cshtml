@@ -64,6 +64,18 @@
 
             </div>
             <div class="form-group">
+                <h5>@Html.DisplayNameFor(model => model.OrderName)</h5>
+                <h5 class="form-control">@Model.OrderName</h5>
+                <input type="hidden" asp-for="OrderName" />
+
+            </div>
+            <div class="form-group">
+                <h5>@Html.DisplayNameFor(model => model.OrderPhone)</h5>
+                <h5 class="form-control">@Model.OrderPhone</h5>
+                <input type="hidden" asp-for="OrderPhone" />
+
+            </div>
+            <div class="form-group">
                 <input type="submit" value="修改" class="btn btn-primary" />
             </div>
         </form>

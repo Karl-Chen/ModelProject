@@ -77,6 +77,16 @@
     </div>
     <div class="col-xl-8 col-lg-4"></div>
     <div class="col-xl-4 col-lg-8 d-flex justify-content-between fs-3">
+        <span>@(Html.DisplayNameFor(modelItem => modelItem.OrderName)) </span>
+        <span>@Model.OrderName</span>
+    </div>
+    <div class="col-xl-8 col-lg-4"></div>
+    <div class="col-xl-4 col-lg-8 d-flex justify-content-between fs-3">
+        <span>@(Html.DisplayNameFor(modelItem => modelItem.OrderPhone)) </span>
+        <span>@Model.OrderPhone</span>
+    </div>
+    <div class="col-xl-8 col-lg-4"></div>
+    <div class="col-xl-4 col-lg-8 d-flex justify-content-between fs-3">
         <span>@(Html.DisplayNameFor(modelItem => modelItem.isFix)) </span>
         @{
             var tmp = Model.isFix == "1" ? 60 : 0;

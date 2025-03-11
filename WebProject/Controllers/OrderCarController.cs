@@ -117,12 +117,12 @@ namespace WebProject.Controllers
             return View();
         }
 
-        public async Task<IActionResult> SubmitOrder(string? ShippingAddr, string? IsGoodPackage)
+        public async Task<IActionResult> SubmitOrder(string? ShippingAddr, string? IsGoodPackage, string? OrderPhone, string? OrderName)
         {
             var acc = HttpContext.Session.GetString("Manager");
             if (acc == null || acc == "")
                 return NoContent();
-            string orderNo = await _orderServices.WriteToOrderTable(ShippingAddr, IsGoodPackage, acc);
+            string orderNo = await _orderServices.WriteToOrderTable(ShippingAddr, IsGoodPackage, acc, OrderPhone, OrderName);
             acc += ".txt";
             VMOrderCar ret = await _orderCarServices.GetOrderCarList(acc);
             await _orderDetailService.WriteToOrderDetailTable(orderNo, ret);

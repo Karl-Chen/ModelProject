@@ -23,32 +23,38 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>
+                    <th style="white-space: nowrap;">
                         @Html.DisplayNameFor(model => model.OrderNo)
                     </th>
-                    <th>
+                    <th style="white-space: nowrap;">
                         @Html.DisplayNameFor(model => model.OrderDate)
                     </th>
-                    <th>
+                    <th style="white-space: nowrap;">
                         @Html.DisplayNameFor(model => model.ShippingDate)
                     </th>
-                    <th>
+                    <th style="white-space: nowrap;">
                         @Html.DisplayNameFor(model => model.IsGoodPackage)
                     </th>
-                    <th>
+                    <th style="white-space: nowrap;">
                         @Html.DisplayNameFor(model => model.ShippingAddr)
                     </th>
-                    <th>
+                    <th style="white-space: nowrap;">
                         @Html.DisplayNameFor(model => model.PayWayID)
                     </th>
-                    <th>
+                    <th style="white-space: nowrap;">
                         @Html.DisplayNameFor(model => model.OrdertatusID)
                     </th>
-                    <th>
+                    <th style="white-space: nowrap;">
                         @Html.DisplayNameFor(model => model.ShippingWayID)
                     </th>
-                    <th>
+                    <th style="white-space: nowrap;">
                         @Html.DisplayNameFor(model => model.Member.Name)
+                    </th>
+                    <th style="white-space: nowrap;">
+                        @Html.DisplayNameFor(model => model.OrderName)
+                    </th>
+                    <th style="white-space: nowrap;">
+                        @Html.DisplayNameFor(model => model.OrderPhone)
                     </th>
                     <th></th>
                 </tr>
@@ -94,8 +100,14 @@
                                 @Html.DisplayFor(modelItem => item.Member.Name)
                             </td>
                             <td>
-                                <a class="btn btn-info" asp-action="Details" asp-route-id="@item.OrderNo">明細</a> <br/>
-                                <a class="btn btn-primary" asp-action="Edit" asp-route-id="@item.OrderNo">編輯</a>
+                                @Html.DisplayFor(modelItem => item.OrderName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.OrderPhone)
+                            </td>
+                            <td>
+                                <a style="white-space: nowrap;" class="btn btn-info" asp-action="Details" asp-route-id="@item.OrderNo">明細</a> <br />
+                                <a style="white-space: nowrap;" class="btn btn-primary" asp-action="Edit" asp-route-id="@item.OrderNo">編輯</a>
                             </td>
                         </tr>
                     }

@@ -40,5 +40,11 @@ namespace WebProject.ViewModels
 
         [Display(Name = "發票號碼")]
         public string? InvoiceID { get; set; }
+
+        [Display(Name = "收貨人姓名")]
+        public string? OrderName { get; set; }
+
+        [Display(Name = "收貨人電話")]
+        public string? OrderPhone { get; set; }
     }
 }

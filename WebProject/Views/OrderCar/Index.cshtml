@@ -114,6 +114,12 @@
                 <a href="#" id="storeSelector" onclick="openStoreMap()" style="display: inline-block; padding: 10px 15px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;" class="text-center">
                     選擇超商門市
                 </a>
+                <br/>
+                <span>取貨人<input id="OrderName" name="OrderName" class="form-control"></span>
+                
+                <br />
+                <span>取貨人電話<input id="OrderPhone" name="OrderPhone" class="form-control"></span>
+                
                 <h3 id="totalMoney">總計 <span id="totalAllPrice">@(totalPrice.ToString("N0"))</span> 元</h3>
                 <a herf="#" onclick="onSubmit()" class="btn btn-outline-danger btn-primary text-light">我要結帳</a>
             </div>
@@ -274,12 +280,16 @@
             var selectIndex = $("#ShippingWayID").val();
             var sendStore = "";
             var isGoodPackage = $("#IsGoodPackage").prop("checked") == true ? "1" : "0";
+            var orderPhone = $('#OrderPhone').val();
+            var orderName = $('#OrderName').val();
             if (selectIndex != "1")
             {
                 sendStore = document.getElementById("storeSelector").innerText;///ShippingAddr
             }
             var url = '/OrderCar/SubmitOrder?ShippingAddr=' + sendStore;
                 url+= '&IsGoodPackage=' + isGoodPackage;
+                url+= '&OrderPhone=' + orderPhone;
+                url+= '&OrderName=' + orderName;
                 console.log(url);
                 window.location.href = url;
         }

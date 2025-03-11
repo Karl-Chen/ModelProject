@@ -80,6 +80,8 @@ namespace WebProject.Services
             vMOrderDetail.sendWay = order.ShippingWay.ShippingWayName;
             vMOrderDetail.ShippingAddr = order.ShippingAddr;
             vMOrderDetail.OrderStatusID = order.Ordertatus.OrdertatusName;
+            vMOrderDetail.OrderPhone = order.OrderPhone;
+            vMOrderDetail.OrderName = order.OrderName;
             if (order.HandleOrder != null && order.HandleOrder.Count > 0)
             {
                 vMOrderDetail.HandleMember = order.HandleOrder[order.HandleOrder.Count - 1].Staff.Name;

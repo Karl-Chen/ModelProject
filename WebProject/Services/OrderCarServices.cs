@@ -34,6 +34,13 @@ namespace WebProject.Services
             return ret;
         }
 
+        public async Task HandleOrderCarAllList(string acc, List<VMSimpleOrderCarItem> list)
+        {
+            acc += ".txt";
+            VMOrderCar vMOrderCar = await ListVMSimpleOrderCarItemToVMOrderCarItem(list);
+            await _fileIOFunction.WriteFileOverWrite(acc, vMOrderCar);
+        }
+
         public async Task<VMOrderCarItem> GetVMOrderCarItemByItems(string[] item, float offset)
         {
             Product p = await _productsService.GetProductByID(item[0]);
@@ -73,6 +80,29 @@ namespace WebProject.Services
             vMorderCarItem.name = p.ProductName;
 
             return vMorderCarItem;
+        }
+
+        private async Task<VMOrderCar> ListVMSimpleOrderCarItemToVMOrderCarItem(List<VMSimpleOrderCarItem> list)
+        {
+            VMOrderCar vMOrderCar = new VMOrderCar();
+            vMOrderCar.item = new List<VMOrderCarItem>();
+            foreach (var item in list)
+            {
+                VMOrderCarItem vMOrderCarItem = new VMOrderCarItem();
+                var p = await _productsService.GetProductByID(item.productID);
+                vMOrderCarItem.product = item.productID;
+                vMOrderCarItem.price = (int)(p.CostJP * p.PriceExchangeRage);
+                vMOrderCarItem.img = p.Photo;
+                vMOrderCarItem.offset = 0f;
+                vMOrderCarItem.count = item.count;
+                vMOrderCar.item.Add(vMOrderCarItem);
+            }
+            return vMOrderCar;
+        }
+
+        internal bool CheckSameItem(string fileName, string productID, object value, List<string> orderList)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -54,17 +54,14 @@ namespace WebProject.Controllers
 
             var oldMember = await _memberService.GetMemberbyAcc(acc);
             if (oldMember == null)
-                return NotFound("查無此會員資料");
+                return NotFound("查無此會員購物車資料");
 
-            MemberAcc ret;
-            if (ModelState.IsValid)
-            {
-                ret = await _memberService.UpdateMemberAcc(memberAcc);
-                return Ok(ret);
-            }
+            await _orderCarServices.HandleOrderCarAllList(acc, list);
 
-            return NotFound("會員密碼更新失敗！");
+            return NotFound("購物車更新成功！");
         }
+
+
 
         [HttpPut("{acc}")]
         public async Task<IActionResult> PutOrderCarItem(string acc, [FromBody] VMSimpleOrderCarItem item)
@@ -80,11 +77,11 @@ namespace WebProject.Controllers
 
             string fileName = acc + ".txt";
             List<string> orderList = _fileIOFunction.ReadFileContent(fileName);
-            bool isSame = _orderCarServices.CheckSameItem(fileName, item.productID, item.value, orderList);
+            bool isSame = _orderCarServices.CheckSameItem(fileName, item.productID, item.count, orderList);
 
             if (!isSame)
             {
-                string orderdetail = item.productID + "," + item.value;
+                string orderdetail = item.productID + "," + item.count;
                 _fileIOFunction.WriteFileAppend(fileName, orderdetail);
             }
             else
@@ -92,9 +89,7 @@ namespace WebProject.Controllers
                 _fileIOFunction.WriteFileOverWrite(fileName, orderList);
             }
 
-            
-
-            return Ok("會員密碼更新失敗！");
+            return Ok("購物車更新成功！");
         }
 
 

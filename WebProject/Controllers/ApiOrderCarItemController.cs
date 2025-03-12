@@ -92,78 +92,51 @@ namespace WebProject.Controllers
             return Ok("購物車更新成功！");
         }
 
-
-        // PUT: api/ApiOrderCarItem/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutOrderDetail(string id, OrderDetail orderDetail)
+        [HttpGet("GetOrderList")]
+        public async Task<ActionResult<List<Order>>> GetOrderList(string acc)
         {
-            if (id != orderDetail.OrderNo)
+            List<Order> orderList = await _orderServices.GetOrderListByAcc(acc);
+            if (orderList == null)
             {
-                return BadRequest();
+                return NotFound("您還沒有成立的訂單");
             }
-
-            _context.Entry(orderDetail).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!OrderDetailExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return await _orderServices.GetOrderListByAcc(acc);
         }
 
-        // POST: api/ApiOrderCarItem
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<OrderDetail>> PostOrderDetail(OrderDetail orderDetail)
+        [HttpPut("CancelOrder/{orderNo}/{userId}")]
+        public async Task<ActionResult<List<Order>>> CancelOrder(string orderNo, string userId)
         {
-            _context.OrderDetail.Add(orderDetail);
-            try
+            Order order = await _orderServices.GetOrderByOrderNo(orderNo);
+            if (order == null)
             {
-                await _context.SaveChangesAsync();
+                return NotFound("查無此訂單(" + orderNo + ")");
             }
-            catch (DbUpdateException)
-            {
-                if (OrderDetailExists(orderDetail.OrderNo))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return CreatedAtAction("GetOrderDetail", new { id = orderDetail.OrderNo }, orderDetail);
+            //order.Ordertatus = "10"
+            await _orderServices.CancelOrder(orderNo);
+            return await _orderServices.GetOrderListByAcc(userId);
         }
 
-        // DELETE: api/ApiOrderCarItem/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteOrderDetail(string id)
+        [HttpPost("PostOrder/{acc}/{OrderName}/{OrderPhone}")]
+        public async Task<ActionResult> PostOrder(string acc, string OrderName, string OrderPhone, [FromBody] VMOrderCar vMOrderCar)
         {
-            var orderDetail = await _context.OrderDetail.FindAsync(id);
-            if (orderDetail == null)
+            if (!ModelState.IsValid)
             {
-                return NotFound();
+                return BadRequest(ModelState);
             }
-
-            _context.OrderDetail.Remove(orderDetail);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            acc += ".txt";
+            await _fileIOFunction.WriteFileOverWrite(acc, vMOrderCar);
+            var orderNo = await _orderServices.WriteToOrderTable(vMOrderCar.sendWay, vMOrderCar.isFix, acc, OrderPhone, OrderName);
+            await _orderDetailService.WriteToOrderDetailTable(orderNo, vMOrderCar);
+            return Ok("訂單成立成功！");
         }
+
+
+        [HttpGet("GetOrderDetailList")]
+        public async Task<List<OrderDetail>> GetOrderDetailList(string orderNo)
+        {
+            return await _orderDetailService.GetOrderDetailByOrderNo(orderNo);
+        }
+
 
         private bool OrderDetailExists(string id)
         {

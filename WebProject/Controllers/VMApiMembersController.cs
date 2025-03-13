@@ -105,7 +105,8 @@ namespace WebProject.Controllers
             await _memberService.SaveMmeberGroup(member, memberAcc, memberTel);
 
 
-            return CreatedAtAction(nameof(GetMemberInfoByAcc), new { acc = memberAcc.Account});
+            //return CreatedAtAction(nameof(GetMemberInfoByAcc), new { acc = memberAcc.Account});
+            return await _memberService.GetMemberbyAcc(memberAcc.Account);
         }
 
 

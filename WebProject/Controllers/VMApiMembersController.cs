@@ -31,15 +31,13 @@ namespace WebProject.Controllers
         }
 
 
-        [HttpGet("GetMemberInfo")]
-        public async Task<ActionResult<Member>> GetMemberInfo(string acc, string mima)
+        [HttpPut("Login")]
+        public async Task<ActionResult<Member>> Login([FromBody] MemberAcc memberAcc)
         {
-            if (string.IsNullOrEmpty(acc) || string.IsNullOrEmpty(mima))
+            if (memberAcc == null ||string.IsNullOrEmpty(memberAcc.Account) || string.IsNullOrEmpty(memberAcc.Mima))
                 return BadRequest("帳號與密碼不能為空");
 
-            MemberAcc memberAcc = new MemberAcc();
-            memberAcc.Account = acc;
-            memberAcc.Mima = mima;
+            
             var result = await _memberService.CheckMemberAcc(memberAcc);
 
             if (result == null)
@@ -47,7 +45,7 @@ namespace WebProject.Controllers
                 return NotFound("帳號或密碼錯誤!");
             }
 
-            return await _memberService.GetMemberbyAcc(acc);
+            return await _memberService.GetMemberbyAcc(memberAcc.Account);
         }
 
         [HttpPut("{acc}")]

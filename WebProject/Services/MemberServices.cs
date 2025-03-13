@@ -126,6 +126,13 @@ namespace WebProject.Services
             return await GetMemberByMmeberID(memberID);
         }
 
+        public async Task UpdateMemberPointByMemberID(string memberID, int point)
+        {
+            Member member = await _context.Member.Where(c => c.MemberID == memberID).FirstAsync();
+            member.Point += point;
+            await  UpdateMember(member);
+        }
+
         public async Task<VMEditMemberAcc> GetVMEditMemberAccByAcc(string account)
         {
             var memberAcc = await GetMemberAccByAccount(account);
@@ -202,6 +209,7 @@ namespace WebProject.Services
             member.Address = vMMembers.Address;
             member.Name = vMMembers.Name;
             member.Email = vMMembers.Email;
+            member.Point = vMMembers.point;
             return member;
         }
         public MemberAcc VMMMemberToMemberAcc(VMMembers vMMembers, string memberID)
@@ -250,6 +258,7 @@ namespace WebProject.Services
             vMMembers.TelNumber = membertel.TelNumber;
             vMMembers.Email = member.Email;
             vMMembers.Name = member.Name;
+            vMMembers.point = member.Point;
             return vMMembers;
         }
 

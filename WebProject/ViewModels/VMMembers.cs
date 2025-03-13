@@ -40,5 +40,8 @@ namespace WebProject.ViewModels
         [StringLength(15, MinimumLength = 1)]
         [Required(ErrorMessage = "必填")]
         public string TelNumber { get; set; } = null!;
+
+        [Display(Name = "會員點數")]
+        public int point { get; set; } = 0;
     }
 }

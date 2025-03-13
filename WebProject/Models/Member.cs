@@ -32,7 +32,7 @@ namespace WebProject.Models
 
         //會員點數
         [JsonProperty("Point")]
-        public int Point = 0;
+        public int Point { get; set; } = 0;
 
         public virtual List<MemberTel>? MemberTel { get; set; }
 

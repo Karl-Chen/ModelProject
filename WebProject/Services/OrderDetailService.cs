@@ -24,6 +24,8 @@ namespace WebProject.Services
         public async Task WriteToOrderDetailTable(string orderNo, VMOrderCar vMOrderCar, float off = 0.0f)
         {
             List<OrderDetail> orderDetails = new List<OrderDetail>();
+            string memberID = await _orderServices.GetMemberIDByOrderNo(orderNo);
+            int totalprice = 0;
             foreach (var item in vMOrderCar.item)
             {
                 OrderDetail orderDetail = new OrderDetail();
@@ -33,9 +35,14 @@ namespace WebProject.Services
                 orderDetail.Off = off;
                 orderDetails.Add(orderDetail);
                 await UpdateProductQty(item.product, item.count);
+                var p = await _productsService.GetProductByID(item.product);
+                totalprice += (int)(p.CostJP * p.PriceExchangeRage * item.count);
             }
             _guestModelContext.OrderDetail.AddRange(orderDetails);
             await _guestModelContext.SaveChangesAsync();
+
+            int point = totalprice / 100;
+            await _memberServices.UpdateMemberPointByMemberID(memberID, point);
         }
 
         public async Task UpdateProductQty(string pid, int count)

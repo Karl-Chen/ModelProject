@@ -20,6 +20,9 @@ namespace WebProject.ViewModels
         [Display(Name = "數量")]
         public int count { get; set; } = 0;
 
-       
+        [Display(Name = "最大數量")]
+        public int MaxCount { get; set; } = 0;
+
+
     }
 }

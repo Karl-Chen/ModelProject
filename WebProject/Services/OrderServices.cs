@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using WebProject.Models;
 
 namespace WebProject.Services
@@ -146,6 +147,15 @@ namespace WebProject.Services
             {
                 // ShippingDate 為 null，可以設置預設值或進行其他處理
                 order.ShippingDate = null; // 或者 DateTime.MinValue 根據需求
+            }
+            var list = await _guestModelContext.OrderDetail
+                .Include(c => c.Products)
+                .Where(c => c.OrderNo == orderNo)
+                .DefaultIfEmpty()
+                .ToListAsync();
+            foreach (var item in list)
+            {
+                await _productsService.CancelOrder(item.ProductID, item.Vol);
             }
             order.OrdertatusID = "10";
             _guestModelContext.Update(order);

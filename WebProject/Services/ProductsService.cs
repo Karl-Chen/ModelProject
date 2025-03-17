@@ -64,6 +64,15 @@ namespace WebProject.Services
                 .FirstOrDefaultAsync(m => m.ProductID == id);
         }
 
+        public async Task CancelOrder(string productID, int count)
+        {
+            var p = await _context.Prodect
+                .FirstOrDefaultAsync(m => m.ProductID == productID);
+            p.Inventory += count;
+            _context.Update(p);
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<List<ProductSpecification>> GetProductSpecification()
         {
             return await _context.ProductSpecification.OrderBy(b => b.SpecificationName).ToListAsync();

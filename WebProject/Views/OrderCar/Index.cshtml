@@ -47,11 +47,11 @@
                             }
                             <input id="@unitpriceid" style="text; width:50px" value="@item.price.ToString("N0")" readonly />
                             <p>　</p>
-                            <input type="button" value="+" onclick="SetCount(1, '@inputid', '@priceid', '@unitpriceid', '@item.product')" />
+                            <input type="button" value="+" onclick="SetCount(1, '@inputid', '@priceid', '@unitpriceid', '@item.product', '@item.MaxCount')" />
                             @* <p>　</p> *@
                             <input id="@inputid" style="text; width:50px" value="@item.count" readonly />
                             @* <p>　</p> *@
-                            <input type="button" value="-" onclick="SetCount(-1, '@inputid', '@priceid', '@unitpriceid', '@item.product')" />
+                            <input type="button" value="-" onclick="SetCount(-1, '@inputid', '@priceid', '@unitpriceid', '@item.product','@item.MaxCount')" />
                             <p>　</p>
                             <input id="@priceid" style="text; width:50px" value="@price.ToString("N0")" readonly />
                         </div>
@@ -172,7 +172,7 @@
             $("#totalAllPrice").text(GetTotalMoney());
         }
 
-        function SetCount(add, textid, priceid, unitpriceid, productid) {
+        function SetCount(add, textid, priceid, unitpriceid, productid, maxCount) {
             console.log(textid);
             var count = parseInt($("#" + textid).val());
             var unitprice = parseInt($("#" + unitpriceid).val());
@@ -180,6 +180,11 @@
             if (count <= 0)
             {
                count = 1;
+            }
+            if (count > maxCount)
+            {
+                count = maxCount;
+                $("#" + textid).val(count);
             }
 
             $("#" + textid).val(count);

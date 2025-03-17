@@ -78,6 +78,7 @@ namespace WebProject.Services
             var count = int.Parse(item[1]);
             vMorderCarItem.count = count;
             vMorderCarItem.name = p.ProductName;
+            vMorderCarItem.MaxCount = p.Inventory;
 
             return vMorderCarItem;
         }

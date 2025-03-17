@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 using System.Runtime.CompilerServices;
 using WebProject.Models;
 using WebProject.ViewModels;
@@ -77,6 +78,19 @@ namespace WebProject.Services
                 .DefaultIfEmpty()
                 .ToListAsync();
             return list;
+        }
+
+        public async Task CancelOrder(string orderNo)
+        {
+            var list = await _guestModelContext.OrderDetail
+                .Include(c => c.Products)
+                .Where(c => c.OrderNo == orderNo)
+                .DefaultIfEmpty()
+                .ToListAsync();
+            foreach (var item in list)
+            {
+                await _productsService.CancelOrder(item.ProductID, item.Vol);
+            }
         }
 
         private async Task<VMOrderDetail> GetVMOrderDetailByOrderObject(Order order, List<OrderDetail> orderDetail)

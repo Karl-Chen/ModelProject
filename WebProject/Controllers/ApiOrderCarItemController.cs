@@ -89,7 +89,7 @@ namespace WebProject.Controllers
                 _fileIOFunction.WriteFileOverWrite(fileName, orderList);
             }
 
-            return Ok("購物車更新成功！");
+            return Ok("商品已加進購物車！");
         }
 
         [HttpGet("GetOrderList")]

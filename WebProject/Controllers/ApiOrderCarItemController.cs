@@ -35,7 +35,7 @@ namespace WebProject.Controllers
             _fileIOFunction = fileIOFunction;
         }
 
-        [HttpGet("GetOrderCarData")]
+        [HttpGet("GetOrderCarData/{acc}")]
         public async Task<ActionResult<VMOrderCar>> GetOrderCarData(string acc)
         {
             acc += ".txt";

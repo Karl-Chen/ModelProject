@@ -94,7 +94,7 @@ namespace WebProject.Services
                 .Include(o => o.Ordertatus)
                 .Include(o => o.PayWay)
                 .Include(o => o.ShippingWay)
-                .Where(c => c.MemberID == memberID && (c.OrdertatusID == "10" || c.OrdertatusID == "5"))
+                .Where(c => c.MemberID == memberID && (c.OrdertatusID == "10" || c.OrdertatusID == "11"))
                 .DefaultIfEmpty().ToListAsync();
             return OrderList;
         }
@@ -107,7 +107,7 @@ namespace WebProject.Services
                 .Include(o => o.ShippingWay)
                 .Include(o => o.Member.MemberTel)
                 .Include(o => o.Member.MemberAcc)
-                .Where(c => (c.OrdertatusID == "10" || c.OrdertatusID == "5"))
+                .Where(c => (c.OrdertatusID == "10" || c.OrdertatusID == "11"))
                 .DefaultIfEmpty().ToListAsync();
             return OrderList;
         }
@@ -119,7 +119,7 @@ namespace WebProject.Services
                 .Include(o => o.Ordertatus)
                 .Include(o => o.PayWay)
                 .Include(o => o.ShippingWay)
-                .Where(c => c.MemberID == memberID && (c.OrdertatusID == "11"))
+                .Where(c => c.MemberID == memberID && (c.OrdertatusID == "05"))
                 .DefaultIfEmpty().ToListAsync();
             return OrderList;
         }

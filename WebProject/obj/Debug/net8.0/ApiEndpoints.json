@@ -1,1 +1,433 @@
-[]
+[
+  {
+    "ContainingType": "WebProject.Controllers.ApiOrderCarItemController",
+    "Method": "PutOrderCarItem",
+    "RelativePath": "apiApiOrderCarItem/{acc}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "acc",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "item",
+        "Type": "WebProject.ViewModels.VMSimpleOrderCarItem",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WebProject.Controllers.ApiOrderCarItemController",
+    "Method": "CancelOrder",
+    "RelativePath": "apiApiOrderCarItem/CancelOrder/{orderNo}/{userId}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "orderNo",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "userId",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.List\u00601[[WebProject.Models.Order, WebProject, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "WebProject.Controllers.ApiOrderCarItemController",
+    "Method": "GetOrderCarData",
+    "RelativePath": "apiApiOrderCarItem/GetOrderCarData/{acc}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "acc",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "WebProject.ViewModels.VMOrderCar",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "WebProject.Controllers.ApiOrderCarItemController",
+    "Method": "GetOrderDetailList",
+    "RelativePath": "apiApiOrderCarItem/GetOrderDetailList",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "orderNo",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.List\u00601[[WebProject.Models.OrderDetail, WebProject, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "WebProject.Controllers.ApiOrderCarItemController",
+    "Method": "GetOrderList",
+    "RelativePath": "apiApiOrderCarItem/GetOrderList/{acc}/{type}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "acc",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "type",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.List\u00601[[WebProject.Models.Order, WebProject, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "WebProject.Controllers.ApiOrderCarItemController",
+    "Method": "PostOrder",
+    "RelativePath": "apiApiOrderCarItem/PostOrder/{acc}/{OrderName}/{OrderPhone}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "acc",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "OrderName",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "OrderPhone",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "vMOrderCar",
+        "Type": "WebProject.ViewModels.VMOrderCar",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WebProject.Controllers.ApiOrderCarItemController",
+    "Method": "PutOrderCarData",
+    "RelativePath": "apiApiOrderCarItem/PutOrderCarData/{acc}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "acc",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "list",
+        "Type": "System.Collections.Generic.List\u00601[[WebProject.ViewModels.VMSimpleOrderCarItem, WebProject, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WebProject.Controllers.ApiProductController",
+    "Method": "GetOrderCarData",
+    "RelativePath": "apiApiProduct/GetOrderCarData",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "acc",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "WebProject.ViewModels.VMOrderCar",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "WebProject.Controllers.ApiProductController",
+    "Method": "GetOrderDetailList",
+    "RelativePath": "apiApiProduct/GetOrderDetailList",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "orderNo",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.List\u00601[[WebProject.Models.OrderDetail, WebProject, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "WebProject.Controllers.ApiProductController",
+    "Method": "GetOrderList",
+    "RelativePath": "apiApiProduct/GetOrderList",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "acc",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.List\u00601[[WebProject.Models.Order, WebProject, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "WebProject.Controllers.ApiProductController",
+    "Method": "GetProductList",
+    "RelativePath": "apiApiProduct/GetProductList",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "type",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "isAll",
+        "Type": "System.Boolean",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.List\u00601[[WebProject.Models.Product, WebProject, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "WebProject.Controllers.ApiProductController",
+    "Method": "GetProductSpecification",
+    "RelativePath": "apiApiProduct/GetProductSpecification",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.List\u00601[[WebProject.Models.ProductSpecification, WebProject, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "WebProject.Controllers.VMApiMembersController",
+    "Method": "GetMemberInfoByAcc",
+    "RelativePath": "apiVMApiMembers/{acc}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "acc",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "WebProject.Models.Member",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "WebProject.Controllers.VMApiMembersController",
+    "Method": "PutMember",
+    "RelativePath": "apiVMApiMembers/{acc}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "acc",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "member",
+        "Type": "WebProject.Models.Member",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WebProject.Controllers.VMApiMembersController",
+    "Method": "Login",
+    "RelativePath": "apiVMApiMembers/Login",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "memberAcc",
+        "Type": "WebProject.Models.MemberAcc",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "WebProject.Models.Member",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "WebProject.Controllers.VMApiMembersController",
+    "Method": "PostMember",
+    "RelativePath": "apiVMApiMembers/PostMember",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "vmMember",
+        "Type": "WebProject.ViewModels.VMMembers",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "WebProject.Models.Member",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "WebProject.Controllers.VMApiMembersController",
+    "Method": "PutMemberAcc",
+    "RelativePath": "apiVMApiMembers/PutMemberAcc",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "memberAcc",
+        "Type": "WebProject.Models.MemberAcc",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  }
+]

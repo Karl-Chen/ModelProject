@@ -92,15 +92,23 @@ namespace WebProject.Controllers
             return Ok("商品已加進購物車！");
         }
 
-        [HttpGet("GetOrderList")]
-        public async Task<ActionResult<List<Order>>> GetOrderList(string acc)
+        [HttpGet("GetOrderList/{acc}/{type}")]
+        public async Task<ActionResult<List<Order>>> GetOrderList(string acc, string type)
         {
             List<Order> orderList = await _orderServices.GetOrderListByAcc(acc);
             if (orderList == null)
             {
                 return NotFound("您還沒有成立的訂單");
             }
-            return await _orderServices.GetOrderListByAcc(acc);
+            if (type == "1")
+            {
+                return await _orderServices.GetOrderListByAcc(acc);
+            }
+            else if (type == "2")
+            {
+                return await _orderServices.GetUCancelOrderListByAcc(acc);
+            }
+            return await _orderServices.GetBCancelOrderListByAcc(acc);
         }
 
         [HttpPut("CancelOrder/{orderNo}/{userId}")]
@@ -123,8 +131,8 @@ namespace WebProject.Controllers
             {
                 return BadRequest(ModelState);
             }
-            acc += ".txt";
-            await _fileIOFunction.WriteFileOverWrite(acc, vMOrderCar);
+            var filename = acc + ".txt";
+            await _fileIOFunction.WriteFileOverWrite(filename, vMOrderCar);
             var orderNo = await _orderServices.WriteToOrderTable(vMOrderCar.sendWay, vMOrderCar.isFix, acc, OrderPhone, OrderName);
             await _orderDetailService.WriteToOrderDetailTable(orderNo, vMOrderCar);
             return Ok("訂單成立成功！");

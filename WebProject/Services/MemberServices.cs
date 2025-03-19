@@ -121,8 +121,11 @@ namespace WebProject.Services
         public async Task<Member> GetMemberbyAcc(string acc)
         {
             string memberID = await GetMemberIDByAccount(acc);
-            if (memberID == "")
+            if (memberID == null || memberID == "")
+            {
+                Console.WriteLine("1111111111111 memberID = null acc = " + acc);
                 return null;
+            }
             return await GetMemberByMmeberID(memberID);
         }
 

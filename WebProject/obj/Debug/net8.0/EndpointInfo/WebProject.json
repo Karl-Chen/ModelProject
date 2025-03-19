@@ -1,0 +1,1333 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "WebProject",
+    "version": "1.0"
+  },
+  "paths": {
+    "/apiApiOrderCarItem/GetOrderCarData/{acc}": {
+      "get": {
+        "tags": [
+          "ApiOrderCarItem"
+        ],
+        "parameters": [
+          {
+            "name": "acc",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/VMOrderCar"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VMOrderCar"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VMOrderCar"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/apiApiOrderCarItem/PutOrderCarData/{acc}": {
+      "put": {
+        "tags": [
+          "ApiOrderCarItem"
+        ],
+        "parameters": [
+          {
+            "name": "acc",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/VMSimpleOrderCarItem"
+                }
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/VMSimpleOrderCarItem"
+                }
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/VMSimpleOrderCarItem"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/apiApiOrderCarItem/{acc}": {
+      "put": {
+        "tags": [
+          "ApiOrderCarItem"
+        ],
+        "parameters": [
+          {
+            "name": "acc",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VMSimpleOrderCarItem"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VMSimpleOrderCarItem"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/VMSimpleOrderCarItem"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/apiApiOrderCarItem/GetOrderList/{acc}/{type}": {
+      "get": {
+        "tags": [
+          "ApiOrderCarItem"
+        ],
+        "parameters": [
+          {
+            "name": "acc",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "type",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Order"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Order"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Order"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/apiApiOrderCarItem/CancelOrder/{orderNo}/{userId}": {
+      "put": {
+        "tags": [
+          "ApiOrderCarItem"
+        ],
+        "parameters": [
+          {
+            "name": "orderNo",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Order"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Order"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Order"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/apiApiOrderCarItem/PostOrder/{acc}/{OrderName}/{OrderPhone}": {
+      "post": {
+        "tags": [
+          "ApiOrderCarItem"
+        ],
+        "parameters": [
+          {
+            "name": "acc",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "OrderName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "OrderPhone",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VMOrderCar"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VMOrderCar"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/VMOrderCar"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/apiApiOrderCarItem/GetOrderDetailList": {
+      "get": {
+        "tags": [
+          "ApiOrderCarItem"
+        ],
+        "parameters": [
+          {
+            "name": "orderNo",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OrderDetail"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OrderDetail"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OrderDetail"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/apiApiProduct/GetProductList": {
+      "get": {
+        "tags": [
+          "ApiProduct"
+        ],
+        "parameters": [
+          {
+            "name": "type",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "isAll",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Product"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Product"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Product"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/apiApiProduct/GetProductSpecification": {
+      "get": {
+        "tags": [
+          "ApiProduct"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProductSpecification"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProductSpecification"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProductSpecification"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/apiApiProduct/GetOrderCarData": {
+      "get": {
+        "tags": [
+          "ApiProduct"
+        ],
+        "parameters": [
+          {
+            "name": "acc",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/VMOrderCar"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VMOrderCar"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VMOrderCar"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/apiApiProduct/GetOrderList": {
+      "get": {
+        "tags": [
+          "ApiProduct"
+        ],
+        "parameters": [
+          {
+            "name": "acc",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Order"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Order"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Order"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/apiApiProduct/GetOrderDetailList": {
+      "get": {
+        "tags": [
+          "ApiProduct"
+        ],
+        "parameters": [
+          {
+            "name": "orderNo",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OrderDetail"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OrderDetail"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OrderDetail"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/apiVMApiMembers/{acc}": {
+      "get": {
+        "tags": [
+          "VMApiMembers"
+        ],
+        "parameters": [
+          {
+            "name": "acc",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Member"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Member"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Member"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "VMApiMembers"
+        ],
+        "parameters": [
+          {
+            "name": "acc",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Member"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Member"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Member"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/apiVMApiMembers/Login": {
+      "put": {
+        "tags": [
+          "VMApiMembers"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MemberAcc"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MemberAcc"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/MemberAcc"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Member"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Member"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Member"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/apiVMApiMembers/PutMemberAcc": {
+      "put": {
+        "tags": [
+          "VMApiMembers"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MemberAcc"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MemberAcc"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/MemberAcc"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/apiVMApiMembers/PostMember": {
+      "post": {
+        "tags": [
+          "VMApiMembers"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VMMembers"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VMMembers"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/VMMembers"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Member"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Member"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Member"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "HandleOrder": {
+        "required": [
+          "handleTime"
+        ],
+        "type": "object",
+        "properties": {
+          "orderNo": {
+            "maxLength": 13,
+            "minLength": 13,
+            "type": "string",
+            "nullable": true
+          },
+          "staffID": {
+            "maxLength": 6,
+            "minLength": 6,
+            "type": "string",
+            "nullable": true
+          },
+          "handleTime": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Invoice": {
+        "type": "object",
+        "properties": {
+          "invoiceNo": {
+            "maxLength": 13,
+            "minLength": 13,
+            "type": "string",
+            "nullable": true
+          },
+          "orderNo": {
+            "maxLength": 13,
+            "minLength": 13,
+            "type": "string",
+            "nullable": true
+          },
+          "order": {
+            "$ref": "#/components/schemas/Order"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Member": {
+        "required": [
+          "email",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "memberID": {
+            "maxLength": 8,
+            "minLength": 8,
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "maxLength": 20,
+            "minLength": 0,
+            "type": "string"
+          },
+          "address": {
+            "maxLength": 200,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string",
+            "format": "email"
+          },
+          "point": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "memberTel": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MemberTel"
+            },
+            "nullable": true
+          },
+          "memberAcc": {
+            "$ref": "#/components/schemas/MemberAcc"
+          }
+        },
+        "additionalProperties": false
+      },
+      "MemberAcc": {
+        "type": "object",
+        "properties": {
+          "account": {
+            "pattern": "^[a-zA-Z0-9]{6,20}$",
+            "type": "string",
+            "nullable": true
+          },
+          "mima": {
+            "pattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d]{8,20}$",
+            "type": "string",
+            "format": "password",
+            "nullable": true
+          },
+          "memberID": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "MemberTel": {
+        "required": [
+          "telNumber"
+        ],
+        "type": "object",
+        "properties": {
+          "index": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "telNumber": {
+            "maxLength": 15,
+            "minLength": 1,
+            "type": "string"
+          },
+          "memberID": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Order": {
+        "required": [
+          "orderDate",
+          "shippingDate"
+        ],
+        "type": "object",
+        "properties": {
+          "orderNo": {
+            "maxLength": 13,
+            "minLength": 13,
+            "type": "string",
+            "nullable": true
+          },
+          "orderDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "shippingDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "isGoodPackage": {
+            "type": "boolean"
+          },
+          "shippingAddr": {
+            "maxLength": 200,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "orderName": {
+            "maxLength": 200,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "orderPhone": {
+            "maxLength": 200,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "payWayID": {
+            "type": "string",
+            "nullable": true
+          },
+          "payWay": {
+            "$ref": "#/components/schemas/PayWay"
+          },
+          "invoice": {
+            "$ref": "#/components/schemas/Invoice"
+          },
+          "handleOrder": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/HandleOrder"
+            },
+            "nullable": true
+          },
+          "ordertatusID": {
+            "type": "string",
+            "nullable": true
+          },
+          "ordertatus": {
+            "$ref": "#/components/schemas/Ordertatus"
+          },
+          "memberID": {
+            "maxLength": 8,
+            "minLength": 8,
+            "type": "string",
+            "nullable": true
+          },
+          "member": {
+            "$ref": "#/components/schemas/Member"
+          },
+          "shippingWayID": {
+            "type": "string",
+            "nullable": true
+          },
+          "shippingWay": {
+            "$ref": "#/components/schemas/ShippingWay"
+          }
+        },
+        "additionalProperties": false
+      },
+      "OrderDetail": {
+        "type": "object",
+        "properties": {
+          "orderNo": {
+            "maxLength": 13,
+            "minLength": 13,
+            "type": "string",
+            "nullable": true
+          },
+          "productID": {
+            "maxLength": 8,
+            "minLength": 8,
+            "type": "string",
+            "nullable": true
+          },
+          "off": {
+            "maximum": 1,
+            "minimum": 0,
+            "type": "number",
+            "format": "float"
+          },
+          "vol": {
+            "maximum": 99,
+            "minimum": 1,
+            "type": "integer",
+            "format": "int32"
+          },
+          "order": {
+            "$ref": "#/components/schemas/Order"
+          },
+          "products": {
+            "$ref": "#/components/schemas/Product"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Ordertatus": {
+        "required": [
+          "ordertatusID",
+          "ordertatusName"
+        ],
+        "type": "object",
+        "properties": {
+          "ordertatusID": {
+            "maxLength": 2,
+            "minLength": 2,
+            "type": "string"
+          },
+          "ordertatusName": {
+            "maxLength": 10,
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PayWay": {
+        "required": [
+          "payWayID",
+          "payWayName"
+        ],
+        "type": "object",
+        "properties": {
+          "payWayID": {
+            "maxLength": 1,
+            "minLength": 1,
+            "type": "string"
+          },
+          "payWayName": {
+            "maxLength": 10,
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Product": {
+        "required": [
+          "costExchangeRate",
+          "costJP",
+          "inventory",
+          "orderedQuantity",
+          "priceExchangeRage",
+          "productName"
+        ],
+        "type": "object",
+        "properties": {
+          "productID": {
+            "maxLength": 8,
+            "minLength": 8,
+            "type": "string",
+            "nullable": true
+          },
+          "productName": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string"
+          },
+          "description": {
+            "maxLength": 500,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "photo": {
+            "maxLength": 18,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "costJP": {
+            "maximum": 99999999,
+            "minimum": 1,
+            "type": "integer",
+            "format": "int32"
+          },
+          "costExchangeRate": {
+            "maximum": 0.99,
+            "minimum": 0.01,
+            "type": "number",
+            "format": "float"
+          },
+          "priceExchangeRage": {
+            "maximum": 0.99,
+            "minimum": 0.01,
+            "type": "number",
+            "format": "float"
+          },
+          "inventory": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "orderedQuantity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "productTypeID": {
+            "type": "string",
+            "nullable": true
+          },
+          "productSpecificationID": {
+            "type": "string",
+            "nullable": true
+          },
+          "brandID": {
+            "type": "string",
+            "nullable": true
+          },
+          "supplierID": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProductSpecification": {
+        "required": [
+          "specificationName"
+        ],
+        "type": "object",
+        "properties": {
+          "specificationID": {
+            "maxLength": 20,
+            "minLength": 1,
+            "type": "string",
+            "nullable": true
+          },
+          "specificationName": {
+            "maxLength": 50,
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ShippingWay": {
+        "required": [
+          "shippingWayID",
+          "shippingWayName"
+        ],
+        "type": "object",
+        "properties": {
+          "shippingWayID": {
+            "maxLength": 1,
+            "minLength": 1,
+            "type": "string"
+          },
+          "shippingWayName": {
+            "maxLength": 10,
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "VMMembers": {
+        "required": [
+          "email",
+          "name",
+          "telNumber"
+        ],
+        "type": "object",
+        "properties": {
+          "account": {
+            "pattern": "^[a-zA-Z0-9]{6,20}$",
+            "type": "string",
+            "nullable": true
+          },
+          "oldMima": {
+            "pattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d]{8,20}$",
+            "type": "string",
+            "format": "password",
+            "nullable": true
+          },
+          "mima": {
+            "pattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d]{8,20}$",
+            "type": "string",
+            "format": "password",
+            "nullable": true
+          },
+          "reMima": {
+            "pattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d]{8,20}$",
+            "type": "string",
+            "format": "password",
+            "nullable": true
+          },
+          "name": {
+            "maxLength": 20,
+            "minLength": 0,
+            "type": "string"
+          },
+          "address": {
+            "maxLength": 200,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string",
+            "format": "email"
+          },
+          "telNumber": {
+            "maxLength": 15,
+            "minLength": 1,
+            "type": "string"
+          },
+          "point": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "VMOrderCar": {
+        "type": "object",
+        "properties": {
+          "item": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VMOrderCarItem"
+            },
+            "nullable": true
+          },
+          "isFix": {
+            "type": "string",
+            "nullable": true
+          },
+          "sendWay": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "VMOrderCarItem": {
+        "type": "object",
+        "properties": {
+          "img": {
+            "type": "string",
+            "nullable": true
+          },
+          "product": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "price": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "offset": {
+            "type": "number",
+            "format": "float"
+          },
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "VMSimpleOrderCarItem": {
+        "type": "object",
+        "properties": {
+          "productID": {
+            "type": "string",
+            "nullable": true
+          },
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

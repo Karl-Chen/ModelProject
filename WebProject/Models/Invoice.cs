@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace WebProject.Models
 {
@@ -14,7 +15,7 @@ namespace WebProject.Models
         [Display(Name = "訂單編號")]
         [StringLength(13, MinimumLength = 13)]
         public string OrderNo { get; set; } = null!;
-
+        [JsonIgnore]
         public virtual Order? Order { get; set; }
     }
 }

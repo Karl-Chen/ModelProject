@@ -95,20 +95,31 @@ namespace WebProject.Controllers
         [HttpGet("GetOrderList/{acc}/{type}")]
         public async Task<ActionResult<List<Order>>> GetOrderList(string acc, string type)
         {
-            List<Order> orderList = await _orderServices.GetOrderListByAcc(acc);
-            if (orderList == null)
-            {
-                return NotFound("您還沒有成立的訂單");
-            }
+            
             if (type == "1")
             {
-                return await _orderServices.GetOrderListByAcc(acc);
+                List<Order> list = await _orderServices.GetOrderListByAcc(acc);
+                if (list == null || list[0] == null)
+                {
+                    return NotFound("您還沒有成立的訂單");
+                }
+                return list;
             }
             else if (type == "2")
             {
-                return await _orderServices.GetUCancelOrderListByAcc(acc);
+                List<Order> ulist = await _orderServices.GetUCancelOrderListByAcc(acc);
+                if (ulist == null || ulist[0] == null)
+                {
+                    return NotFound("您還沒有已取消的訂單");
+                }
+                return ulist;
             }
-            return await _orderServices.GetBCancelOrderListByAcc(acc);
+            List<Order> orderList = await _orderServices.GetBCancelOrderListByAcc(acc);
+            if (orderList == null || orderList[0] == null)
+            {
+                return NotFound("您還沒有已完成的訂單");
+            }
+            return orderList;
         }
 
         [HttpPut("CancelOrder/{orderNo}/{userId}")]
@@ -132,14 +143,15 @@ namespace WebProject.Controllers
                 return BadRequest(ModelState);
             }
             var filename = acc + ".txt";
-            await _fileIOFunction.WriteFileOverWrite(filename, vMOrderCar);
+            //await _fileIOFunction.WriteFileOverWrite(filename, vMOrderCar);
             var orderNo = await _orderServices.WriteToOrderTable(vMOrderCar.sendWay, vMOrderCar.isFix, acc, OrderPhone, OrderName);
             await _orderDetailService.WriteToOrderDetailTable(orderNo, vMOrderCar);
+            await _fileIOFunction.DeletOrderCardFile(filename);
             return Ok("訂單成立成功！");
         }
 
 
-        [HttpGet("GetOrderDetailList")]
+        [HttpGet("GetOrderDetailList/{orderNo}")]
         public async Task<List<OrderDetail>> GetOrderDetailList(string orderNo)
         {
             return await _orderDetailService.GetOrderDetailByOrderNo(orderNo);

@@ -68,6 +68,8 @@ namespace WebProject.Services
                 .Include(c => c.Order)
                 .ThenInclude(c=>c.PayWay)
                 .Include(c => c.Order)
+                .ThenInclude(c => c.Invoice)
+                .Include(c => c.Order)
                 .ThenInclude(c => c.ShippingWay)
                 .Include(c => c.Order)
                 .ThenInclude(c => c.Ordertatus)
